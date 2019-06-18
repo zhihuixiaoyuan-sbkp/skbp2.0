@@ -29,7 +29,9 @@
         methods: {
             defaultLeftNavOpened() {
                 let cur_path = this.$route.path; //获取当前路由
+                console.log(cur_path)
                 let routers = this.$router.options.routes; // 获取路由对象
+                console.log(routers)
                 for (let i = 0; i < routers.length; i++) {
                     let children = routers[i].children;
                     if (children) {
@@ -55,6 +57,7 @@
         bottom: 0;
         overflow: hidden;
         width: 180px;
+        height: 100%;
         background: #303030;
     }
 

@@ -7,6 +7,9 @@ import Message from "@/pages/baowei/pages/Message.vue"
 import List from "@/pages/baowei/pages/List.vue"
 import Log from "@/pages/baowei/pages/Log.vue"
 import History from "@/pages/baowei/pages/History.vue"
+import tongji from "@/pages/houqin/pages/tongji.vue"
+import weigui from "@/pages/houqin/pages/weigui.vue"
+import houqinHome from "@/pages/houqin/houqinHome.vue"
 
 Vue.use(Router)
 
@@ -15,7 +18,7 @@ export default new Router({
         {
             path: '/',
             name: 'Home',
-            redirect: '/Message',
+            // redirect: '/Message',
             component: Home,
             children: [
                 {
@@ -57,6 +60,35 @@ export default new Router({
                         aside: Sidebar,
                     }
                 }
+            ]
+        },
+        {
+            path: '/',
+            name: 'houqinHome',
+            // redirect: '/tongji',
+            component: houqinHome,
+            children: [
+                {
+                    path: '/tongji',
+                    name: '统计信息',
+                    components: {
+                        default: tongji,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/weigui',
+                    name: '违规人员名单',
+                    components: {
+                        default: weigui,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
             ]
         }
     ]
