@@ -18,7 +18,7 @@ export default new Router({
         {
             path: '/',
             name: 'Home',
-            // redirect: '/Message',
+            redirect: '/Message',
             component: Home,
             children: [
                 {
@@ -65,7 +65,7 @@ export default new Router({
         {
             path: '/',
             name: 'houqinHome',
-            // redirect: '/tongji',
+            redirect: '/tongji',
             component: houqinHome,
             children: [
                 {
