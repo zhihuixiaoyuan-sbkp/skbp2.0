@@ -19,11 +19,11 @@ export default new Router({
         {
             path: '/',
             name: 'houqinHome',
-            redirect:'/loding',
+            redirect: '/loding',
             component: houqinHome,
             children: [
                 {
-                    path:'/tongji',
+                    path: '/tongji',
                     name: '统计信息',
                     components: {
                         default: tongji,
@@ -102,35 +102,5 @@ export default new Router({
                 }
             ]
         },
-<<<<<<< HEAD
-        {
-            path: '/',
-            name: 'houqinHome',
-            redirect: '/tongji',
-            component: houqinHome,
-            children: [
-                {
-                    path: '/tongji',
-                    name: '统计信息',
-                    components: {
-                        default: tongji,
-                        top: Header,
-                        aside: Sidebar,
-                    },
-                    menuShow: true
-                },
-                {
-                    path: '/weigui',
-                    name: '违规人员名单',
-                    components: {
-                        default: weigui,
-                        top: Header,
-                        aside: Sidebar
-                    },
-                    menuShow: true,
-                },
-=======
->>>>>>> 2747c92f1fd175cadf94a6ca79c192bd16f1cbd0
-
     ]
 })
