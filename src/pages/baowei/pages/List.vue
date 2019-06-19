@@ -8,7 +8,7 @@
                 <!--模态框-添加重点人员-->
                 <el-dialog title="添加重点人员"
                            class="addModal"
-                           width="650px"
+                           width="520px"
                            :visible.sync="addDialog"
                            :close-on-press-escape="false"
                            :close-on-click-modal="false"
@@ -17,9 +17,9 @@
                     <div class="bodyModal">
                         <el-form :model="formData">
                             <el-form-item
-                                    label="学号:"
+                                    label="学号: "
                                     prop="stuNum"
-                            >
+                            ><br/>
                                 <el-input type="stuNum"
                                           ref="stuNum"
                                           v-model="formData.stuNum"
@@ -29,7 +29,9 @@
                                 ></el-input>
                             </el-form-item>
                             <el-form-item
-                                    label="添加原因:">
+                                    label="添加原因（多个标签用空格分隔）:"
+                                    prop="addReason"
+                            ><br/>
                                 <el-input
                                         type="addReason"
                                         ref="addReason"
@@ -39,6 +41,7 @@
                                 </el-input>
                             </el-form-item>
                             <div class="tags">
+                                <span>推荐添加原因：</span>
                                 <el-tag
                                         :key="tag"
                                         v-for="tag in showTags"
@@ -58,20 +61,14 @@
                 <!--搜索部分-->
                 <div class="search">
                     <!--下拉框-搜索筛选-->
-                    <el-dropdown trigger="click" @command="getLabel">
-                        <!--默认-->
-                        <el-button type="primary" v-model="label">{{label}}<i
-                                class="el-icon-arrow-down el-icon--right"></i></el-button>
-                        <!--下拉列表-->
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="学号">学号</el-dropdown-item>
-                            <el-dropdown-item command="姓名">姓名</el-dropdown-item>
-                            <el-dropdown-item command="学院">学院</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                    <!--搜索框-->
-                    <input type="text">
-                    <button>搜索</button>
+                    <el-input placeholder="请输入内容" v-model="label" class="input-with-select">
+                        <el-select v-model="select" slot="prepend" placeholder="请选择">
+                            <el-option label="餐厅名" value="1"></el-option>
+                            <el-option label="订单号" value="2"></el-option>
+                            <el-option label="用户电话" value="3"></el-option>
+                        </el-select>
+                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    </el-input>
                 </div>
                 <!--分界线-->
                 <hr class="list-boundary">
@@ -128,7 +125,6 @@
         components: {},
         data() {
             return {
-                label: '请输入需要搜索的标签',
                 addDialog: false,
                 // form表单数据
                 formData: {
@@ -139,6 +135,8 @@
                 addReasonArr: [],
                 // 展示标签数组
                 showTags: ["晚归", "夜不归宿", "蜗居"],
+                label: '',
+                select: '',
             }
         },
         props: {
@@ -217,6 +215,7 @@
                 this.submitForm(stuNum, inputValue);
             },
 
+            // 选取标签后全部删除 再次选择时会出现之前选中的所有选项
             tagContent(tag) {
                 // input框展示选中的标签
                 this.addReasonArr.push(tag);
@@ -269,11 +268,13 @@
     }
 
     /*模态框*/
+    .addModal {
+    }
+
     .addModal >>> .el-dialog {
-        margin-top: 120px;
-        -webkit-border-radius: 4px;
-        -moz-border-radius: 4px;
-        border-radius: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
     }
 
     /*头部*/
@@ -295,55 +296,54 @@
     .boundaryModal {
         margin: 0 13px;
         width: 95%;
-        height: 2px;
-        border: 0;
         background: #BBBBBB;
     }
 
     /*表单部分*/
+    .bodyModal {
+        margin: 0px 26px;
+        width: 90%;
+        /*height: 230px;*/
+        overflow: hidden;
+    }
+
+    .addModal >>> .el-form-item {
+        margin-bottom: 5px;
+    }
+
     .addModal >>> .el-dialog__body {
         padding: 0;
     }
 
-    .bodyModal {
-        margin: 15px 13px;
-        width: 95%;
+    .addModal >>> .el-form-item__label {
+        margin: 0;
     }
 
-    /*.addModal >>> .el-form-item {*/
-        /*margin-bottom: 0;*/
-    /*}*/
+    .addModal >>> .el-form-item__content {
+        line-height: 0;
+    }
 
-    /*.addModal >>> .el-form-item__content {*/
-        /*float: right;*/
-    /*}*/
-
-    /*.addModal >>> .el-form-item__label {*/
-        /*width: 80px;*/
-        /*font-size: 16px;*/
-    /*}*/
-
-    /*.addModal >>> .el-input {*/
-        /*width: 200px;*/
-    /*}*/
-
-    /*.addModal >>> .el-input__inner {*/
-        /*width: 320px;*/
-        /*height: 32px;*/
-    /*}*/
+    .addModal >>> .el-input__inner {
+        height: 30px;
+    }
 
     .tags {
-
+        margin-top: 15px;
     }
 
     .addModal >>> .el-tag {
         margin-right: 10px;
+        margin-bottom: 15px;
+    }
+
+    .addModal >>> .el-dialog__footer {
+        padding: 15px 20px;
     }
 
     /*搜索框*/
     .search {
         float: right;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     /*下拉框*/
