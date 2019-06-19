@@ -8,6 +8,7 @@ import List from "@/pages/baowei/pages/List.vue"
 import Log from "@/pages/baowei/pages/Log.vue"
 import History from "@/pages/baowei/pages/History.vue"
 import tongji from "@/pages/houqin/pages/tongji.vue"
+import loding from "@/pages/houqin/pages/loding.vue"
 import weigui from "@/pages/houqin/pages/weigui.vue"
 import houqinHome from "@/pages/houqin/houqinHome.vue"
 
@@ -18,7 +19,7 @@ export default new Router({
         {
             path: '/',
             name: 'houqinHome',
-            redirect:'/tongji',
+            redirect:'/loding',
             component: houqinHome,
             children: [
                 {
@@ -36,6 +37,16 @@ export default new Router({
                     name: '违规人员名单',
                     components: {
                         default: weigui,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+                {
+                    path: '/loding',
+                    name: '加载页面',
+                    components: {
+                        default: loding,
                         top: Header,
                         aside: Sidebar
                     },
