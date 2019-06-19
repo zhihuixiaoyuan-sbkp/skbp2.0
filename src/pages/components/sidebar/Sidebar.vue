@@ -25,25 +25,9 @@
         name: "Sidebar",
         data() {
             return {
-                initPath:""
+                initPath:"",
             }
         },
-        // defaultLeftNavOpened() {
-        //     let cur_path = this.$route.path; //获取当前路由
-        //     console.log(cur_path)
-        //     let routers = this.$router.options.routes; // 获取路由对象
-        //     console.log(routers)
-        //     for (let i = 0; i < routers.length; i++) {
-        //         let children = routers[i].children;
-        //         if (children) {
-        //             for (let j = 0; j < children.length; j++) {
-        //                 if (children[j].path === cur_path) {
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // },
         methods: {
             defaultLeftNavOpened() {
                 let cur_path = this.$store.state.Sidebar; //获取当前路由
@@ -55,16 +39,13 @@
                        let newRuoter = routers[i]
                         console.log(newRuoter.children[0].path)
                          this.initPath = newRuoter.children[0].path
-                         this.$router.replace(this.initPath)
+                        console.log(this.$route.path)
+                        if(this.$route.path === "/loding"){
+                            this.$router.replace(this.initPath)
+                        }
+
                         break;
                     }
-                    // if (children) {
-                    //     for (let j = 0; j < children.length; j++) {
-                    //         if (children[j].path === cur_path) {
-                    //             break;
-                    //         }
-                    //     }
-                    // }
                 }
             },
         },
