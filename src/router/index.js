@@ -8,6 +8,7 @@ import List from "@/pages/baowei/pages/List.vue"
 import Log from "@/pages/baowei/pages/Log.vue"
 import History from "@/pages/baowei/pages/History.vue"
 import tongji from "@/pages/houqin/pages/tongji.vue"
+import loding from "@/pages/houqin/pages/loding.vue"
 import weigui from "@/pages/houqin/pages/weigui.vue"
 import houqinHome from "@/pages/houqin/houqinHome.vue"
 
@@ -15,6 +16,45 @@ Vue.use(Router)
 
 export default new Router({
     routes: [
+        {
+            path: '/',
+            name: 'houqinHome',
+            redirect:'/loding',
+            component: houqinHome,
+            children: [
+                {
+                    path:'/tongji',
+                    name: '统计信息',
+                    components: {
+                        default: tongji,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/weigui',
+                    name: '违规人员名单',
+                    components: {
+                        default: weigui,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+                {
+                    path: '/loding',
+                    name: '加载页面',
+                    components: {
+                        default: loding,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: false,
+                },
+
+            ]
+        },
         {
             path: '/',
             name: 'Home',
@@ -62,6 +102,7 @@ export default new Router({
                 }
             ]
         },
+<<<<<<< HEAD
         {
             path: '/',
             name: 'houqinHome',
@@ -88,8 +129,8 @@ export default new Router({
                     },
                     menuShow: true,
                 },
+=======
+>>>>>>> 2747c92f1fd175cadf94a6ca79c192bd16f1cbd0
 
-            ]
-        }
     ]
 })
