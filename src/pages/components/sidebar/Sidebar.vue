@@ -25,7 +25,7 @@
         name: "Sidebar",
         data() {
             return {
-                initPath:""
+                initPath:"",
             }
         },
         methods: {
@@ -39,16 +39,13 @@
                        let newRuoter = routers[i]
                         console.log(newRuoter.children[0].path)
                          this.initPath = newRuoter.children[0].path
-                         this.$router.replace(this.initPath)
+                        console.log(this.$route.path)
+                        if(this.$route.path === "/loding"){
+                            this.$router.replace(this.initPath)
+                        }
+
                         break;
                     }
-                    // if (children) {
-                    //     for (let j = 0; j < children.length; j++) {
-                    //         if (children[j].path === cur_path) {
-                    //             break;
-                    //         }
-                    //     }
-                    // }
                 }
             },
         },

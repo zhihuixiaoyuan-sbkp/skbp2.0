@@ -50,7 +50,7 @@ export default new Router({
                         top: Header,
                         aside: Sidebar
                     },
-                    menuShow: true,
+                    menuShow: false,
                 },
 
             ]
