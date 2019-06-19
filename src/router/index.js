@@ -17,8 +17,37 @@ export default new Router({
     routes: [
         {
             path: '/',
+            name: 'houqinHome',
+            redirect:'/tongji',
+            component: houqinHome,
+            children: [
+                {
+                    path:'/tongji',
+                    name: '统计信息',
+                    components: {
+                        default: tongji,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/weigui',
+                    name: '违规人员名单',
+                    components: {
+                        default: weigui,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ]
+        },
+        {
+            path: '/',
             name: 'Home',
-            // redirect: '/Message',
+            redirect: '/Message',
             component: Home,
             children: [
                 {
@@ -62,34 +91,6 @@ export default new Router({
                 }
             ]
         },
-        {
-            path: '/',
-            name: 'houqinHome',
-            // redirect: '/tongji',
-            component: houqinHome,
-            children: [
-                {
-                    path: '/tongji',
-                    name: '统计信息',
-                    components: {
-                        default: tongji,
-                        top: Header,
-                        aside: Sidebar,
-                    },
-                    menuShow: true
-                },
-                {
-                    path: '/weigui',
-                    name: '违规人员名单',
-                    components: {
-                        default: weigui,
-                        top: Header,
-                        aside: Sidebar
-                    },
-                    menuShow: true,
-                },
 
-            ]
-        }
     ]
 })

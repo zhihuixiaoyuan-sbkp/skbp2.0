@@ -8,7 +8,8 @@ Vue.use(Vuex)
 
 /*测试数据*/
 const state = {
-    Sidebar: 'houqinHome'
+    Sidebar:'Home',
+    initPath:""
 }
 
 /*从本地存储读取数据*/
