@@ -3,13 +3,13 @@
         <div class="sider-scroll">
             <!--default-active	当前激活菜单的 index-->
             <!--router	是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转-->
-            <el-menu :default-active="$router.path" router>
+            <el-menu :default-active="$route.path" router>
                 <template v-for="issue in $router.options.routes">
                     <!-- 当该值与router的根路由的name相等时加载相应菜单组 -->
                     <template v-if="issue.name === $store.state.Sidebar">
                         <template v-for="item in issue.children">
                             <el-menu-item :index="item.path"
-                                          :class="$route.path===item.path ? 'is-active':''" v-show="item.menuShow">
+                                          :class="$route.path===item.path?'is-active':''" v-show="item.menuShow">
                                 <span slot="title">{{item.name}}</span>
                             </el-menu-item>
                         </template>
