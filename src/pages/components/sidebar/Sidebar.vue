@@ -6,7 +6,8 @@
             <el-menu :default-active="$route.path" router>
                 <template v-for="issue in $router.options.routes">
                     <!-- 当该值与router的根路由的name相等时加载相应菜单组 -->
-                    <template v-if="issue.name === $store.state.Sidebar">
+                    <!--判断session中的值，pathname与pathname1两个值，pathname1为持久化存在的-->
+                    <template v-if="issue.name === pathname || issue.name === pathname1">
                         <template v-for="item in issue.children">
                             <el-menu-item :index="item.path"
                                           :class="$route.path===item.path?'is-active':''" v-show="item.menuShow">
@@ -25,31 +26,39 @@
         name: "Sidebar",
         data() {
             return {
-                initPath:"",
+                initPath: "",
+                pathname: "",
+                pathname1: sessionStorage.getItem("name") === 'undefined' ? sessionStorage.getItem("name1") : sessionStorage.getItem("name"),//数据持久化，解决侧边栏刷新后消失问题
+                isFirst: true,//浏览器刷新标识，控制页面刷新导致session值变化
             }
         },
         methods: {
             defaultLeftNavOpened() {
-                let cur_path = this.$store.state.Sidebar; //获取当前路由
-                console.log(cur_path)
+                // let cur_path = this.$store.state.Sidebar; //获取当前路由
+                let cur_path = this.$route.query.name //获取后端访问url参数
+                if (this.isFirst || sessionStorage.getItem("name") === 'undefined') {
+                    sessionStorage.setItem("name", cur_path)//将获取到的参数存入session
+                    this.isFirst = false
+                }
+                this.pathname = cur_path
                 let routers = this.$router.options.routes; // 获取路由对象
                 console.log(routers)
-                for (let i = 0; i < routers.length; i++) {
-                    if(cur_path === routers[i].name){
-                       let newRuoter = routers[i]
-                        console.log(newRuoter.children[0].path)
-                         this.initPath = newRuoter.children[0].path
-                        console.log(this.$route.path)
-                        if(this.$route.path === "/loding"){
+                for (let i = 0; i < routers.length; i++) {//遍历所有父路由
+                    if (cur_path === routers[i].name) {//匹配与后端传入角色主页值一致的父路由
+                        let newRuoter = routers[i]
+                        this.initPath = newRuoter.children[0].path
+                        if (this.$route.path === "/loding") { //解决本页面刷新导致回到首页问题
                             this.$router.replace(this.initPath)
                         }
-
                         break;
                     }
                 }
             },
         },
         mounted() {
+            window.addEventListener("beforeunload", () => {  //浏览器刷新之前，将返回参数存入session
+                sessionStorage.setItem("name1", this.pathname1)//浏览器刷新之前，将返回参数存入另外一个值中
+            })
             this.defaultLeftNavOpened();
         },
     }

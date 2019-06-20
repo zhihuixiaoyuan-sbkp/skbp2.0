@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/pages/baowei/Home'
+import home from '@/pages/baowei/Home'
 import Header from "@/pages/components/header/Header.vue"
 import Sidebar from "@/pages/components/sidebar/Sidebar.vue"
 import Message from "@/pages/baowei/pages/Message.vue"
@@ -51,15 +51,15 @@ export default new Router({
                         aside: Sidebar
                     },
                     menuShow: false,
-                },
+                }
 
-            ]
-        },
+            ],
+            },
         {
             path: '/',
-            name: 'Home',
+            name: 'home',
             redirect: '/Message',
-            component: Home,
+            component: home,
             children: [
                 {
                     path: '/Message',
