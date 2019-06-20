@@ -51,9 +51,9 @@
                             <td>{{item.keyPerson.schoolStatus}}</td>
                             <td>
                                 <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
-                                <span class="iconfont operation">&#xe677;</span>
+                                <router-link class="iconfont operation" to="/">&#xe677;</router-link>
                                 <span class="iconfont operation" @click="showModifyModal">&#xe64b;</span>
-                                <span class="iconfont operation">&#xe639;</span>
+                                <span class="iconfont operation" @click="showDelModal">&#xe639;</span>
                             </td>
                         </tr>
                         </tbody>
@@ -61,7 +61,7 @@
                 </el-col>
                 <!--模态框-添加重点人员-->
                 <el-dialog title="添加重点人员"
-                           class="addModal"
+                           class="allModal"
                            width="520px"
                            :visible.sync="addDialog"
                            :close-on-press-escape="false"
@@ -114,18 +114,55 @@
                 </el-dialog>
                 <!--模态框-修改重点人员-->
                 <el-dialog title="修改重点人员"
-                           class="modifyModal"
+                           class="allModal"
                            width="520px"
                            :visible.sync="modifyDialog"
                            :close-on-press-escape="false"
                            :close-on-click-modal="false"
                            :before-close="closeModal">
                     <hr class="boundaryModal">
-
+                    <div class="bodyModal">
+                        <el-form :model="formData">
+                            <el-form-item
+                                    label="添加原因（多个标签用空格分隔）:"
+                                    prop="addReason"
+                            ><br/>
+                                <el-input>
+                                </el-input>
+                                <div class="tags">
+                                    <span>我的添加原因：</span>
+                                    <el-tag></el-tag>
+                                </div>
+                                <div class="tags">
+                                    <span>推荐添加原因：</span>
+                                    <el-tag
+                                            :key="tag"
+                                            v-for="tag in showTags"
+                                            :disable-transitions="false">
+                                        {{tag}}
+                                    </el-tag>
+                                </div>
+                            </el-form-item>
+                        </el-form>
+                    </div>
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
                         <el-button type="primary" @click="submitForm(formData.stuNum,formData.addReason)">提交</el-button>
+                    </div>
+                </el-dialog>
+                <!--模态框-删除重点人员-->
+                <el-dialog title="删除重点人员"
+                           class="allModal"
+                           :visible.sync="delDialog"
+                           width="520px">
+                    <hr class="boundaryModal">
+                    <div class="bodyModaldel">
+                        <span class="tips">是否确认从列表删除该名重点人员？</span>
+                    </div>
+                    <div slot="footer" class="dialog-footer delbutton">
+                        <el-button @click="closeModal">取 消</el-button>
+                        <el-button type="danger" @click="closeModal">删 除</el-button>
                     </div>
                 </el-dialog>
             </el-col>
@@ -143,7 +180,8 @@
                 label: '',
                 select: '',
                 addDialog: false,
-                modifyDialog:false,
+                modifyDialog: false,
+                delDialog: false,
                 // form表单数据
                 formData: {
                     stuNum: '',
@@ -164,15 +202,20 @@
                 this.addDialog = true;
             },
 
+            showModifyModal() {
+                // 展示添加模态框
+                this.modifyDialog = true;
+            },
+
+            showDelModal() {
+                this.delDialog = true;
+            },
+
             closeModal() {
                 // 关闭添加模态框
                 this.addDialog = false;
                 this.modifyDialog = false;
-            },
-
-            showModifyModal() {
-                // 展示添加模态框
-                this.modifyDialog = true;
+                this.delDialog = false;
             },
 
             submitForm(stuNum, addReason) {
@@ -208,12 +251,12 @@
                 // 清空添加原因数组
                 this.addReasonArr = [];
                 // 关闭模态框
-                this.addDialog = false;
+                this.closeModal();
                 return true;
             },
 
             handleInputConfirm() {
-                // 增加添加原因标签
+                // 增加推荐添加原因标签
                 let inputValue = this.formData.addReason;
                 if (inputValue) {
                     // 获取输入的数据
@@ -227,6 +270,7 @@
                             return i == element;
                         });
                         if (index < 0) {
+                            this.addReasonArr.push(element)
                             this.showTags.push(element);
                         }
                     });
@@ -239,20 +283,19 @@
 
             // 选取标签后全部删除 再次选择时会出现之前选中的所有选项
             tagContent(tag) {
-                // input框展示选中的标签
-                this.addReasonArr.push(tag);
-                // 存放去重后的数据
-                let newArr = [];
-                // 数组去重
-                for (var i = 0; i < this.addReasonArr.length; i++) {
-                    if (newArr.indexOf(this.addReasonArr[i]) == -1) {
-                        newArr.push(this.addReasonArr[i]);
+                if (this.addReasonArr.length == 0) {
+                    this.addReasonArr.push(tag);
+                    this.formData.addReason += tag;
+                } else {
+                    this.addReasonArr = this.formData.addReason.split(" ");
+                    for (let i = 0; i < this.addReasonArr.length; i++) {
+                        if (tag === this.addReasonArr[i]) {
+                            return false;
+                        }
                     }
+                    this.formData.addReason = this.formData.addReason + " " + tag + " ";
                 }
-                // 赋值给添加原因的数组，并将其转换为字符串
-                this.addReasonArr = newArr;
-                this.formData.addReason = this.addReasonArr.join(" ");
-            },
+            }
         },
     }
 </script>
@@ -285,24 +328,24 @@
     }
 
     /*模态框*/
-    .addModal >>> .el-dialog {
+    .allModal >>> .el-dialog {
         -webkit-border-radius: 8px;
         -moz-border-radius: 8px;
         border-radius: 8px;
     }
 
     /*头部*/
-    .addModal >>> .el-dialog__header {
+    .allModal >>> .el-dialog__header {
         padding: 13px 17px;
     }
 
-    .addModal >>> .el-dialog__headerbtn {
+    .allModal >>> .el-dialog__headerbtn {
         top: 9px;
         font-size: 20px;
         outline: none;
     }
 
-    .addModal >>> .el-dialog__title {
+    .allModal >>> .el-dialog__title {
         font-size: 22px;
         color: #77A2FB;
     }
@@ -320,23 +363,29 @@
         width: 90%;
     }
 
-    .addModal >>> .el-form-item {
+    .bodyModaldel {
+        margin: 45px 26px 25px;
+        width: 90%;
+        text-align: center;
+    }
+
+    .allModal >>> .el-form-item {
         margin-bottom: 5px;
     }
 
-    .addModal >>> .el-dialog__body {
+    .allModal >>> .el-dialog__body {
         padding: 0;
     }
 
-    .addModal >>> .el-form-item__label {
+    .allModal >>> .el-form-item__label {
         margin: 0;
     }
 
-    .addModal >>> .el-form-item__content {
+    .allModal >>> .el-form-item__content {
         line-height: 0;
     }
 
-    .addModal >>> .el-input__inner {
+    .allModal >>> .el-input__inner {
         height: 30px;
     }
 
@@ -344,14 +393,28 @@
         margin-top: 15px;
     }
 
-    .addModal >>> .el-tag {
+    .allModal >>> .el-tag {
         margin-right: 10px;
         margin-bottom: 15px;
         cursor: pointer;
     }
 
-    .addModal >>> .el-dialog__footer {
+    .allModal >>> .el-dialog__footer {
         padding: 15px 20px;
+    }
+
+    .tips {
+        color: #101010;
+        font-size: 24px;
+    }
+
+    .delbutton {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .allModal >>> .el-button--danger {
+        margin-left: 35px;
     }
 
     /*搜索框*/
@@ -384,7 +447,6 @@
         border: 0;
         border-collapse: collapse;
         text-align: center;
-        color: #808080;
     }
 
     /*表头*/
@@ -407,5 +469,11 @@
     .operation {
         font-size: 25px;
         cursor: pointer;
+        color: #5C5B5C;
+    }
+
+    .operation:hover {
+        color: #457aec;
+        text-decoration: transparent
     }
 </style>
