@@ -19,11 +19,11 @@ export default new Router({
         {
             path: '/',
             name: 'houqinHome',
-            redirect:'/loding',
+            redirect: '/loding',
             component: houqinHome,
             children: [
                 {
-                    path:'/tongji',
+                    path: '/tongji',
                     name: '统计信息',
                     components: {
                         default: tongji,
@@ -102,6 +102,5 @@ export default new Router({
                 }
             ]
         },
-
     ]
 })

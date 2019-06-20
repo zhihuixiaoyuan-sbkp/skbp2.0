@@ -10,7 +10,7 @@
                     <template v-if="issue.name === pathname || issue.name === pathname1">
                         <template v-for="item in issue.children">
                             <el-menu-item :index="item.path"
-                                          :class="$route.path===item.path ? 'is-active':''" v-show="item.menuShow">
+                                          :class="$route.path===item.path?'is-active':''" v-show="item.menuShow">
                                 <span slot="title">{{item.name}}</span>
                             </el-menu-item>
                         </template>

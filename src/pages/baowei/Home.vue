@@ -34,6 +34,20 @@
         mounted() {
             this.getStudentsInfo()//挂载组件
         }
+
+        // methods: {
+        //     getStudentsInfo() {
+        //         axios.get('localhost:8080/personnel/personnelList'),{params: this.ids}
+        //             .then(this.getHomeInfoSucc)
+        //     },
+        //     getHomeInfoSucc(res) {
+        //         this.personList = res.data
+        //         // console.log(res)
+        //     }
+        // },
+        // mounted() {
+        //     this.getStudentsInfo()//挂载组件
+        // }
     }
 </script>
 
