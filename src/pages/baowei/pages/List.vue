@@ -3,7 +3,8 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <!--按钮-添加重点人员-->
-                <button class="addBtn" @click="showAddModal"><span class="iconfont add">&#xe64f;</span>&nbsp;添加重点人员
+                <button class="addBtn" @click="showAddModal">
+                    <span class="iconfont add">&#xe64f;</span>&nbsp;添加重点人员
                 </button>
                 <!--搜索部分-->
                 <div class="search">
@@ -18,7 +19,7 @@
                     </el-input>
                 </div>
                 <!--分界线-->
-                <hr class="list-boundary">
+                <hr class="boundary">
                 <!--主体-->
                 <el-col :span="24" class="table-wrapper">
                     <!--表格-->
@@ -40,7 +41,6 @@
                         <!--内容-->
                         <tbody v-for="(item,index) in list">
                         <tr class="body">
-                            <!--<td>1</td>-->
                             <td>{{index+1}}</td>
                             <td>{{item.keyPerson.stuNum}}</td>
                             <td>{{item.keyPerson.name}}</td>
@@ -49,6 +49,7 @@
                             <td>{{item.keyPerson.class}}</td>
                             <td>{{item.keyPerson.addReason}}</td>
                             <td>{{item.keyPerson.schoolStatus}}</td>
+                            <!--操作-->
                             <td>
                                 <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
                                 <router-link class="iconfont operation" to="/">&#xe677;</router-link>
@@ -69,11 +70,11 @@
                            :before-close="closeModal">
                     <hr class="boundaryModal">
                     <div class="bodyModal">
+                        <!--表单-->
                         <el-form :model="formData">
                             <el-form-item
                                     label="学号: "
-                                    prop="stuNum"
-                            ><br/>
+                                    prop="stuNum">
                                 <el-input type="stuNum"
                                           ref="stuNum"
                                           v-model="formData.stuNum"
@@ -84,16 +85,15 @@
                             </el-form-item>
                             <el-form-item
                                     label="添加原因（多个标签用空格分隔）:"
-                                    prop="addReason"
-                            ><br/>
+                                    prop="addReason">
                                 <el-input
                                         type="addReason"
                                         ref="addReason"
                                         v-model="formData.addReason"
-                                        @keyup.enter.native="handleInputConfirm"
-                                >
+                                        @keyup.enter.native="handleInputConfirm">
                                 </el-input>
                             </el-form-item>
+                            <!--标签-->
                             <div class="tags">
                                 <span>推荐添加原因：</span>
                                 <el-tag
@@ -122,17 +122,19 @@
                            :before-close="closeModal">
                     <hr class="boundaryModal">
                     <div class="bodyModal">
+                        <!--表单-->
                         <el-form :model="formData">
                             <el-form-item
                                     label="添加原因（多个标签用空格分隔）:"
-                                    prop="addReason"
-                            ><br/>
+                                    prop="addReason">
                                 <el-input>
                                 </el-input>
+                                <!--上次使用的标签-->
                                 <div class="tags">
                                     <span>我的添加原因：</span>
                                     <el-tag></el-tag>
                                 </div>
+                                <!--所有标签-->
                                 <div class="tags">
                                     <span>推荐添加原因：</span>
                                     <el-tag
@@ -157,6 +159,7 @@
                            :visible.sync="delDialog"
                            width="520px">
                     <hr class="boundaryModal">
+                    <!--提示文本-->
                     <div class="bodyModaldel">
                         <span class="tips">是否确认从列表删除该名重点人员？</span>
                     </div>
@@ -187,9 +190,9 @@
                     stuNum: '',
                     addReason: ''
                 },
-                // 添加原因数组
+                // 记录添加原因
                 addReasonArr: [],
-                // 展示标签数组
+                // 全部标签
                 showTags: ["晚归", "夜不归宿", "蜗居"],
             }
         },
@@ -203,11 +206,12 @@
             },
 
             showModifyModal() {
-                // 展示添加模态框
+                // 展示修改模态框
                 this.modifyDialog = true;
             },
 
             showDelModal() {
+                // 展示删除模态框
                 this.delDialog = true;
             },
 
@@ -281,18 +285,21 @@
                 this.submitForm(stuNum, inputValue);
             },
 
-            // 选取标签后全部删除 再次选择时会出现之前选中的所有选项
             tagContent(tag) {
+                // 选择标签
                 if (this.addReasonArr.length == 0) {
+                    // 记录的添加原因为空
                     this.addReasonArr.push(tag);
                     this.formData.addReason += tag;
                 } else {
+                    // 将已有的addReasonArr拆分数组存放至addReasonArr判断tag是否重复
                     this.addReasonArr = this.formData.addReason.split(" ");
                     for (let i = 0; i < this.addReasonArr.length; i++) {
                         if (tag === this.addReasonArr[i]) {
                             return false;
                         }
                     }
+                    // 拼接addReason字符串
                     this.formData.addReason = this.formData.addReason + " " + tag + " ";
                 }
             }
@@ -311,9 +318,9 @@
     }
 
     .content {
-        min-width: 990px;
         margin-left: 230px;
         margin-right: 50px;
+        min-width: 990px;
     }
 
     /*人员添加*/
@@ -325,6 +332,66 @@
         font-weight: bold;
         border: 0;
         background: transparent;
+    }
+
+    /*搜索框*/
+    .search {
+        float: right;
+        margin-top: 15px;
+        margin-right: 20px;
+    }
+
+    .input-with-select {
+        width: 370px;
+    }
+
+    .search >>> .el-select {
+        width: 90px;
+    }
+
+    /*分界线*/
+    .boundary {
+        margin-top: 7px;
+        width: 100%;
+        height: 3px;
+        border: 0;
+        background: #BBBBBB;
+    }
+
+    /*表格*/
+    .list {
+        width: 100%;
+        border: 0;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    /*表头*/
+    .header {
+        height: 40px;
+        font-size: 18px;
+        color: #4D4C4D;
+    }
+
+    /*主体*/
+    .body {
+        height: 60px;
+        border-left: 1px solid #BBBBBB;
+        border-right: 1px solid #BBBBBB;
+        font-size: 20px;
+        color: #5C5B5C;
+    }
+
+    /*操作*/
+    .operation {
+        font-size: 25px;
+        cursor: pointer;
+        color: #5C5B5C;
+    }
+
+    .operation:hover {
+        color: #457aec;
+        text-decoration: transparent
     }
 
     /*模态框*/
@@ -415,65 +482,5 @@
 
     .allModal >>> .el-button--danger {
         margin-left: 35px;
-    }
-
-    /*搜索框*/
-    .search {
-        float: right;
-        margin-top: 15px;
-        margin-right: 20px;
-    }
-
-    .input-with-select {
-        width: 370px;
-    }
-
-    .search >>> .el-select {
-        width: 90px;
-    }
-
-    /*分界线*/
-    .list-boundary {
-        margin-top: 7px;
-        width: 100%;
-        height: 3px;
-        border: 0;
-        background: #BBBBBB;
-    }
-
-    /*表格*/
-    .list {
-        width: 100%;
-        border: 0;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    /*表头*/
-    .header {
-        height: 40px;
-        font-size: 18px;
-        color: #4D4C4D;
-    }
-
-    /*主体*/
-    .body {
-        height: 60px;
-        border-left: 1px solid #BBBBBB;
-        border-right: 1px solid #BBBBBB;
-        font-size: 20px;
-        color: #5C5B5C;
-    }
-
-    /*操作*/
-    .operation {
-        font-size: 25px;
-        cursor: pointer;
-        color: #5C5B5C;
-    }
-
-    .operation:hover {
-        color: #457aec;
-        text-decoration: transparent
     }
 </style>
