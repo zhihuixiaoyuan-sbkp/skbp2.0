@@ -18,7 +18,7 @@
     }
 
     a:hover {
-        color: lightpink;
+        color: #25309a;
         text-decoration: transparent
     }
 
