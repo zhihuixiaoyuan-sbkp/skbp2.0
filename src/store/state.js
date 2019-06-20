@@ -1,7 +1,6 @@
 // 状态对象
 
 export default {
-        Sidebar:'houqinHome',
+        Sidebar:"houqinHome",
         initPath:"",
-
 }
