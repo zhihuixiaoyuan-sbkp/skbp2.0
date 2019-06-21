@@ -33,7 +33,7 @@
                             <td>性别</td>
                             <td>学院</td>
                             <td>专业班级</td>
-                            <td>添加原因</td>
+                            <!--<td>添加原因</td>-->
                             <td>在校状态</td>
                             <td>更多操作</td>
                         </tr>
@@ -42,17 +42,17 @@
                         <tbody v-for="(item,index) in list">
                         <tr class="body">
                             <td>{{index+1}}</td>
-                            <td>{{item.keyPerson.stuNum}}</td>
-                            <td>{{item.keyPerson.name}}</td>
-                            <td>{{item.keyPerson.gender}}</td>
-                            <td>{{item.keyPerson.college}}</td>
-                            <td>{{item.keyPerson.class}}</td>
-                            <td>{{item.keyPerson.addReason}}</td>
-                            <td>{{item.keyPerson.schoolStatus}}</td>
+                            <td>{{item.stuNum}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.gender}}</td>
+                            <td>{{item.college}}</td>
+                            <td>{{item.proClass}}</td>
+                            <!--<td>{{item.addReason}}</td>-->
+                            <td>{{item.schoolStatus}}</td>
                             <!--操作-->
                             <td>
                                 <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
-                                <router-link class="iconfont operation" to="/">&#xe677;</router-link>
+                                <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
                                 <span class="iconfont operation" @click="showModifyModal">&#xe64b;</span>
                                 <span class="iconfont operation" @click="showDelModal">&#xe639;</span>
                             </td>
@@ -174,8 +174,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
-
     export default {
         name: "List",
         data() {
@@ -421,7 +419,6 @@
     .boundaryModal {
         margin: 0 13px;
         width: 95%;
-        background: #BBBBBB;
     }
 
     /*表单部分*/
