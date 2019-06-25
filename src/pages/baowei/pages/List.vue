@@ -15,7 +15,7 @@
                             <el-option label="姓名" value="2"></el-option>
                             <el-option label="学院" value="3"></el-option>
                         </el-select>
-                        <el-button slot="append" icon="el-icon-search"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="searchStu"></el-button>
                     </el-input>
                 </div>
                 <!--分界线-->
@@ -23,7 +23,7 @@
                 <!--主体-->
                 <el-col :span="24" class="table-wrapper">
                     <!--表格-->
-                    <table class="list">
+                    <table class="list" id="table">
                         <!--表头-->
                         <thead>
                         <tr class="header">
@@ -33,7 +33,7 @@
                             <td>性别</td>
                             <td>学院</td>
                             <td>专业班级</td>
-                            <!--<td>添加原因</td>-->
+                            <td>添加原因</td>
                             <td>在校状态</td>
                             <td>更多操作</td>
                         </tr>
@@ -45,19 +45,29 @@
                             <td>{{item.stuNum}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.gender}}</td>
-                            <td>{{item.college}}</td>
+                            <el-tooltip class="item" effect="light" :content=item.college placement="right"><td>{{item.college}}</td></el-tooltip>
                             <td>{{item.proClass}}</td>
-                            <!--<td>{{item.addReason}}</td>-->
+                            <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right"><td>{{item.reasonNames}}</td></el-tooltip>
                             <td>{{item.schoolStatus}}</td>
                             <!--操作-->
                             <td>
                                 <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
                                 <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
-                                <span class="iconfont operation" @click="showModifyModal">&#xe64b;</span>
-                                <span class="iconfont operation" @click="showDelModal">&#xe639;</span>
+                                <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
+                                <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                             </td>
                         </tr>
                         </tbody>
+                        <tfoot class="foot">
+                        <!--分页-->
+                        <div class="block">
+                            <el-pagination layout="prev, pager, next"
+                                           @current-change="pageNum"
+                                           :total=totalNum
+                                           background>
+                            </el-pagination>
+                        </div>
+                        </tfoot>
                     </table>
                 </el-col>
                 <!--模态框-添加重点人员-->
@@ -79,7 +89,6 @@
                                           ref="stuNum"
                                           v-model="formData.stuNum"
                                           autocomplete="off"
-                                          id="stuNum"
                                           @keyup.enter.native="submitForm(formData.stuNum,formData.addReason)"
                                 ></el-input>
                             </el-form-item>
@@ -96,12 +105,11 @@
                             <!--标签-->
                             <div class="tags">
                                 <span>推荐添加原因：</span>
-                                <el-tag
-                                        :key="tag"
-                                        v-for="tag in showTags"
+                                <el-tag v-for="tag in showTags"
+                                        :key="tag.id"
                                         :disable-transitions="false"
-                                        @click="tagContent(tag)">
-                                    {{tag}}
+                                        @click="tagContent(tag.id,tag.name)">
+                                    {{tag.name}}
                                 </el-tag>
                             </div>
                         </el-form>
@@ -125,23 +133,45 @@
                         <!--表单-->
                         <el-form :model="formData">
                             <el-form-item
+                                    label="学号: "
+                                    prop="stuNum">
+                                <el-input type="stuNum"
+                                          id="stuNum"
+                                          ref="stuNum"
+                                          v-model="formData.stuNum"
+                                          autocomplete="off"
+                                          disabled
+                                          @keyup.enter.native="modifyForm(formData.addReason)"
+                                ></el-input>
+                            </el-form-item>
+                            <el-form-item
                                     label="添加原因（多个标签用空格分隔）:"
                                     prop="addReason">
-                                <el-input>
-                                </el-input>
+                                <el-input type="stuNum"
+                                          id="addReason"
+                                          ref="addReason"
+                                          v-model="formData.addReason"
+                                          autocomplete="off"
+                                          @keyup.enter.native="handleInputConfirm"
+                                ></el-input>
                                 <!--上次使用的标签-->
                                 <div class="tags">
                                     <span>我的添加原因：</span>
-                                    <el-tag></el-tag>
+                                    <el-tag v-for="historytag in historyAddReason"
+                                            :key="historytag"
+                                            :disable-transitions="false"
+                                            type="info"
+                                    >{{historytag}}
+                                    </el-tag>
                                 </div>
                                 <!--所有标签-->
                                 <div class="tags">
                                     <span>推荐添加原因：</span>
-                                    <el-tag
-                                            :key="tag"
-                                            v-for="tag in showTags"
-                                            :disable-transitions="false">
-                                        {{tag}}
+                                    <el-tag v-for="tag in showTags"
+                                            :key="tag.id"
+                                            :disable-transitions="false"
+                                            @click="tagContent(tag.id,tag.name)">
+                                        {{tag.name}}
                                     </el-tag>
                                 </div>
                             </el-form-item>
@@ -150,13 +180,15 @@
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
-                        <el-button type="primary" @click="submitForm(formData.stuNum,formData.addReason)">提交</el-button>
+                        <el-button type="primary" @click="modifyForm(formData.addReason)">提交</el-button>
                     </div>
                 </el-dialog>
                 <!--模态框-删除重点人员-->
                 <el-dialog title="删除重点人员"
                            class="allModal"
                            :visible.sync="delDialog"
+                           :close-on-press-escape="false"
+                           :close-on-click-modal="false"
                            width="520px">
                     <hr class="boundaryModal">
                     <!--提示文本-->
@@ -165,7 +197,7 @@
                     </div>
                     <div slot="footer" class="dialog-footer delbutton">
                         <el-button @click="closeModal">取 消</el-button>
-                        <el-button type="danger" @click="closeModal">删 除</el-button>
+                        <el-button type="danger" @click="delStu">删 除</el-button>
                     </div>
                 </el-dialog>
             </el-col>
@@ -174,12 +206,21 @@
 </template>
 
 <script>
+    import axios from 'axios'
+    import qs from 'qs'
+
     export default {
         name: "List",
         data() {
             return {
+                // 下拉框
                 label: '',
                 select: '',
+                // 搜索后的数据表
+                stuList: [],
+                // 分页
+                currentPage: 1,
+                // 模态框
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -190,38 +231,80 @@
                 },
                 // 记录添加原因
                 addReasonArr: [],
-                // 全部标签
-                showTags: ["晚归", "夜不归宿", "蜗居"],
+                addReasonId: [],
+                // 历史添加原因标签
+                historyAddReason: [],
+                // 全部标签（对象数组）
+                showTags: [],
+                modifyNum: '',
+                // 删除id号
+                delNum: '',
             }
         },
         props: {
-            list: Array
+            list: Array,
+            totalNum: Number
         },
         methods: {
+            // 获取关键词搜索的数据
+            searchStu() {
+
+                if (this.select === '1') {
+                    // console.log('学号');
+                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/stu_num/' + this.label)
+                        .then(this.searchList)
+                } else if (this.select === '2') {
+                    // console.log('姓名');
+                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/name/' + this.label)
+                        .then(this.searchList)
+                } else if (this.select === '3') {
+                    console.log(this.label);
+                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/college/' + this.label)
+                        .then(this.searchList)
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '请选择要查找的信息类型',
+                        type: 'error'
+                    });
+                }
+            },
+
+            // 处理搜索的数据并跳转至搜索页面
+            searchList(res) {
+                res = res.data;
+                const data = res.personnelList;
+                for (let i = 0; i < data.length; i++) {
+                    data[i].reasonNames = data[i].reasonNames.join(' ');
+                    if (data[i].schoolStatus === 0) {
+                        data[i].schoolStatus = '是'
+                    } else {
+                        data[i].schoolStatus = '否'
+                    }
+                }
+                this.stuList = data;
+                this.$router.push({
+                    name: '搜索结果',
+                    params: {
+                        select: this.select,
+                        label: this.label,
+                        list: this.stuList,
+                        totalNum: res.totalNum,
+                    }
+                })
+            },
+
+            // 展示添加模态框
             showAddModal() {
-                // 展示添加模态框
+                if (this.showTags.length === 0) {
+                    axios.get('http://172.16.211.151/sbkp/personnel/reasons')
+                        .then(this.getTagsInfoSucc);
+                }
                 this.addDialog = true;
             },
 
-            showModifyModal() {
-                // 展示修改模态框
-                this.modifyDialog = true;
-            },
-
-            showDelModal() {
-                // 展示删除模态框
-                this.delDialog = true;
-            },
-
-            closeModal() {
-                // 关闭添加模态框
-                this.addDialog = false;
-                this.modifyDialog = false;
-                this.delDialog = false;
-            },
-
+            // 添加-提交操作
             submitForm(stuNum, addReason) {
-                // 添加操作
                 // 提交表单--点击提交or学号input框获得焦点时回车
                 // 判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
                 var reg = /^[0-9]+.?[0-9]*$/;
@@ -247,60 +330,183 @@
                     this.$message.error('学号必须为数字值');
                     return false;
                 }
+                addReason = this.addReasonId.join(",");
+                axios.post('http://172.16.211.151/sbkp/personnel/postPersonal', qs.stringify({
+                        studentNum: stuNum,
+                        reasonIds: addReason
+                    }
+                )).then(this.changList);
                 // 清空学号、添加原因的数值
                 this.formData.stuNum = '';
                 this.formData.addReason = '';
                 // 清空添加原因数组
-                this.addReasonArr = [];
+                this.addReasonId = [];
                 // 关闭模态框
                 this.closeModal();
                 return true;
             },
 
+            // 展示修改模态框
+            showModifyModal(id) {
+                this.modifyNum = id;
+                //获取学生学号及添加原因的数据传入模态框
+                for (let i = 0; i < this.list.length; i++) {
+                    if (id === this.list[i].id) {
+                        this.formData.stuNum = this.list[i].stuNum;
+                        this.formData.addReason = this.list[i].reasonNames;
+                    }
+                }
+                this.historyAddReason = this.formData.addReason.split(" ");
+                if (this.showTags.length === 0) {
+                    axios.get('http://172.16.211.151/sbkp/personnel/reasons')
+                        .then(this.getTagsInfoSucc);
+                }
+                this.modifyDialog = true;
+            },
+
+            // 修改-提交操作
+            modifyForm(addReason) {
+                if (addReason === "") {
+                    // 判断添加原因是否为空
+                    this.$nextTick(() => {
+                        this.$refs.addReason.focus()
+                    });
+                    this.$message.error('添加原因不能为空');
+                    return false;
+                }
+                this.addReasonArr = addReason.split(" ");
+                this.addReasonId = [];
+                for (let i = 0; i < this.addReasonArr.length; i++) {
+                    for (let j = 0; j < this.showTags.length; j++) {
+                        if (this.addReasonArr[i] === this.showTags[j].name) {
+                            console.log(this.showTags[j].id);
+                            this.addReasonId.push(this.showTags[j].id)
+                        }
+                    }
+                }
+                addReason = this.addReasonId.join(",");
+                axios.post('http://172.16.211.151/sbkp/personnel/putReasons', qs.stringify({
+                        userId: 1,
+                        personnelId: this.modifyNum,
+                        reasonIds: addReason
+                    }
+                )).then(this.changList);
+                // 关闭模态框
+                this.closeModal();
+            },
+
+            // 展示删除模态框
+            showDelModal(id) {
+                this.delNum = id;
+                this.delDialog = true;
+            },
+
+            // 删除-提交操作
+            delStu() {
+                console.log(this.delNum);
+                axios.get('http://172.16.211.151/sbkp/personnel/deletePersonal', {
+                    params: {
+                        personnelId: this.delNum
+                    }
+                }).then(this.changList).catch(function () {
+                    console.log('123')
+                });
+                // 关闭模态框
+                this.closeModal();
+            },
+
+            // 关闭添加模态框
+            closeModal() {
+                // 添加模态框数据清除
+                this.formData.stuNum = '';
+                this.formData.addReason = '';
+                // 删除模态框数据清除
+                this.delNum = '';
+                // 关闭添加模态框
+                this.addDialog = false;
+                this.modifyDialog = false;
+                this.delDialog = false;
+            },
+
+            // 处理标签数据并赋值
+            getTagsInfoSucc(res) {
+                res = res.data;
+                const data = res.reasons;
+                this.showTags = data;
+            },
+
+            // 增加标签
             handleInputConfirm() {
-                // 增加推荐添加原因标签
                 let inputValue = this.formData.addReason;
+                let tags = [];
+                // 新标签数组
+                let newTag = {};
+                var _this = this;
                 if (inputValue) {
                     // 获取输入的数据
-                    var values = inputValue.split(" ").filter(item => {
-                        return item != '' && item != undefined;
+                    let values = inputValue.split(" ").filter(item => {
+                        return item !== '' && item !== undefined;
                     });
                     // 循环数据进行对比
                     values.forEach(element => {
+                        // 取出对象中的name
+                        for (let i = 0; i < this.showTags.length; i++) {
+                            tags[i] = this.showTags[i].name
+                        }
                         // 获取索引位置，获取不到添加进数组
-                        var index = this.showTags.findIndex(i => {
-                            return i == element;
+                        let index = tags.findIndex(i => {
+                            return i === element;
                         });
                         if (index < 0) {
-                            this.addReasonArr.push(element)
-                            this.showTags.push(element);
+                            axios.post('http://172.16.211.151/sbkp/personnel/postDefinedReason', qs.stringify({
+                                    reasonName: element
+                                }
+                            )).then(function (res) {
+                                newTag = {
+                                    id: res.data.id,
+                                    name: element
+                                };
+                                _this.showTags.push(newTag);
+                                _this.addReasonArr.push(element);
+                                _this.addReasonId.push(res.data.id);
+                                this.changList();
+                            });
                         }
                     });
                 }
-                // 获取学号数据
-                let stuNum = $("#stuNum").val();
-                // 提交表单
-                this.submitForm(stuNum, inputValue);
             },
 
-            tagContent(tag) {
-                // 选择标签
-                if (this.addReasonArr.length == 0) {
+            // 选择标签
+            tagContent(id, name) {
+                let addReasonArr = [];
+                addReasonArr = this.formData.addReason.split(" ");
+                if (addReasonArr.length === 0) {
                     // 记录的添加原因为空
-                    this.addReasonArr.push(tag);
-                    this.formData.addReason += tag;
+                    this.addReasonId.push(id);
+                    this.formData.addReason += name;
                 } else {
-                    // 将已有的addReasonArr拆分数组存放至addReasonArr判断tag是否重复
-                    this.addReasonArr = this.formData.addReason.split(" ");
-                    for (let i = 0; i < this.addReasonArr.length; i++) {
-                        if (tag === this.addReasonArr[i]) {
+                    // name是否重复
+                    for (let i = 0; i < addReasonArr.length; i++) {
+                        if (name === addReasonArr[i]) {
                             return false;
                         }
                     }
                     // 拼接addReason字符串
-                    this.formData.addReason = this.formData.addReason + " " + tag + " ";
+                    this.formData.addReason = this.formData.addReason + " " + name;
+                    this.addReasonId.push(id);
                 }
-            }
+            },
+
+            // 获取当前页码
+            pageNum(currentPage) {
+                this.currentPage = currentPage;
+                this.$emit('pageNum', this.currentPage);
+            },
+
+            // 操作完成更新数据表
+            changList() {
+                this.$emit('getStudentsInfo', this.currentPage);
+            },
         },
     }
 </script>
@@ -311,8 +517,19 @@
         cursor: pointer;
     }
 
+    table {
+        /*width:30em;*/
+        table-layout: fixed;
+    }
+
     td {
+        width: 100%;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         border-bottom: 1px solid #BBBBBB;
+        outline: none;
     }
 
     .content {
@@ -335,7 +552,7 @@
     /*搜索框*/
     .search {
         float: right;
-        margin-top: 15px;
+        margin-top: 13px;
         margin-right: 20px;
     }
 
@@ -380,6 +597,10 @@
         color: #5C5B5C;
     }
 
+    .item {
+        margin: 4px;
+    }
+
     /*操作*/
     .operation {
         font-size: 25px;
@@ -390,6 +611,10 @@
     .operation:hover {
         color: #457aec;
         text-decoration: transparent
+    }
+
+    .block {
+        margin: 20px 630px 0;
     }
 
     /*模态框*/
