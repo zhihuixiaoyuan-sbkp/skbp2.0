@@ -1,8 +1,8 @@
 <template>
-    <div class="main">
+    <div class="main" v-if="isOk">
         <div v-if="isView">
             <div class="head_box">
-                <span class="text">更新时间: 2019/06/04 13:00</span>
+                <span class="text">更新时间: {{(new Date()).toLocaleString('chinese', { hour12: false })}}</span>
                 <div class="btn">
                     <el-button type="success" @click="clickView">切换表格</el-button>
                 </div>
@@ -21,12 +21,15 @@
         <div v-else>
             <div>
                 <div class="head_box">
-                    <span class="text">更新时间: 2019/06/04 13:00</span>
-                    <div class="btn2">
+                    <span class="text">更新时间: {{(new Date()).toLocaleString('chinese', { hour12: false })}}</span>
+                    <label for="input6" class="btn2">
                         <svg class="icon icon-back icons" aria-hidden="true">
                             <use xlink:href="#icon-daoChu"></use>
                         </svg>
-                    </div>
+                        <form action="" method="get">
+                            <input type="submit" id="input6" hidden @click="exportAllCollege('/sbkp/census/exportAllCollege')">
+                        </form>
+                    </label>
                     <div class="btn">
                         <el-button type="success" @click="clickView">切换图表</el-button>
                     </div>
@@ -46,7 +49,7 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="personCount"
+                            prop="key_personnel"
                             label="重点人员人数"
                             width="150">
                     </el-table-column>
@@ -61,7 +64,7 @@
                         </el-table-column>
                         <el-table-column
                                 align="center"
-                                prop="undisposed"
+                                prop="untreated"
                                 width="200"
                                 label="未处理">
                         </el-table-column>
@@ -74,42 +77,87 @@
 
 <script>
     import bar from '../../houqin/components/charts/charts'
+    import axios from "axios"
+    import qs from "qs"
 
     export default {
         name: "xuesheng",
+        components: {
+            bar
+        },
+        methods: {
+            /*图表与表格切换*/
+            clickView() {
+                this.isView = !this.isView
+            },
+
+            /*请求学生处学院信息统计数据*/
+            getStudentsCensusInfo() {
+                axios.post(this.api + "/sbkp/census/getStudentsCensusInfo")
+                    .then(this.getStudentsCensusInfoCallback)
+                    .catch(function () {
+                        console.log("出错了")
+                    })
+            },
+
+            /*请求学生处学员信息统计数据回调函数*/
+            getStudentsCensusInfoCallback(res) {
+                let data = res.data
+
+                console.log(data)
+                let arr = data.msg
+                this.tableData =arr
+                let len = arr.length
+                /*//数据是否为空*/
+                if (arr !== "null") {
+                    for (let i = 0; i < len; i++) {
+                        this.xAxis.data[i] = arr[i].college
+                    }
+                    for (let j = 0; j < 3; j++) {
+                        for (let i = 0; i < len; i++) {
+                            if (j === 0) {
+                                this.series[j].data[i] = arr[i].key_personnel
+                            } else if (j === 1) {
+                                this.series[j].data[i] = arr[i].processed
+                            } else {
+                                this.series[j].data[i] = arr[i].untreated
+                            }
+
+                        }
+                        this.isOk = true
+                    }
+                    console.log(this.series[2].data)
+
+                }
+
+            },
+
+            /*学生处导出数据请求*/
+            exportAllCollege(url){
+                document.getElementsByTagName("form")[0].action = this.api + url
+            }
+        },
+        mounted() {
+            /*请求数据初始化页面*/
+            this.getStudentsCensusInfo()
+        },
         data() {
             return {
-                isView:true,//切换表格/图表
-                tableData: [
+                isOk:false,
+                isView: true,//切换表格/图表
+                tableData: [//接口数据模型
                     {
-                        college: "计算机与软件工程学院",
-                        personCount: 60,
-                        processed: 30,
-                        undisposed: 30
+                        college: "",
+                        key_personnel: '',
+                        processed: '',
+                        untreated: ''
                     },
-                    {
-                        college: "艺术设计学院",
-                        personCount: 80,
-                        processed: 40,
-                        undisposed: 40
-                    },
-                    {
-                        college: "机械工程学院",
-                        personCount: 100,
-                        processed: 30,
-                        undisposed: 70
-                    },
-                    {
-                        college: "管理工程学院",
-                        personCount: 90,
-                        processed: 40,
-                        undisposed: 50
-                    }
+
 
                 ],
                 a: '统计数据',
                 b: '人数',
-                c: ['管理工程学院', '计算机与软件工程学院', '大数据与人工智能学院', '艺术设计学院', '机械工程学院', '通识教育与外国语学院',"电气与电子工程学院"],
+                c: [],
                 d: '统计',
                 e: [],
                 s: {},
@@ -130,13 +178,13 @@
                 },
                 // X轴
                 xAxis: {
-                    data: ['管理工程学院', '计算机与软件工程学院', '大数据与人工智能学院', '艺术设计学院', '机械工程学院', '通识教育与外国语学院',"电气与电子工程学院"],
+                    data: [],
                     splitLine: {
                         show: false
                     },
                     axisLabel: {
-                        interval:0,
-                        rotate:-15
+                        interval: 0,
+                        rotate: -12
                     }
                 },
                 // Y轴
@@ -147,33 +195,25 @@
                         name: '重点人员人数',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [20, 50, 30, 10, 70, 80,30],
+                        data: [],
 
                     },
                     {
                         name: '报警通知已处理',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [30, 50, 30, 10, 40, 50,40]
+                        data: []
                     },
                     {
                         name: '报警通知未处理',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [20, 50, 40, 10, 20, 30,50]
+                        data: []
                     },
 
                 ],
             }
         },
-        components: {
-            bar
-        },
-        methods:{
-            clickView(){
-                this.isView = !this.isView
-            }
-        }
     }
 </script>
 

@@ -26,7 +26,7 @@
                 default:""
             },
             count:{//重点人员人数
-               type:String,
+               type:Number,
                 default:""
             }
         },

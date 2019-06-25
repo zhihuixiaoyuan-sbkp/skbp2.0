@@ -8,6 +8,7 @@
                         type="date"
                         placeholder="选择日期"
                         @change="selectDate"
+                        value-format="yyyy-MM-dd"
                 >
                 </el-date-picker>
             </div>
@@ -22,22 +23,28 @@
                     </el-option>
                 </el-select>
             </div>
-            <label class="btn2" for="inputid4" @click="exportTable('/sbkp/census/exportAllRulesList',0)" v-if="isSearch">
+
+            <label class="btn2" for="inputid4" v-if="isSearch">
                 <svg class="icon icon-back icons" aria-hidden="true">
                     <use xlink:href="#icon-daoChu"></use>
                 </svg>
                 <form action="" method="get">
-                    <input id="inputid4" type="submit" hidden/>
+                    <input id="inputid4" type="submit" hidden @click="exportInfo" />
                 </form>
+
             </label>
-            <label class="btn2" for="inputid5" @click="exportTable('/sbkp/census/getRulesListBySearch',0)"  v-else>
+            <label class="btn2" for="inputid5" v-else>
                 <svg class="icon icon-back icons" aria-hidden="true">
                     <use xlink:href="#icon-daoChu"></use>
                 </svg>
                 <form action="" method="get">
-                    <input id="inputid5" type="submit" hidden/>
+                    <input  type="text" v-model="valueTime" name="date" hidden />
+                    <input  type="text" hidden v-model="value"  name="college"/>
+                    <input id="inputid5" type="submit" hidden @click="exportInfo" />
                 </form>
+
             </label>
+
             <div style="display: inline-block;margin-left: 20px">
                 <el-button icon="el-icon-search" @click="searchInfo">查询</el-button>
             </div>
@@ -125,23 +132,23 @@
             return {
                 isSearch: true,//是否搜索
                 options: [{
-                    value: '选项1',
+                    value: '计算机与软件工程学院',
                     label: '计算机与软件工程学院'
                 }, {
-                    value: '选项2',
+                    value: '机械工程学院',
                     label: '机械工程学院'
                 }, {
-                    value: '选项3',
+                    value: '艺术设计学院',
                     label: '艺术设计学院'
                 }, {
-                    value: '选项4',
+                    value: '大数据与人工智能学院',
                     label: '大数据与人工智能学院'
                 }, {
-                    value: '选项5',
+                    value: '通识教育与外国语学院',
                     label: '通识教育与外国语学院'
                 },
                     {
-                        value: '选项6',
+                        value: '管理工程学院',
                         label: '管理工程学院'
                     }],
                 value: '',//选择学院值
@@ -168,19 +175,20 @@
         },
         methods: {
 
+            /*导出数据提示框*/
+
             /*提示框*/
             open() {//element模态框
                 this.$message({
                     type: 'warning',
-                    message:"请选择对应筛选条件"
+                    message: "请选择对应筛选条件"
                 });
             },
             /*搜索异步请求*/
             searchInfo() {
                 if (this.value === "" || this.valueTime === "") {
                     this.open()
-                }
-                else{
+                } else {
                     this.isSearch = true
                     let searchParams = {
                         curPage: this.curPage,
@@ -188,20 +196,29 @@
                         date: this.valueTime
                     }
                     axios.post(this.api + "/sbkp/census/getRulesListBySearch", qs.stringify(searchParams))
-                        .then(this.getRulesListInfoCallback)
+                        .then(this.getSearchRulesListInfoCallback)
                         .catch(function () {
                             this.isSearch = false
                         })
                 }
 
             },
+            /*搜索回调函数*/
+            getSearchRulesListInfoCallback(res) {
+                this.isSearch = false
+                let data = res.data
+                console.log(data)
+                this.tableData = data.msg.lists.reverse()
+                this.totalCount = data.msg.totalCount
+                this.curPage = data.msg.curPage
 
+            },
             /*表格导出*/
-            exportTable(url, num) {
-                if(this.isSearch){
-
-                }else{
-                    document.getElementsByTagName("form")[0].action = this.api + url
+            exportInfo() {
+                if (this.isSearch) {
+                    document.getElementsByTagName("form")[0].action = this.api + "/sbkp/census/exportAllRulesList"
+                } else {
+                    document.getElementsByTagName("form")[0].action = this.api + "/sbkp/census/exportRulesListBySearch"
                 }
 
             },
@@ -214,7 +231,9 @@
 
             /*选择时间进行筛选*/
             selectDate() {
-                console.log(new Date(this.valueTime).toLocaleDateString().split('/').join('-'))
+                // this.valueTime = new Date(this.valueTime)
+
+                console.log(this.valueTime)
             },
 
             /*获取违规名单异步请求*/

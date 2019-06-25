@@ -65,27 +65,28 @@
             </el-tabs>
         </div>
         <!--<label for="radio" @click="ids.status = 1">-->
-            <!--<label class="lb" v-if="!(ids.status === 1)"></label>-->
-            <!--<svg class="icon icon-back icons log_span" aria-hidden="true" v-else>-->
-                <!--<use xlink:href="#icon-zhengchang"></use>-->
-            <!--</svg>-->
-            <!--<input id="radio" type="radio" name="check_state" value="1"-->
-                   <!--v-model="ids.status">&nbsp;&nbsp;出勤-->
+        <!--<label class="lb" v-if="!(ids.status === 1)"></label>-->
+        <!--<svg class="icon icon-back icons log_span" aria-hidden="true" v-else>-->
+        <!--<use xlink:href="#icon-zhengchang"></use>-->
+        <!--</svg>-->
+        <!--<input id="radio" type="radio" name="check_state" value="1"-->
+        <!--v-model="ids.status">&nbsp;&nbsp;出勤-->
         <!--</label>-->
         <div v-else>
             <el-tabs v-model="activeName1" @tab-click="handleClick1">
                 <el-tab-pane label="信息统计表-学院" name="xueyuan">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <label class="btn2"  for="inputid" @click="exportTable('/sbkp/census/exportAllLogisticsCollege',0)">
+                        <label class="btn2" for="inputid"
+                               @click="exportTable('/sbkp/census/exportAllLogisticsCollege',0)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action=""  method="get">
+                            <form action="" method="get">
                                 <input id="inputid" type="submit" hidden/>
                             </form>
                         </label>
-                        <div class="btn" >
+                        <div class="btn">
                             <el-button type="success" @click="initView(1)">切换图表</el-button>
                         </div>
 
@@ -121,11 +122,12 @@
                 <el-tab-pane label="违规人数统计-楼栋" name="loudong">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <label class="btn2"  for="inputid2" @click="exportTable('/sbkp/census/exportAllLogisticsBuilding',1)">
+                        <label class="btn2" for="inputid2"
+                               @click="exportTable('/sbkp/census/exportAllLogisticsBuilding',1)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action=""  method="get">
+                            <form action="" method="get">
                                 <input id="inputid2" type="submit" hidden/>
                             </form>
                         </label>
@@ -165,11 +167,11 @@
                 <el-tab-pane label="违规人数统计-性别" name="xingbie">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <label class="btn2"  for="inputid3" @click="exportTable('/sbkp/census/exportAllLogisticsSex',2)">
+                        <label class="btn2" for="inputid3" @click="exportTable('/sbkp/census/exportAllLogisticsSex',2)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action=""  method="get">
+                            <form action="" method="get">
                                 <input id="inputid3" type="submit" hidden/>
                             </form>
                         </label>
@@ -260,24 +262,24 @@
             },
 
             /*图表表格切换*/
-            initView1(num){
-              this.flag = num
+            initView1(num) {
+                this.flag = num
                 this.isView = !this.isView
             },
             initView(num) {
-                if(this.flag === 1){
+                if (this.flag === 1) {
                     this.ischart0 = false
                     this.ischart1 = false
                     this.isView = !this.isView
-                }else if(this.flag === 2){
+                } else if (this.flag === 2) {
                     this.isOk = false
-                    this.ischart1 =false
+                    this.ischart1 = false
                     this.isView = !this.isView
-                }else if(this.flag === 3){
+                } else if (this.flag === 3) {
                     this.isOk = false
                     this.ischart0 = false
                     this.isView = !this.isView
-                }else{
+                } else {
                     this.isView = !this.isView
                 }
 
@@ -319,7 +321,7 @@
                     }
 
                 }
-                this.name=""
+                this.name = ""
                 this.isOk = true
 
 
@@ -369,7 +371,7 @@
                     }
 
                     console.log(this.series2[0].data)
-                    this.name=""
+                    this.name = ""
                     this.ischart0 = true
                 }
 
@@ -389,9 +391,9 @@
             getSexCensusInfoCallback(res) {
                 console.log("回调成功")
                 let data = res.data
-                if(this.name === "性别"){
+                if (this.name === "性别") {
                     this.tableData = data.msg
-                }else{
+                } else {
                     let arr = data.msg
                     console.log(arr)
                     let seriesLen = this.series3.length
@@ -412,7 +414,7 @@
                     for (var a = 0; a < 4; a++) {
                         console.log(this.series2[a].data)
                     }
-                    this.name=""
+                    this.name = ""
                     this.ischart1 = true
 
                 }
@@ -420,9 +422,9 @@
             },
 
             /*学院/楼栋/性别列表导出*/
-            exportTable(url,num) {
-                let myform =document.getElementsByTagName("form")
-                    myform[num].action = this.api + url
+            exportTable(url, num) {
+                let myform = document.getElementsByTagName("form")
+                myform[num].action = this.api + url
             },
         },
         mounted() {
@@ -432,7 +434,7 @@
 
         data() {
             return {
-                flag:"",
+                flag: "",
                 isOk: false,
                 isView: true,//图表与表格切换控制
                 name: "",//头部
