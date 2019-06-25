@@ -11,6 +11,15 @@ import tongji from "@/pages/houqin/pages/tongji.vue"
 import loding from "@/pages/houqin/pages/loding.vue"
 import weigui from "@/pages/houqin/pages/weigui.vue"
 import houqinHome from "@/pages/houqin/houqinHome.vue"
+import xueshengchu from '@/pages/xuesheng/pages/xuesheng.vue'
+import detail from "@/pages/xuesheng/pages/detail.vue"
+import xueshengHome from "@/pages/xuesheng/xueshengHome.vue"
+import erjixueyuan from "@/pages/erji/pages/erjixueyuan.vue"
+import instructor from "@/pages/erji/pages/instructor.vue"
+import erjiHome from "@/pages/erji/erjiHome.vue"
+import admin from "@/pages/guanli/pages/admin.vue"
+import powerControl from "@/pages/guanli/pages/powerControl.vue"
+import guanliHomw from "@/pages/guanli/guanliHome.vue"
 
 Vue.use(Router)
 
@@ -54,7 +63,36 @@ export default new Router({
                 }
 
             ],
-            },
+        },
+        {
+            path: '/',
+            name: 'xueshengHome',
+            redirect: '/xueshengchu',
+            component: xueshengHome,
+            children: [
+                {
+                    path: '/xueshengchu',
+                    name: '统计信息',
+                    components: {
+                        default: xueshengchu,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/detail',
+                    name: '详细信息',
+                    components: {
+                        default: detail,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ],
+        },
         {
             path: '/',
             name: 'home',
@@ -101,6 +139,64 @@ export default new Router({
                     }
                 }
             ]
+        },
+        {
+            path: '/',
+            name: 'erjiHome',
+            redirect: '/erjixueyuan',
+            component: erjiHome,
+            children: [
+                {
+                    path: '/erjixueyuan',
+                    name: '统计信息',
+                    components: {
+                        default: erjixueyuan,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/instructor',
+                    name: '辅导员列表',
+                    components: {
+                        default: instructor,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ],
+        },
+        {
+            path: '/',
+            name: 'guanliHome',
+            redirect: '/admin',
+            component: guanliHomw,
+            children: [
+                {
+                    path: '/admin',
+                    name: '操作日志',
+                    components: {
+                        default: admin,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/powerControl',
+                    name: '权限分配',
+                    components: {
+                        default: powerControl,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ],
         },
     ]
 })

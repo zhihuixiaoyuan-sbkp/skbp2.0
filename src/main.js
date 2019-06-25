@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/styles/iconfont.css'
+import G from './api/api'
+Vue.use(G)
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
