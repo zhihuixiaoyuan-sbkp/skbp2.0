@@ -6,7 +6,7 @@
                     <div class="head_box">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
                         <div class="btn">
-                            <el-button type="success" @click="initView">切换表格</el-button>
+                            <el-button type="success" @click="initView1(1)">切换表格</el-button>
                         </div>
                     </div>
                     <div class="body_box" v-if="isOk">
@@ -25,7 +25,7 @@
                         <div class="head_box">
                             <span class="text">更新时间: 2019/06/04 13:00</span>
                             <div class="btn">
-                                <el-button type="success" @click="initView">切换表格</el-button>
+                                <el-button type="success" @click="initView1(2)">切换表格</el-button>
                             </div>
                         </div>
                         <div v-if="ischart0">
@@ -46,7 +46,7 @@
                     <div class="head_box">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
                         <div class="btn">
-                            <el-button type="success" @click="initView ">切换表格</el-button>
+                            <el-button type="success" @click="initView1(3)">切换表格</el-button>
                         </div>
                     </div>
                     <div v-if="ischart1">
@@ -64,18 +64,29 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <!--<label for="radio" @click="ids.status = 1">-->
+            <!--<label class="lb" v-if="!(ids.status === 1)"></label>-->
+            <!--<svg class="icon icon-back icons log_span" aria-hidden="true" v-else>-->
+                <!--<use xlink:href="#icon-zhengchang"></use>-->
+            <!--</svg>-->
+            <!--<input id="radio" type="radio" name="check_state" value="1"-->
+                   <!--v-model="ids.status">&nbsp;&nbsp;出勤-->
+        <!--</label>-->
         <div v-else>
             <el-tabs v-model="activeName1" @tab-click="handleClick1">
                 <el-tab-pane label="信息统计表-学院" name="xueyuan">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <div class="btn2" @click="exportTable('/sbkp/census/exportAllLogisticsBuilding')">
+                        <label class="btn2"  for="inputid" @click="exportTable('/sbkp/census/exportAllLogisticsCollege',0)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                        </div>
-                        <div class="btn">
-                            <el-button type="success" @click="initView">切换图表</el-button>
+                            <form action=""  method="get">
+                                <input id="inputid" type="submit" hidden/>
+                            </form>
+                        </label>
+                        <div class="btn" >
+                            <el-button type="success" @click="initView(1)">切换图表</el-button>
                         </div>
 
                     </div>
@@ -110,13 +121,16 @@
                 <el-tab-pane label="违规人数统计-楼栋" name="loudong">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <div class="btn2" @click="exportTable('/sbkp/census/exportAllLogisticsBuilding')">
+                        <label class="btn2"  for="inputid2" @click="exportTable('/sbkp/census/exportAllLogisticsBuilding',1)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                        </div>
+                            <form action=""  method="get">
+                                <input id="inputid2" type="submit" hidden/>
+                            </form>
+                        </label>
                         <div class="btn">
-                            <el-button type="success" @click="initView">切换图表</el-button>
+                            <el-button type="success" @click="initView(2)">切换图表</el-button>
                         </div>
 
                     </div>
@@ -151,13 +165,16 @@
                 <el-tab-pane label="违规人数统计-性别" name="xingbie">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <div class="btn2" @click="exportTable('/sbkp/census/exportAllLogisticsSex')">
+                        <label class="btn2"  for="inputid3" @click="exportTable('/sbkp/census/exportAllLogisticsSex',2)">
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                        </div>
+                            <form action=""  method="get">
+                                <input id="inputid3" type="submit" hidden/>
+                            </form>
+                        </label>
                         <div class="btn">
-                            <el-button type="success" @click="initView">切换图表</el-button>
+                            <el-button type="success" @click="initView(3)">切换图表</el-button>
                         </div>
 
                     </div>
@@ -217,6 +234,9 @@
                 if (event.index === '2') {
                     this.getSexCensusInfo()
                 }
+                if (event.index === '0') {
+                    this.getColleageCensusInfo()
+                }
             },
 
             /*切换选项卡发送请求，显示表格数据*/
@@ -240,9 +260,27 @@
             },
 
             /*图表表格切换*/
-            initView() {
-                console.log(123)
+            initView1(num){
+              this.flag = num
                 this.isView = !this.isView
+            },
+            initView(num) {
+                if(this.flag === 1){
+                    this.ischart0 = false
+                    this.ischart1 = false
+                    this.isView = !this.isView
+                }else if(this.flag === 2){
+                    this.isOk = false
+                    this.ischart1 =false
+                    this.isView = !this.isView
+                }else if(this.flag === 3){
+                    this.isOk = false
+                    this.ischart0 = false
+                    this.isView = !this.isView
+                }else{
+                    this.isView = !this.isView
+                }
+
             },
 
             /*学院统计图、表格数据接口异步请求*/
@@ -382,14 +420,9 @@
             },
 
             /*学院/楼栋/性别列表导出*/
-            exportTable(url) {
-                axios.get(this.api + url)
-                    .then(function () {
-                        console.log("导出成功")
-                    })
-                    .catch(function () {
-                        console.log("导出失败")
-                    })
+            exportTable(url,num) {
+                let myform =document.getElementsByTagName("form")
+                    myform[num].action = this.api + url
             },
         },
         mounted() {
@@ -399,6 +432,7 @@
 
         data() {
             return {
+                flag:"",
                 isOk: false,
                 isView: true,//图表与表格切换控制
                 name: "",//头部
