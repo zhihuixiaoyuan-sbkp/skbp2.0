@@ -1,8 +1,8 @@
 <template>
-    <div class="main">
+    <div class="main" v-if="isOk">
         <div v-if="isView">
             <div class="head_box">
-                <span class="text">更新时间: 2019/06/04 13:00</span>
+                <span class="text">更新时间: {{(new Date()).toLocaleString('chinese', { hour12: false })}}</span>
                 <div class="btn">
                     <el-button type="success" @click="clickView">切换表格</el-button>
                 </div>
@@ -21,12 +21,15 @@
         <div v-else>
             <div>
                 <div class="head_box">
-                    <span class="text">更新时间: 2019/06/04 13:00</span>
-                    <div class="btn2">
+                    <span class="text">更新时间: {{(new Date()).toLocaleString('chinese', { hour12: false })}}</span>
+                    <label for="input7" class="btn2">
                         <svg class="icon icon-back icons" aria-hidden="true">
                             <use xlink:href="#icon-daoChu"></use>
                         </svg>
-                    </div>
+                        <form action="" method="get">
+                            <input type="submit" id="input7" hidden @click="exportAllInstructor('/sbkp/census/exportAllInstructor')">
+                        </form>
+                    </label>
                     <div class="btn">
                         <el-button type="success" @click="clickView">切换图表</el-button>
                     </div>
@@ -39,14 +42,14 @@
                         style="width: 100%;background: transparent;border: 0px">
                     <el-table-column
                             align="center"
-                            prop="college"
-                            label="学院"
+                            prop="counsellor_name"
+                            label="姓名"
                             width="300"
                     >
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="personCount"
+                            prop="key_personnel"
                             label="重点人员人数"
                             width="150">
                     </el-table-column>
@@ -61,7 +64,7 @@
                         </el-table-column>
                         <el-table-column
                                 align="center"
-                                prop="undisposed"
+                                prop="untreated"
                                 width="200"
                                 label="未处理">
                         </el-table-column>
@@ -74,60 +77,25 @@
 
 <script>
     import bar from '../../houqin/components/charts/charts'
+    import axios from "axios"
+    import qs from 'qs'
 
     export default {
         name: "erjixueyuan",
         data() {
             return {
-                isView:true,//切换表格/图表
-                tableData: [
+                isOk: false,
+                isView: true,//切换表格/图表
+                tableData: [//接口数据模型
                     {
-                        college: "汤菲菲",
-                        personCount: 60,
-                        processed: 30,
-                        undisposed: 30
-                    },
-                    {
-                        college: "夏琳",
-                        personCount: 80,
-                        processed: 40,
-                        undisposed: 40
-                    },
-                    {
-                        college: "袁卫家",
-                        personCount: 100,
-                        processed: 30,
-                        undisposed: 70
-                    },
-                    {
-                        college: "伍祥",
-                        personCount: 90,
-                        processed: 40,
-                        undisposed: 50
-                    },
-                    {
-                        college: "朱洪军",
-                        personCount: 90,
-                        processed: 40,
-                        undisposed: 50
-                    },
-                    {
-                        college: "高超",
-                        personCount: 90,
-                        processed: 40,
-                        undisposed: 50
-                    },
-                    {
-                        college: "朱伟杰",
-                        personCount: 90,
-                        processed: 40,
-                        undisposed: 50
-                    }
-
-                ],
+                        counsellor_name: "",
+                        key_personnel: '',
+                        processed: '',
+                        untreated: ''
+                    },],
                 a: '统计数据',
                 b: '人数',
-                c: ['汤菲菲', '夏琳', '袁卫家', '伍祥', '朱洪军', '高超',"朱伟杰"],
+                c: [],
                 d: '统计',
                 e: [],
                 s: {},
@@ -148,7 +116,7 @@
                 },
                 // X轴
                 xAxis: {
-                    data: ['汤菲菲', '夏琳', '袁卫家', '伍祥', '朱洪军', '高超',"朱伟杰"],
+                    data: [],
                     splitLine: {
                         show: false
                     },
@@ -165,20 +133,20 @@
                         name: '重点人员人数',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [20, 50, 30, 10, 70, 80,30],
+                        data: [],
 
                     },
                     {
                         name: '报警通知已处理',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [30, 50, 30, 10, 40, 50,40]
+                        data: []
                     },
                     {
                         name: '报警通知未处理',
                         type: 'bar',
                         barMaxWidth: 20,
-                        data: [20, 50, 40, 10, 20, 30,50]
+                        data: []
                     },
 
                 ],
@@ -187,10 +155,58 @@
         components: {
             bar
         },
-        methods:{
-            clickView(){
+        methods: {
+            clickView() {
                 this.isView = !this.isView
+            },
+            /*请求二级学院信息统计数据*/
+            getInstructorCensusInfo() {
+                axios.post(this.api + "/sbkp/census/getInstructorCensusInfo")
+                    .then(this.getInstructorCensusInfoCallback)
+                    .catch(function () {
+                        console.log("出错了")
+                    })
+            },
+
+            /*请求二级学院信息统计数据回调函数*/
+            getInstructorCensusInfoCallback(res) {
+                let data = res.data
+                console.log(data)
+                let arr = data.msg
+                this.tableData = arr
+                let len = arr.length
+                /*//数据是否为空*/
+                if (arr !== "null") {
+                    for (let i = 0; i < len; i++) {
+                        this.xAxis.data[i] = arr[i].counsellor_name
+                    }
+                    for (let j = 0; j < 3; j++) {
+                        for (let i = 0; i < len; i++) {
+                            if (j === 0) {
+                                this.series[j].data[i] = arr[i].key_personnel
+                            } else if (j === 1) {
+                                this.series[j].data[i] = arr[i].processed
+                            } else {
+                                this.series[j].data[i] = arr[i].untreated
+                            }
+
+                        }
+                        this.isOk = true
+                    }
+                    console.log(this.series[2].data)
+
+                }
+
+            },
+
+            /*导出数据*/
+            exportAllInstructor(url){
+                document.getElementsByTagName("form")[0].action = this.api + url
             }
+
+        },
+        mounted() {
+            this.getInstructorCensusInfo()
         }
     }
 </script>
