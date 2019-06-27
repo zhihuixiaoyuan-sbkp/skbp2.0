@@ -20,7 +20,15 @@ import instructor from "@/pages/erji/pages/instructor.vue"
 import erjiHome from "@/pages/erji/erjiHome.vue"
 import admin from "@/pages/guanli/pages/admin.vue"
 import powerControl from "@/pages/guanli/pages/powerControl.vue"
-import guanliHomw from "@/pages/guanli/guanliHome.vue"
+import guanliHome from "@/pages/guanli/guanliHome.vue"
+import abnormalList from "@/pages/xinli/pages/abnormalList"
+import waringMessage from "@/pages/xinli/pages/waringMessage.vue"
+import xinliLog from "@/pages/xinli/pages/xinliLog.vue"
+import xinliHome from "@/pages/xinli/xinliHome.vue"
+import waringInfo from "@/pages/fudao/pages/waringInfo.vue"
+import keyPersonList from "@/pages/fudao/pages/keyPersonList.vue"
+import instructorLog from "@/pages/fudao/pages/instructorLog.vue"
+import fudaoHome from "@/pages/fudao/fudaoHome.vue"
 
 Vue.use(Router)
 
@@ -183,7 +191,7 @@ export default new Router({
             path: '/',
             name: 'guanliHome',
             redirect: '/admin',
-            component: guanliHomw,
+            component: guanliHome,
             children: [
                 {
                     path: '/admin',
@@ -200,6 +208,84 @@ export default new Router({
                     name: '权限分配',
                     components: {
                         default: powerControl,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ],
+        },
+        {
+            path: '/',
+            name: 'xinliHome',
+            redirect: '/abnormalList',
+            component: xinliHome,
+            children: [
+                {
+                    path: '/abnormalList',
+                    name: '报警信息管理',
+                    components: {
+                        default: abnormalList,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/waringMessage',
+                    name: '心理异常人员名单',
+                    components: {
+                        default: waringMessage,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+                {
+                    path: '/xinliLog',
+                    name: '操作日志',
+                    components: {
+                        default: xinliLog,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+
+            ],
+        },
+        {
+            path: '/',
+            name: 'fudaoHome',
+            redirect: '/waringInfo',
+            component: fudaoHome,
+            children: [
+                {
+                    path: '/waringInfo',
+                    name: '报警信息管理',
+                    components: {
+                        default: waringInfo,
+                        top: Header,
+                        aside: Sidebar,
+                    },
+                    menuShow: true
+                },
+                {
+                    path: '/keyPersonList',
+                    name: '重点人员名单管理',
+                    components: {
+                        default: keyPersonList,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+                {
+                    path: '/instructorLog',
+                    name: '操作日志',
+                    components: {
+                        default: instructorLog,
                         top: Header,
                         aside: Sidebar
                     },

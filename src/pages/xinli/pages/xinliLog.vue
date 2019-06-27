@@ -154,6 +154,12 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
+                                    prop="mind_status"
+                                    label="状态"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
                                     label="操作"
                                     width="80">
                                 <template slot-scope="scope">
@@ -180,8 +186,10 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+
     </div>
 </template>
+
 <script>
     import axios from "axios"
     import qs from "qs"
@@ -191,6 +199,7 @@
         data() {
             return {
                 noDelete: true,
+                value: "保卫处",
                 dept: "",
                 valueTime: new Date(),
                 logList: [],
@@ -258,7 +267,7 @@
                 axios.post(this.api + "/sbkp/loging/getLogingHandleSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        dept: "保卫处",
+                        dept: "心理健康处",
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -280,7 +289,7 @@
                 axios.post(this.api + "/sbkp/loging/getLogingDeleteSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        dept: "保卫处",
+                        dept: "心理健康处",
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
