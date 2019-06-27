@@ -67,17 +67,19 @@
                                     prop="date_time"
                                     label="违规时间">
                             </el-table-column>
+
                             <el-table-column
                                     align="center"
                                     prop="status"
                                     label="状态"
-                                    width="60">
+                                    width="80"
+                                    :formatter="filterStatus">
                             </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop=""
-                                    label="备注">
-                            </el-table-column>
+                            <!--<el-table-column-->
+                            <!--align="center"-->
+                            <!--prop=""-->
+                            <!--label="备注">-->
+                            <!--</el-table-column>-->
                             <el-table-column
                                     align="center"
                                     label="操作">
@@ -156,6 +158,7 @@
                                     align="center"
                                     prop="mind_status"
                                     label="状态"
+
                             >
                             </el-table-column>
                             <el-table-column
@@ -211,11 +214,21 @@
             }
         },
         methods: {
+            /*过滤状态值*/
+            filterStatus(row, cellValue){
+               if(cellValue === 0){
+                  return "未处理"
+               }else if(cellValue === 1){
+                   return"已处理"
+               }else{
+                   return "已忽略"
+               }
+            },
             /*选项卡切换*/
             handleClick(event) {
                 this.valueTime = new Date()
                 this.noDelete = !this.noDelete
-                console.log(typeof(this.noDelete))
+                console.log(typeof (this.noDelete))
                 if (!this.noDelete) {
                     this.getLogingDeleteSearch()
                 } else {
@@ -224,10 +237,10 @@
             },
             /*撤销操作*/
             handleEdit(id) {
-                axios.post(this.api + "/sbkp/loging/logingRevoke",qs.stringify({log_id:id}))
+                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
                     .then(function () {
                         this.$message({
-                            type:"success",
+                            type: "success",
                             message
                         })
                     })

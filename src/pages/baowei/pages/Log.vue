@@ -71,7 +71,8 @@
                                     align="center"
                                     prop="status"
                                     label="状态"
-                                    width="60">
+                                    width="60"
+                                    :formatter="filterStatus">
                             </el-table-column>
                             <el-table-column
                                     align="center"
@@ -202,6 +203,16 @@
             }
         },
         methods: {
+
+    filterStatus(row, cellValue){
+        if(cellValue === 0){
+            return "未处理"
+        }else if(cellValue === 1){
+            return"已处理"
+        }else{
+            return "已忽略"
+        }
+    },
             /*选项卡切换*/
             handleClick(event) {
                 this.valueTime = new Date()
