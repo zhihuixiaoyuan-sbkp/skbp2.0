@@ -248,15 +248,32 @@
             /*撤销操作*/
             handleEdit(id) {
                 axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
-                    .then(function () {
+                    .then(this.handleEditCallback)
+                    .catch(() =>{
                         this.$message({
-                            type: "success",
+                            type: "danger",
                             message
                         })
                     })
-                    .catch(function () {
-                        console.log("请求失败")
-                    })
+            },
+            /*撤销刷新列表*/
+            handleEditCallback(){
+                this.$message({
+                    type: "success",
+                    message
+                })
+                if (this.notDelete && this.notSearch) { //处于处理选卡，且没有进行搜索
+                    this.getLogingHandle()
+                }
+                if(this.notDelete && !this.notSearch){ //处于处理选项卡，且进行了搜索
+                    this.getLogingHandleSearch()
+                }
+                if (!this.notDelete && this.notSearch) { //处于删除选卡，且没有进行搜索
+                    this.getLogingDelete()
+                }
+                if(!this.notDelete && !this.notSearch){ //处于删除选项卡，且进行了搜索
+                    this.getLogingDeleteSearch()
+                }
             },
             pageChange(val) {
                 this.curPage = val
