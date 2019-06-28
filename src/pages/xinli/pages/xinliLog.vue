@@ -11,7 +11,7 @@
                 >
                 </el-date-picker>
             </div>
-            <div style="display: inline-block;margin-left: 20px" v-if="noDelete">
+            <div style="display: inline-block;margin-left: 20px" v-if="notDelete">
                 <el-button icon="el-icon-search" @click="searchInfo">查询</el-button>
             </div>
             <div style="display: inline-block;margin-left: 20px" v-else>
@@ -201,8 +201,8 @@
         name: "admin",
         data() {
             return {
-                noDelete: true,
-                value: "保卫处",
+                notSearch:true,
+                notDelete: true,
                 dept: "",
                 valueTime: new Date(),
                 logList: [],
@@ -214,26 +214,36 @@
             }
         },
         methods: {
-            /*过滤状态值*/
-            filterStatus(row, cellValue){
-               if(cellValue === 0){
-                  return "未处理"
-               }else if(cellValue === 1){
-                   return"已处理"
-               }else{
-                   return "已忽略"
-               }
+
+            filterStatus(row, cellValue) {
+                if (cellValue === 0) {
+                    return "未处理"
+                } else if (cellValue === 1) {
+                    return "已处理"
+                } else {
+                    return "已忽略"
+                }
             },
             /*选项卡切换*/
             handleClick(event) {
+                this.notSearch = true
                 this.valueTime = new Date()
-                this.noDelete = !this.noDelete
-                console.log(typeof (this.noDelete))
-                if (!this.noDelete) {
-                    this.getLogingDeleteSearch()
-                } else {
-                    this.getLogingHandleSearch()
+                if(event.name === "delete"){
+                    this.notDelete = false
                 }
+                if(event.name === 'dealWith'){
+                    this.notDelete = true
+                }
+                console.log(this.notDelete)
+                if(this.notDelete){
+                    console.log(1)
+                    this.getLogingHandle()
+                }else {
+                    console.log(2)
+                    this.getLogingDelete()
+                }
+
+
             },
             /*撤销操作*/
             handleEdit(id) {
@@ -248,23 +258,32 @@
                         console.log("请求失败")
                     })
             },
-
             pageChange(val) {
                 this.curPage = val
-                this.getLogingHandleSearch()
+                if(this.notSearch){
+                    this.getLogingHandle()
+                }else{
+                    this.getLogingHandleSearch()
+                }
             },
             pageChange1(val) {
                 console.log("123")
                 this.curPage = val
-                this.getLogingDeleteSearch()
+                if(this.notSearch){
+                    this.getLogingDelete()
+                }else{
+                    this.getLogingDeleteSearch()
+                }
             },
             selectDate() {
 
             },
             searchInfo() {
+                this.notSearch = false
                 this.getLogingHandleSearch()
             },
             searchInfo1() {
+                this.notSearch = false
                 this.getLogingDeleteSearch()
             },
             timeTool(date) {
@@ -280,7 +299,7 @@
                 axios.post(this.api + "/sbkp/loging/getLogingHandleSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        dept: "心理健康处",
+                        dept: "心理健康中心",
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -302,7 +321,7 @@
                 axios.post(this.api + "/sbkp/loging/getLogingDeleteSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        dept: "心理健康处",
+                        dept: "心理健康中心",
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -318,10 +337,31 @@
                 console.log(data)
                 this.logList = data.msg.lists
                 this.totalCount = data.msg.totalCount
+            },
+            /*初始化日志处理列表*/
+            getLogingHandle(){
+                axios.post(this.api + "/sbkp/loging/getLogingHandle",qs.stringify({
+                    curPage:this.curPage,
+                    dept:"心理健康中心"
+                }))
+                    .then(this.getLogingHandleSearchCallback)
+                    .catch(function () {
+                        console.log("请求出错")
+                    })
+            },
+            getLogingDelete(){
+                axios.post(this.api + "/sbkp/loging/getLogingDelete",qs.stringify({
+                    curPage:this.curPage,
+                    dept:"心理健康中心"
+                }))
+                    .then(this.getLogingDeleteSearchCallback)
+                    .catch(function () {
+                        console.log("请求出错")
+                    })
             }
         },
         mounted() {
-            this.getLogingHandleSearch()
+            this.getLogingHandle()
         }
     }
 </script>
