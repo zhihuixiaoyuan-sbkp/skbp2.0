@@ -39,15 +39,19 @@
                         </tr>
                         </thead>
                         <!--内容-->
-                        <tbody v-for="(item,index) in list">
+                        <tbody v-for="(item,index) in personList">
                         <tr class="body">
                             <td>{{index+1}}</td>
                             <td>{{item.stuNum}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.gender}}</td>
-                            <el-tooltip class="item" effect="light" :content=item.college placement="right"><td>{{item.college}}</td></el-tooltip>
+                            <el-tooltip class="item" effect="light" :content=item.college placement="right">
+                                <td>{{item.college}}</td>
+                            </el-tooltip>
                             <td>{{item.proClass}}</td>
-                            <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right"><td>{{item.reasonNames}}</td></el-tooltip>
+                            <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right">
+                                <td>{{item.reasonNames}}</td>
+                            </el-tooltip>
                             <td>{{item.schoolStatus}}</td>
                             <!--操作-->
                             <td>
@@ -58,17 +62,15 @@
                             </td>
                         </tr>
                         </tbody>
-                        <tfoot class="foot">
-                        <!--分页-->
-                        <div class="block">
-                            <el-pagination layout="prev, pager, next"
-                                           @current-change="pageNum"
-                                           :total=totalNum
-                                           background>
-                            </el-pagination>
-                        </div>
-                        </tfoot>
                     </table>
+                    <!--分页-->
+                    <nav class="block">
+                        <el-pagination layout="prev, pager, next"
+                                       @current-change="pageNum"
+                                       :total=totalNum
+                                       background>
+                        </el-pagination>
+                    </nav>
                 </el-col>
                 <!--模态框-添加重点人员-->
                 <el-dialog title="添加重点人员"
@@ -242,13 +244,12 @@
             }
         },
         props: {
-            list: Array,
+            personList: Array,
             totalNum: Number
         },
         methods: {
             // 获取关键词搜索的数据
             searchStu() {
-
                 if (this.select === '1') {
                     // console.log('学号');
                     axios.get('http://172.16.211.151/sbkp/personnel/personnelList/stu_num/' + this.label)
@@ -272,6 +273,7 @@
 
             // 处理搜索的数据并跳转至搜索页面
             searchList(res) {
+                // console.log(res)
                 res = res.data;
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
@@ -308,6 +310,7 @@
                 // 提交表单--点击提交or学号input框获得焦点时回车
                 // 判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
                 var reg = /^[0-9]+.?[0-9]*$/;
+                var _this = this;
                 if (stuNum === "") {
                     // 判断学号是否为空
                     this.$nextTick(() => {
@@ -335,12 +338,15 @@
                         studentNum: stuNum,
                         reasonIds: addReason
                     }
-                )).then(this.changList);
-                // 清空学号、添加原因的数值
-                this.formData.stuNum = '';
-                this.formData.addReason = '';
-                // 清空添加原因数组
-                this.addReasonId = [];
+                )).then(function () {
+                    _this.$message({
+                        message: '添加成功！',
+                        type: 'success'
+                    });
+                    _this.changList()
+                }).catch(function () {
+                    _this.$message.error('添加失败,请重试！');
+                });
                 // 关闭模态框
                 this.closeModal();
                 return true;
@@ -350,10 +356,10 @@
             showModifyModal(id) {
                 this.modifyNum = id;
                 //获取学生学号及添加原因的数据传入模态框
-                for (let i = 0; i < this.list.length; i++) {
-                    if (id === this.list[i].id) {
-                        this.formData.stuNum = this.list[i].stuNum;
-                        this.formData.addReason = this.list[i].reasonNames;
+                for (let i = 0; i < this.personList.length; i++) {
+                    if (id === this.personList[i].id) {
+                        this.formData.stuNum = this.personList[i].stuNum;
+                        this.formData.addReason = this.personList[i].reasonNames;
                     }
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
@@ -366,6 +372,7 @@
 
             // 修改-提交操作
             modifyForm(addReason) {
+                var _this = this;
                 if (addReason === "") {
                     // 判断添加原因是否为空
                     this.$nextTick(() => {
@@ -390,7 +397,15 @@
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }
-                )).then(this.changList);
+                )).then(function () {
+                    _this.$message({
+                        message: '修改成功！',
+                        type: 'success'
+                    });
+                    _this.changList()
+                }).catch(function () {
+                    _this.$message.error('修改失败,请重试！');
+                });
                 // 关闭模态框
                 this.closeModal();
             },
@@ -403,13 +418,20 @@
 
             // 删除-提交操作
             delStu() {
+                var _this = this;
                 console.log(this.delNum);
                 axios.get('http://172.16.211.151/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
-                }).then(this.changList).catch(function () {
-                    console.log('123')
+                }).then(function () {
+                    _this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    });
+                    _this.changList()
+                }).catch(function () {
+                    _this.$message.error('删除失败,请重试！');
                 });
                 // 关闭模态框
                 this.closeModal();
@@ -469,7 +491,6 @@
                                 _this.showTags.push(newTag);
                                 _this.addReasonArr.push(element);
                                 _this.addReasonId.push(res.data.id);
-                                this.changList();
                             });
                         }
                     });
@@ -613,8 +634,10 @@
         text-decoration: transparent
     }
 
+    /*分页*/
     .block {
-        margin: 20px 630px 0;
+        text-align: center;
+        margin-top: 20px;
     }
 
     /*模态框*/

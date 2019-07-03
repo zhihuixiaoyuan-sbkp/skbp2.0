@@ -5,7 +5,9 @@
         <!--侧边栏组件-->
         <router-view name="aside"></router-view>
         <!--主体-->
-        <router-view :list="personList" :totalNum="totalNum" @pageNum="getStudentsInfo"
+        <router-view :personList="personList"
+                     :totalNum="totalNum"
+                     @pageNum="getStudentsInfo"
                      @getStudentsInfo="getStudentsInfo"></router-view>
     </div>
 </template>
@@ -18,7 +20,8 @@
         data() {
             return {
                 personList: [],
-                totalNum: 0
+                totalNum: 0,
+                messageList: []
             }
         },
         methods: {
@@ -47,10 +50,11 @@
                     }
                 }
                 this.personList = data;
-            }
+            },
         },
         mounted() {
             this.getStudentsInfo()//挂载组件
+            // this.getMessageInfo()
         }
     }
 </script>

@@ -9,15 +9,36 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 import './assets/styles/iconfont.css'
 import G from './api/api'
-Vue.use(G)
 import echarts from 'echarts'
-Vue.prototype.$echarts = echarts
 
+Vue.use(G);
 Vue.use(ElementUI);
-Vue.use(BootstrapVue)
-Vue.config.productionTip = false
+Vue.use(BootstrapVue);
+Vue.config.productionTip = false;
+Vue.prototype.$echarts = echarts;
+Vue.use(Viewer)
+Viewer.setDefaults({
+    Options: {
+        'inline': true,
+        'button': true,
+        'navbar': true,
+        'title': true,
+        'toolbar': true,
+        'tooltip': true,
+        'movable': true,
+        'zoomable': true,
+        'rotatable': true,
+        'scalable': true,
+        'transition': true,
+        'fullscreen': true,
+        'keyboard': true,
+        'url': 'data-source'
+    }
+})
 
 /* eslint-disable no-new */
 new Vue({
@@ -25,10 +46,6 @@ new Vue({
     router,
     render: h => h(App),
     store,
-    components:
-        {
-            App
-        }
-    ,
+    components: {App},
     template: '<App/>'
 })
