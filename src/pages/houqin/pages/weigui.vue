@@ -55,8 +55,8 @@
                 style="width: 90%; margin-top: 40px">
             <el-table-column
                     align="center"
-                    prop="num"
                     label="序号"
+                    type=index
                     width="60">
             </el-table-column>
             <el-table-column
