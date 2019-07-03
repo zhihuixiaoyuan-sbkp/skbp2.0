@@ -49,7 +49,7 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="key_personnel"
+                            prop="keyPersonnel"
                             label="重点人员人数"
                             width="150">
                     </el-table-column>
@@ -116,7 +116,7 @@
                     for (let j = 0; j < 3; j++) {
                         for (let i = 0; i < len; i++) {
                             if (j === 0) {
-                                this.series[j].data[i] = arr[i].key_personnel
+                                this.series[j].data[i] = arr[i].keyPersonnel
                             } else if (j === 1) {
                                 this.series[j].data[i] = arr[i].processed
                             } else {
@@ -148,7 +148,7 @@
                 tableData: [//接口数据模型
                     {
                         college: "",
-                        key_personnel: '',
+                        keyPersonnel: '',
                         processed: '',
                         untreated: ''
                     },

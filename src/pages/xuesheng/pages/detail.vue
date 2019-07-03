@@ -3,8 +3,8 @@
         <div v-for="item in detail" style="display: inline-block">
             <card :collage="item.college"
                   :head="item.college.substr(0,3)"
-                  :count="item.key_personnel"
-                  @checkInfo='checkInfo(item.college,item.key_personnel,item.processed,item.untreated)'
+                  :count="item.keyPersonnel"
+                  @checkInfo='checkInfo(item.college,item.keyPersonnel,item.processed,item.untreated)'
             ></card>
         </div>
 

@@ -20,13 +20,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -35,12 +35,12 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id)">修改
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id)">修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -65,13 +65,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -80,13 +80,13 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id,scope.row.college)">
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id,scope.row.college)">
                                 修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -111,13 +111,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -126,13 +126,13 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id,scope.row.college)">
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id,scope.row.college)">
                                 修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -157,13 +157,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -172,13 +172,13 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id,scope.row.college)">
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id,scope.row.college)">
                                 修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -203,13 +203,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -218,13 +218,13 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id,scope.row.college)">
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id,scope.row.college)">
                                 修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -249,13 +249,13 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_num"
+                            prop="userNum"
                             label="账号"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="user_name"
+                            prop="userName"
                             label="姓名">
                     </el-table-column>
                     <el-table-column
@@ -264,13 +264,13 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.row.user_name,scope.row.user_num,scope.row.id,scope.row.college)">
+                                    @click="handleEdit(scope.row.userName,scope.row.userNum,scope.row.id,scope.row.college)">
                                 修改
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.row.user_name,scope.row.user_num,scope.row.id)">删除
+                                    @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>

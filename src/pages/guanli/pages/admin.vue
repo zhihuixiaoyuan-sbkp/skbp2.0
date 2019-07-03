@@ -1,3 +1,4 @@
+<!--<script src="../../../../../SCC_2/.eslintrc.js"></script>-->
 <template>
     <div class="main">
         <div style="text-align: right;margin-right: 10px">
@@ -48,7 +49,7 @@
                         <div class="rowBox" v-for="item in logList">
                             <el-divider class="el-divider"></el-divider>
                             <span style="font-size: 20px">
-                            <span>{{item.date_time}}</span>
+                            <span>{{item.dateTime}}</span>
                             <span>{{item.dept}}账号{{item.account}}处理{{item.name}}的报警信息</span>
                         </span>
                             <span style="position: absolute;right: 50px">
@@ -90,7 +91,7 @@
                         <div class="rowBox" v-for="item in logList">
                             <el-divider class="el-divider"></el-divider>
                             <span style="font-size: 20px">
-                            <span>{{item.date_time}}</span>
+                            <span>{{item.dateTime}}</span>
                             <span>{{item.dept}}账号{{item.account}}处理{{item.name}}的报警信息</span>
                         </span>
                             <span style="position: absolute;right: 50px">

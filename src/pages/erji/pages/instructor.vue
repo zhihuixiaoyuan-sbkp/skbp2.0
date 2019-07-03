@@ -1,10 +1,10 @@
 <template>
     <div class="main">
         <div v-for="item in instructor" style="display: inline-block">
-            <card :head="item.counsellor_name.charAt(0)"
-                  :collage="item.counsellor_name"
-                  :count="item.key_personnel"
-                  @checkInfo='checkInfo(item.counsellor_name,item.key_personnel,item.processed,item.untreated)'
+            <card :head="item.counsellorName.charAt(0)"
+                  :collage="item.counsellorName"
+                  :count="item.keyPersonnel"
+                  @checkInfo='checkInfo(item.counsellorName,item.keyPersonnel,item.processed,item.untreated)'
             ></card>
         </div>
 
