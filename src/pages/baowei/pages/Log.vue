@@ -102,7 +102,7 @@
                             background
                             @current-change="pageChange"
                             layout="prev, pager, next"
-                            :total='20'>
+                            :total='totalCount'>
                     </el-pagination>
                 </div>
             </el-tab-pane>
@@ -176,7 +176,7 @@
                             background
                             @current-change="pageChange1"
                             layout="prev, pager, next"
-                            :total='20'>
+                            :total='totalCount'>
                     </el-pagination>
                 </div>
             </el-tab-pane>

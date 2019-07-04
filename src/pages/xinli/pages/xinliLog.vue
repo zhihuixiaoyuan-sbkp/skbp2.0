@@ -260,7 +260,7 @@
             handleEditCallback(){
                 this.$message({
                     type: "success",
-                    message
+                    message:"撤销成功"
                 })
                 if (this.notDelete && this.notSearch) { //处于处理选卡，且没有进行搜索
                     this.getLogingHandle()
