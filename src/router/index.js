@@ -1,32 +1,43 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/pages/baowei/Home'
 import Header from "@/pages/components/header/Header.vue"
 import Sidebar from "@/pages/components/sidebar/Sidebar.vue"
+
+import home from "@/pages/baowei/Home"
 import Message from "@/pages/baowei/pages/Message.vue"
 import List from "@/pages/baowei/pages/List.vue"
 import Log from "@/pages/baowei/pages/Log.vue"
 import History from "@/pages/baowei/pages/History.vue"
 import Search from "@/pages/baowei/pages/Search.vue"
+
 import tongji from "@/pages/houqin/pages/tongji.vue"
 import loding from "@/pages/houqin/pages/loding.vue"
 import weigui from "@/pages/houqin/pages/weigui.vue"
 import houqinHome from "@/pages/houqin/houqinHome.vue"
+
 import xueshengchu from '@/pages/xuesheng/pages/xuesheng.vue'
 import detail from "@/pages/xuesheng/pages/detail.vue"
 import xueshengHome from "@/pages/xuesheng/xueshengHome.vue"
+
 import erjixueyuan from "@/pages/erji/pages/erjixueyuan.vue"
 import instructor from "@/pages/erji/pages/instructor.vue"
 import erjiHome from "@/pages/erji/erjiHome.vue"
+
 import admin from "@/pages/guanli/pages/admin.vue"
 import powerControl from "@/pages/guanli/pages/powerControl.vue"
 import guanliHome from "@/pages/guanli/guanliHome.vue"
+
 import abnormalList from "@/pages/xinli/pages/abnormalList"
+import listSearch from "@/pages/xinli/pages/listSearch.vue"
+import xinliHistory from "@/pages/xinli/pages/xinliHistory.vue"
 import waringMessage from "@/pages/xinli/pages/waringMessage.vue"
 import xinliLog from "@/pages/xinli/pages/xinliLog.vue"
 import xinliHome from "@/pages/xinli/xinliHome.vue"
+
 import waringInfo from "@/pages/fudao/pages/waringInfo.vue"
 import keyPersonList from "@/pages/fudao/pages/keyPersonList.vue"
+import stulistSearch from "@/pages/fudao/pages/stulistSearch.vue"
+import fudaoHistory from "@/pages/fudao/pages/fudaoHistory.vue"
 import instructorLog from "@/pages/fudao/pages/instructorLog.vue"
 import fudaoHome from "@/pages/fudao/fudaoHome.vue"
 
@@ -219,24 +230,24 @@ export default new Router({
         {
             path: '/',
             name: 'xinliHome',
-            redirect: '/abnormalList',
+            redirect: '/waringMessage',
             component: xinliHome,
             children: [
                 {
-                    path: '/abnormalList',
+                    path: '/waringMessage',
                     name: '报警信息管理',
                     components: {
-                        default: abnormalList,
+                        default: waringMessage,
                         top: Header,
                         aside: Sidebar,
                     },
                     menuShow: true
                 },
                 {
-                    path: '/waringMessage',
+                    path: '/abnormalList',
                     name: '心理异常人员名单',
                     components: {
-                        default: waringMessage,
+                        default: abnormalList,
                         top: Header,
                         aside: Sidebar
                     },
@@ -252,7 +263,24 @@ export default new Router({
                     },
                     menuShow: true,
                 },
-
+                {
+                    path: '/listSearch',
+                    name: '心理健康中心搜索结果',
+                    components: {
+                        default: listSearch,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                },
+                {
+                    path: '/xinliHistory',
+                    name: '历史记录',
+                    components: {
+                        default: xinliHistory,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                },
             ],
         },
         {
@@ -291,7 +319,24 @@ export default new Router({
                     },
                     menuShow: true,
                 },
-
+                {
+                    path: '/stulistSearch',
+                    name: '辅导员搜索结果',
+                    components: {
+                        default: stulistSearch,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                },
+                {
+                    path: '/fudaoHistory',
+                    name: '历史记录',
+                    components: {
+                        default: fudaoHistory,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                },
             ],
         },
     ]

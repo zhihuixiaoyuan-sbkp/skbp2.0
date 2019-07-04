@@ -2,13 +2,52 @@
     <div class="header">
         <span class="title">重点人员行为监管系统</span>
         <span class="exit">退出登录</span>
-        <router-link to="/Message" class="iconfont message">&#xe606;</router-link>
+        <!--<router-link to="/Message" class="iconfont message">&#xe606;</router-link>-->
+        <el-button class="iconfont message" @click="loadMessage" v-show="warningMessage">&#xe606;</el-button>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Header"
+        name: "Header",
+        data() {
+            return {
+                warningMessage: false,
+                curName: ''
+            }
+        },
+        methods: {
+            loadMessage() {
+                console.log(this.curName)
+                if (this.curName === 'home') {
+                    // 保卫处报警信息跳转
+                    this.$router.push({
+                        path: '/Message'
+                    })
+                } else if (this.curName === 'fudaoHome') {
+                    // 辅导员报警信息跳转
+                    this.$router.push({
+                        path: '/waringInfo'
+                    })
+                } else if (this.curName === 'xinliHome') {
+                    // 心理健康中心报警信息跳转
+                    this.$router.push({
+                        path: '/waringMessage'
+                    })
+                }
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            // 这里的vm指的就是vue实例，可以用来当做this使用
+            next(vm => {
+                // console.log(to.matched[0].name);
+                vm.curName = to.matched[0].name;
+                // console.log(vm.curName)
+                if (vm.curName === 'home' || vm.curName === 'fudaoHome' || vm.curName === 'xinliHome') {
+                    vm.warningMessage = true
+                }
+            })
+        }
     }
 </script>
 
@@ -48,9 +87,15 @@
 
     .message {
         position: absolute;
-        font-size: 30px;
-        right: 140px;
+        font-size: 33px;
+        top: 3px;
+        right: 122px;
         font-weight: 600;
+
+        outline: none;
         cursor: pointer;
+        border: 0;
+        background: transparent;
+        color: #fff;
     }
 </style>

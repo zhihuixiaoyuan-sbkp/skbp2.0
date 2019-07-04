@@ -181,7 +181,7 @@
     import axios from 'axios'
 
     export default {
-        name: "History",
+        name: "fudaoHistory",
         data() {
             return {
                 ruleType: 'first',
@@ -242,7 +242,7 @@
             // 返回重点人员表
             updateList() {
                 this.$router.push({
-                    path: '/List'
+                    path: '/keyPersonList'
                 })
             },
         },

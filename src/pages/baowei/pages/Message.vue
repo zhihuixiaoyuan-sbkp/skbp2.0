@@ -82,7 +82,7 @@
                                 </viewer>
                             </td>
                             <td>
-                                <el-button type="info" plain @click="showHandleDialog(item.id)">信息按钮</el-button>
+                                <el-button type="info" plain @click="showHandleDialog(item.id)">处理状态</el-button>
                             </td>
                         </tr>
                         </tbody>
@@ -329,7 +329,7 @@
         methods: {
             // 初始化列表
             getMessageInfo() {
-                axios.get('http://172.16.211.151/sbkp/message/messageList/0/1', {
+                axios.get(this.api1+'/sbkp/message/messageList/0/1', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -350,7 +350,7 @@
                 this.searchDetection = false;
                 this.label = '请选择';
                 if (this.personnelType === 'first') {
-                    axios.get('http://172.16.211.151/sbkp/message/messageList/0/1', {
+                    axios.get(this.api1+'/sbkp/message/messageList/0/1', {
                         params: {
                             pageNum: this.currentPage,
                             pageSize: 10,
@@ -359,7 +359,7 @@
                         _this.getMessageInfoSucc(res);
                     });
                 } else if (this.personnelType === 'second') {
-                    axios.get('http://172.16.211.151/sbkp/message/messageList/1/1', {
+                    axios.get(this.api1+'/sbkp/message/messageList/1/1', {
                         params: {
                             pageNum: this.currentPage,
                             pageSize: 10,
@@ -377,7 +377,7 @@
                 this.label = command;
                 if (this.personnelType === 'first') {
                     if (this.label === '危险' || this.label === '请选择') {
-                        axios.get('http://172.16.211.151/sbkp/message/messageList/0/1', {
+                        axios.get(this.api1+'/sbkp/message/messageList/0/1', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -386,7 +386,7 @@
                             _this.getMessageInfoSucc(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get('http://172.16.211.151/sbkp/message/messageList/0/2', {
+                        axios.get(this.api1+'/sbkp/message/messageList/0/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -397,7 +397,7 @@
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险' || this.label === '请选择') {
-                        axios.get('http://172.16.211.151/sbkp/message/messageList/1/1', {
+                        axios.get(this.api1+'/sbkp/message/messageList/1/1', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -406,7 +406,7 @@
                             _this.getMessageInfoSucc(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get('http://172.16.211.151/sbkp/message/messageList/1/2', {
+                        axios.get(this.api1+'/sbkp/message/messageList/1/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -420,7 +420,7 @@
 
             // 展示完善筛选条件模态框
             showScreenModal() {
-                axios.get('http://172.16.211.151/sbkp/message/messageListBySearch/actions')
+                axios.get(this.api1+'/sbkp/message/messageListBySearch/actions')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
             },
@@ -453,7 +453,7 @@
                     levelId = 1;
                 }
                 if (time1 === 'NaN-NaN-NaN' || time2 === 'NaN-NaN-NaN') {
-                    axios.post("http://172.16.211.151/sbkp/message/messageListBySearch", qs.stringify({
+                    axios.post(this.api1+"/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
                             levelId: levelId,
                             actionIds: screenDataId,
@@ -465,7 +465,7 @@
                         _this.getSearchInfoSucc(res);
                     });
                 } else {
-                    axios.post("http://172.16.211.151/sbkp/message/messageListBySearch", qs.stringify({
+                    axios.post(this.api1+"/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
                             levelId: levelId,
                             startTime: time1,
@@ -493,7 +493,7 @@
             // 处理报警信息
             handleMessage() {
                 var _this = this;
-                axios.post('http://172.16.211.151/sbkp/message/putKeyMessageStatus/1', qs.stringify({
+                axios.post(this.api1+'/sbkp/message/putKeyMessageStatus/1', qs.stringify({
                         messageId: this.messageId,
                         remark: this.remark
                     }
@@ -512,7 +512,7 @@
             // 忽略报警信息
             ignoreMessage() {
                 var _this = this;
-                axios.post('http://172.16.211.151/sbkp/message/putKeyMessageStatus/2', qs.stringify({
+                axios.post(this.api1+'/sbkp/message/putKeyMessageStatus/2', qs.stringify({
                         messageId: this.messageId,
                         remark: this.remark
                     }
@@ -537,7 +537,7 @@
             // 非重点人员添加至名单
             addNew() {
                 var _this = this;
-                axios.post('http://172.16.211.151/sbkp/message/putMessageStatus', qs.stringify({
+                axios.post(this.api1+'/sbkp/message/putMessageStatus', qs.stringify({
                         messageId: this.messageId,
                     }
                 )).then(function () {
@@ -554,11 +554,6 @@
 
             // 关闭模态框
             closeModal() {
-                // 筛选字段模态框数据清空
-                // this.screenData.time1 = '';
-                // this.screenData.time2 = '';
-                // this.screenData.screenReason = [];
-                // this.screenData.name = '';
                 // 处理模态框数据清空
                 this.remark = '';
                 this.screenDialog = false;
@@ -582,9 +577,13 @@
 
             // 获取当前页码
             pageNum(currentPage) {
-                console.log(this.searchDetection);
                 this.currentPage = currentPage;
                 if (this.searchDetection === false) {
+                    // 筛选字段模态框数据清空
+                    this.screenData.time1 = '';
+                    this.screenData.time2 = '';
+                    this.screenData.screenReason = [];
+                    this.screenData.name = '';
                     this.getMessageInfo();
                 }else if(this.searchDetection === true) {
                     this.submitForm();

@@ -55,7 +55,9 @@
                             <td>{{item.schoolStatus}}</td>
                             <!--操作-->
                             <td>
-                                <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
+                                <router-link class="iconfont operation" :to="{path:'/History',query:{id:item.id}}">
+                                    &#xe685;
+                                </router-link>
                                 <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
                                 <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                                 <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
@@ -143,7 +145,7 @@
                                           v-model="formData.stuNum"
                                           autocomplete="off"
                                           disabled
-                                          @keyup.enter.native="modifyForm(formData.addReason)"
+                                          @keyup.enter.native="submitModify(formData.addReason)"
                                 ></el-input>
                             </el-form-item>
                             <el-form-item
@@ -182,7 +184,7 @@
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
-                        <el-button type="primary" @click="modifyForm(formData.addReason)">提交</el-button>
+                        <el-button type="primary" @click="submitModify(formData.addReason)">提交</el-button>
                     </div>
                 </el-dialog>
                 <!--模态框-删除重点人员-->
@@ -215,6 +217,8 @@
         name: "List",
         data() {
             return {
+                personList: [],
+                totalNum: 0,
                 // 下拉框
                 label: '',
                 select: '',
@@ -243,24 +247,44 @@
                 delNum: '',
             }
         },
-        props: {
-            personList: Array,
-            totalNum: Number
-        },
         methods: {
+            // 初始化列表
+            getStudentsInfo() {
+                axios.get(this.api1+'/sbkp/personnel/personnelList', {
+                    params: {
+                        pageNum: this.currentPage,
+                        pageSize: 10,
+                    }
+                }).then(this.getStudentsInfoSucc)
+            },
+
+            // 处理表格数据
+            getStudentsInfoSucc(res) {
+                res = res.data;
+                this.totalNum = res.totalNum;
+                const data = res.personnelList;
+                for (let i = 0; i < data.length; i++) {
+                    data[i].reasonNames = data[i].reasonNames.join(' ');
+                    if (data[i].schoolStatus === 0) {
+                        data[i].schoolStatus = '是'
+                    } else {
+                        data[i].schoolStatus = '否'
+                    }
+                }
+                this.personList = data;
+            },
+
             // 获取关键词搜索的数据
             searchStu() {
                 if (this.select === '1') {
-                    // console.log('学号');
-                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/stu_num/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '2') {
-                    // console.log('姓名');
-                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/name/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '3') {
                     console.log(this.label);
-                    axios.get('http://172.16.211.151/sbkp/personnel/personnelList/college/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
                 } else {
                     this.$message({
@@ -273,7 +297,6 @@
 
             // 处理搜索的数据并跳转至搜索页面
             searchList(res) {
-                // console.log(res)
                 res = res.data;
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
@@ -299,7 +322,7 @@
             // 展示添加模态框
             showAddModal() {
                 if (this.showTags.length === 0) {
-                    axios.get('http://172.16.211.151/sbkp/personnel/reasons')
+                    axios.get(this.api1+'/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.addDialog = true;
@@ -334,7 +357,7 @@
                     return false;
                 }
                 addReason = this.addReasonId.join(",");
-                axios.post('http://172.16.211.151/sbkp/personnel/postPersonal', qs.stringify({
+                axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
                         studentNum: stuNum,
                         reasonIds: addReason
                     }
@@ -343,7 +366,7 @@
                         message: '添加成功！',
                         type: 'success'
                     });
-                    _this.changList()
+                    _this.getStudentsInfo();
                 }).catch(function () {
                     _this.$message.error('添加失败,请重试！');
                 });
@@ -364,15 +387,16 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get('http://172.16.211.151/sbkp/personnel/reasons')
+                    axios.get(this.api1+'/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
             },
 
-            // 修改-提交操作
-            modifyForm(addReason) {
+            // 修改-提交操作数据处理
+            submitModify(addReason) {
                 var _this = this;
+                let newTag = {};
                 if (addReason === "") {
                     // 判断添加原因是否为空
                     this.$nextTick(() => {
@@ -386,13 +410,37 @@
                 for (let i = 0; i < this.addReasonArr.length; i++) {
                     for (let j = 0; j < this.showTags.length; j++) {
                         if (this.addReasonArr[i] === this.showTags[j].name) {
-                            console.log(this.showTags[j].id);
-                            this.addReasonId.push(this.showTags[j].id)
+                            this.addReasonId.push(this.showTags[j].id);
+                            this.addReasonArr.splice(i,1);
                         }
                     }
                 }
-                addReason = this.addReasonId.join(",");
-                axios.post('http://172.16.211.151/sbkp/personnel/putReasons', qs.stringify({
+                if (this.addReasonArr.length !== 0) {
+                    for (let i = 0; i < this.addReasonArr.length; i++) {
+                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                                reasonName: this.addReasonArr[i]
+                            }
+                        )).then(function (res) {
+                            newTag = {
+                                id: res.data.id,
+                                name: _this.addReasonArr[i]
+                            };
+                            _this.showTags.push(newTag);
+                            _this.addReasonId.push(res.data.id);
+                            addReason = _this.addReasonId.join(",");
+                            _this.modifyForm(addReason);
+                        });
+                    }
+                }else if (this.addReasonArr.length === 0) {
+                    addReason = this.addReasonId.join(",");
+                    this.modifyForm(addReason);
+                }
+            },
+
+            // 修改-提交操作调用接口
+            modifyForm(addReason){
+                var _this = this;
+                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
                         userId: 1,
                         personnelId: this.modifyNum,
                         reasonIds: addReason
@@ -402,7 +450,7 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.changList()
+                    _this.getStudentsInfo();
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -419,8 +467,7 @@
             // 删除-提交操作
             delStu() {
                 var _this = this;
-                console.log(this.delNum);
-                axios.get('http://172.16.211.151/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
@@ -429,7 +476,7 @@
                         message: '删除成功！',
                         type: 'success'
                     });
-                    _this.changList()
+                    _this.getStudentsInfo();
                 }).catch(function () {
                     _this.$message.error('删除失败,请重试！');
                 });
@@ -480,7 +527,7 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post('http://172.16.211.151/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
@@ -506,7 +553,7 @@
                     this.addReasonId.push(id);
                     this.formData.addReason += name;
                 } else {
-                    // name是否重复
+                    // 判断name是否重复
                     for (let i = 0; i < addReasonArr.length; i++) {
                         if (name === addReasonArr[i]) {
                             return false;
@@ -521,14 +568,19 @@
             // 获取当前页码
             pageNum(currentPage) {
                 this.currentPage = currentPage;
-                this.$emit('pageNum', this.currentPage);
+                this.getStudentsInfo();
+                // this.$emit('pageNum', this.currentPage);
             },
 
             // 操作完成更新数据表
-            changList() {
-                this.$emit('getStudentsInfo', this.currentPage);
-            },
+            // changList() {
+            //     // this.$emit('getStudentsInfo', this.currentPage);
+            //
+            // },
         },
+        mounted() {
+            this.getStudentsInfo()//挂载组件
+        }
     }
 </script>
 

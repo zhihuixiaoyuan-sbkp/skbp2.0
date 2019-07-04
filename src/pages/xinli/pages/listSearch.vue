@@ -17,7 +17,7 @@
                     <td>学院</td>
                     <td>专业班级</td>
                     <td>添加原因</td>
-                    <td>在校状态</td>
+                    <td>状态</td>
                     <td>更多操作</td>
                 </tr>
                 </thead>
@@ -35,11 +35,10 @@
                     <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right">
                         <td>{{item.reasonNames}}</td>
                     </el-tooltip>
-                    <td>{{item.schoolStatus}}</td>
+                    <td>{{item.mentalStatus}}</td>
                     <!--操作-->
                     <td>
-                        <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
-                        <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
+                        <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">&#xe685;</router-link>
                         <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                         <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                     </td>
@@ -142,7 +141,7 @@
     import qs from 'qs'
 
     export default {
-        name: "Search",
+        name: "listSearch",
         data() {
             return {
                 label: '',
@@ -179,10 +178,10 @@
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
                     data[i].reasonNames = data[i].reasonNames.join(' ');
-                    if (data[i].schoolStatus === 0) {
-                        data[i].schoolStatus = '是'
+                    if (data[i].mentalStatus === 0) {
+                        data[i].mentalStatus = '轻度心理异常'
                     } else {
-                        data[i].schoolStatus = '否'
+                        data[i].mentalStatus = '重度心理异常'
                     }
                 }
                 this.list = data;
@@ -192,7 +191,7 @@
             updateList() {
                 // 返回并更新重点人员表
                 this.$router.push({
-                    path: '/List'
+                    path: '/abnormalList'
                 })
             },
 

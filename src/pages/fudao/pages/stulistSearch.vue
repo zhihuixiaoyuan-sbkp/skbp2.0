@@ -38,8 +38,7 @@
                     <td>{{item.schoolStatus}}</td>
                     <!--操作-->
                     <td>
-                        <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
-                        <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
+                        <router-link class="iconfont operation" :to="{path:'/fudaoHistory',query:{id:item.id}}">&#xe685;</router-link>
                         <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                         <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                     </td>
@@ -142,7 +141,7 @@
     import qs from 'qs'
 
     export default {
-        name: "Search",
+        name: "stulistSearch",
         data() {
             return {
                 label: '',
@@ -192,7 +191,7 @@
             updateList() {
                 // 返回并更新重点人员表
                 this.$router.push({
-                    path: '/List'
+                    path: '/keyPersonList'
                 })
             },
 

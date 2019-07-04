@@ -242,7 +242,7 @@
             // 返回重点人员表
             updateList() {
                 this.$router.push({
-                    path: '/List'
+                    path: '/abnormalList'
                 })
             },
         },
