@@ -40,28 +40,83 @@
         data() {
             return {
                 userName: '',
-                password: ''
+                password: '',
+                testObject:{
+                    baoweichu:{
+                        username:"",
+                        password:""
+                    },
+                    xueshengchu:{
+                        username:"",
+                        password:""
+                    },
+                    fudaoyuan:{
+                        username:"",
+                        password:""
+                    },
+                    houqinchu:{
+                        username:"",
+                        password:""
+                    },
+                    xinlijiankang:{
+                        username:"",
+                        password:""
+                    },
+                    guanliyuan:{
+                        username:"",
+                        password:""
+                    },
+                    erjixueyuan:{
+                        username:"",
+                        password:""
+                    },
+
+                }
             }
         },
         methods: {
-
+            // loginAxios(){
+            //     if (this.userName === 'test1' && this.password === 'test1') {
+            //         axios.post(this.api + '/admin/adminLogin', qs.stringify({
+            //             // userName: this.userName,
+            //             // password: this.password
+            //             userName: '2018009602',
+            //             password: 'Aiit@6044137796'
+            //         })).then((res) => {
+            //             if (res.data.status == 'ok') {
+            //                 let ses = window.sessionStorage;
+            //                 let d = JSON.stringify(res.data[0])
+            //                 ses.setItem('data', d)
+            //                 alert('登录成功')
+            //                 this.$router.push('/teacher');
+            //             } else {
+            //                 alert('账号或密码错误')
+            //             }
+            //         }).catch(() => {
+            //             this.loading = false
+            //         })
+            //     }
+            //
+            // },
             Login() {
+                sessionStorage.setItem("name","")
+                sessionStorage.setItem("name1","")
                 if(this.userName ==="" && this.password === ""){
                     this.$message.error('请输入合法值');
                 }else{
                     if (this.userName === 'test1' && this.password === 'test1') {
-                        axios.post(this.api + '/admin/adminLogin', qs.stringify({
+                        axios.post( 'http://172.16.211.151/sbkp/login', qs.stringify({
                             // userName: this.userName,
                             // password: this.password
-                            userName: '2018009602',
+                            username: '2018009602',
                             password: 'Aiit@6044137796'
                         })).then((res) => {
+                            console.log(111)
                             if (res.data.status == 'ok') {
                                 let ses = window.sessionStorage;
                                 let d = JSON.stringify(res.data[0])
                                 ses.setItem('data', d)
                                 alert('登录成功')
-                                this.$router.push('/teacher');
                             } else {
                                 alert('账号或密码错误')
                             }
