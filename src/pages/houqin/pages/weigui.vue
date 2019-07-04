@@ -55,13 +55,13 @@
                 style="width: 90%; margin-top: 40px">
             <el-table-column
                     align="center"
-                    prop="num"
                     label="序号"
+                    type=index
                     width="60">
             </el-table-column>
             <el-table-column
                     align="center"
-                    prop="stu_num"
+                    prop="stuNum"
                     label="学号"
                     width="140">
             </el-table-column>
@@ -84,7 +84,7 @@
             </el-table-column>
             <el-table-column
                     align="center"
-                    prop="pro_class"
+                    prop="proClass"
                     label="班级"
                     width="120">
             </el-table-column>
@@ -107,7 +107,7 @@
             </el-table-column>
             <el-table-column
                     align="center"
-                    prop="date_time"
+                    prop="dateTime"
                     label="时间">
             </el-table-column>
         </el-table>

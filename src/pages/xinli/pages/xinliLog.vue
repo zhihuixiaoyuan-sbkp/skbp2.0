@@ -37,7 +37,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="stu_num"
+                                    prop="stuNum"
                                     label="学号"
                                     width="180">
                             </el-table-column>
@@ -54,17 +54,17 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="pro_class"
+                                    prop="proClass"
                                     label="专业班级">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="action_name"
+                                    prop="actionName"
                                     label="行为描述">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="date_time"
+                                    prop="dateTime"
                                     label="违规时间">
                             </el-table-column>
 
@@ -124,7 +124,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="stu_num"
+                                    prop="stuNum"
                                     label="学号"
                                     width="180">
                             </el-table-column>
@@ -141,7 +141,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="pro_class"
+                                    prop="proClass"
                                     label="专业班级">
                             </el-table-column>
                             <el-table-column
@@ -151,12 +151,12 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="delete_time"
+                                    prop="deleteTime"
                                     label="删除时间">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="mind_status"
+                                    prop="mindStatus"
                                     label="状态"
 
                             >
@@ -260,7 +260,7 @@
             handleEditCallback(){
                 this.$message({
                     type: "success",
-                    message
+                    message:"撤销成功"
                 })
                 if (this.notDelete && this.notSearch) { //处于处理选卡，且没有进行搜索
                     this.getLogingHandle()

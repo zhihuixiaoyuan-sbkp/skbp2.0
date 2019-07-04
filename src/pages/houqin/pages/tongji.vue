@@ -101,20 +101,20 @@
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="rules_num"
+                                prop="rulesNum"
                                 label="违规人数"
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="late_num"
+                                prop="lateNum"
                                 label="晚归">
                         </el-table-column>
                         <el-table-column
-                                prop="nightout_num"
+                                prop="nightoutNum"
                                 label="夜不归宿">
                         </el-table-column>
                         <el-table-column
-                                prop="dwell_num"
+                                prop="dwellNum"
                                 label="蜗居">
                         </el-table-column>
                     </el-table>
@@ -141,25 +141,25 @@
                             border
                             style="width: 90%; margin-top: 40px">
                         <el-table-column
-                                prop="building_num"
+                                prop="buildingNum"
                                 :label='name'
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="rules_num"
+                                prop="rulesNum"
                                 label="违规人数"
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="late_num"
+                                prop="lateNum"
                                 label="晚归">
                         </el-table-column>
                         <el-table-column
-                                prop="nightout_num"
+                                prop="nightoutNum"
                                 label="夜不归宿">
                         </el-table-column>
                         <el-table-column
-                                prop="dwell_num"
+                                prop="dwellNum"
                                 label="蜗居">
                         </el-table-column>
                     </el-table>
@@ -185,25 +185,25 @@
                             border
                             style="width: 90%; margin-top: 40px">
                         <el-table-column
-                                prop="stu_sex"
+                                prop="stuSex"
                                 :label='name'
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="rules_num"
+                                prop="rulesNum"
                                 label="违规人数"
                                 width="180">
                         </el-table-column>
                         <el-table-column
-                                prop="late_num"
+                                prop="lateNum"
                                 label="晚归">
                         </el-table-column>
                         <el-table-column
-                                prop="nightout_num"
+                                prop="nightoutNum"
                                 label="夜不归宿">
                         </el-table-column>
                         <el-table-column
-                                prop="dwell_num"
+                                prop="dwellNum"
                                 label="蜗居">
                         </el-table-column>
                     </el-table>
@@ -287,7 +287,7 @@
 
             /*学院统计图、表格数据接口异步请求*/
             getColleageCensusInfo() {
-                axios.post("http://172.16.67.53:8080/sbkp/census/getCollegeCensusInfo")
+                axios.post(this.api + "/sbkp/census/getCollegeCensusInfo")
                     .then(this.getColleageCensusInfoCallback)
                     .catch(function () {
                         console.log("出错了")
@@ -310,18 +310,18 @@
                 for (var j = 0; j < seriesLen; j++) {
                     for (var i = 0; i < len; i++) {//拆分数据结构
                         if (j === 0) {
-                            this.series[j].data[i] = arr[i].rules_num
+                            this.series[j].data[i] = arr[i].rulesNum
                         } else if (j === 1) {
-                            this.series[j].data[i] = arr[i].late_num
+                            this.series[j].data[i] = arr[i].lateNum
                         } else if (j === 2) {
-                            this.series[j].data[i] = arr[i].nightout_num
+                            this.series[j].data[i] = arr[i].nightoutNum
                         } else {
-                            this.series[j].data[i] = arr[i].dwell_num
+                            this.series[j].data[i] = arr[i].dwellNum
                         }
                     }
 
                 }
-                this.name = ""
+                // this.name = ""
                 this.isOk = true
 
 
@@ -329,7 +329,7 @@
 
             /*楼栋统计图、表格数据接口异步请求*/
             getBuildingCensusInfo() {
-                axios.post("http://172.16.67.53:8080/sbkp/census/getBuildingCensusInfo")
+                axios.post(this.api + "/sbkp/census/getBuildingCensusInfo")
                     .then(this.getBuildingCensusInfoCallback)
 
                     .catch(
@@ -351,18 +351,18 @@
                     let len = arr.length
                     let seriesLen = this.series2.length
                     for (var i = 0; i < len; i++) {//拆分数据结构
-                        this.xAxis2.data[i] = arr[i].building_num //x轴坐标轴
+                        this.xAxis2.data[i] = arr[i].buildingNum //x轴坐标轴
                     }
                     for (var j = 0; j < seriesLen; j++) {
                         for (var i = 0; i < len; i++) {//拆分数据结构
                             if (j === 0) {
-                                this.series2[j].data[i] = arr[i].rules_num
+                                this.series2[j].data[i] = arr[i].rulesNum
                             } else if (j === 1) {
-                                this.series2[j].data[i] = arr[i].late_num
+                                this.series2[j].data[i] = arr[i].lateNum
                             } else if (j === 2) {
-                                this.series2[j].data[i] = arr[i].nightout_num
+                                this.series2[j].data[i] = arr[i].nightoutNum
                             } else {
-                                this.series2[j].data[i] = arr[i].dwell_num
+                                this.series2[j].data[i] = arr[i].dwellNum
                             }
 
 
@@ -380,7 +380,7 @@
 
             /*性别统计图、表格接口异步请求*/
             getSexCensusInfo() {
-                axios.post("http://172.16.67.53:8080/sbkp/census/getSexCensusInfo")
+                axios.post(this.api + "/sbkp/census/getSexCensusInfo")
                     .then(this.getSexCensusInfoCallback)
                     .catch(function () {
                         console.log("出错了")
@@ -401,18 +401,15 @@
                     for (var j = 0; j < seriesLen; j++) {
                         for (var i = 0; i < 4; i++) {//拆分数据结构
                             if (i === 0) {
-                                this.series3[j].data[i] = arr[j].rules_num
+                                this.series3[j].data[i] = arr[j].rulesNum
                             } else if (i === 1) {
-                                this.series3[j].data[i] = arr[j].late_num
+                                this.series3[j].data[i] = arr[j].lateNum
                             } else if (i === 2) {
-                                this.series3[j].data[i] = arr[j].nightout_num
+                                this.series3[j].data[i] = arr[j].nightoutNum
                             } else {
-                                this.series3[j].data[i] = arr[j].dwell_num
+                                this.series3[j].data[i] = arr[j].dwellNum
                             }
                         }
-                    }
-                    for (var a = 0; a < 4; a++) {
-                        console.log(this.series2[a].data)
                     }
                     this.name = ""
                     this.ischart1 = true
@@ -437,7 +434,7 @@
                 flag: "",
                 isOk: false,
                 isView: true,//图表与表格切换控制
-                name: "",//头部
+                name: "学院",//头部
                 tableData: [{
                     xueyuan: '计算机与软件工程学院',
                     weiguirenshu: 100,

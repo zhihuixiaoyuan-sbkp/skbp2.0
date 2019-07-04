@@ -42,14 +42,14 @@
                         style="width: 100%;background: transparent;border: 0px">
                     <el-table-column
                             align="center"
-                            prop="counsellor_name"
+                            prop="counsellorName"
                             label="姓名"
                             width="300"
                     >
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="key_personnel"
+                            prop="keyPersonnel"
                             label="重点人员人数"
                             width="150">
                     </el-table-column>
@@ -88,8 +88,8 @@
                 isView: true,//切换表格/图表
                 tableData: [//接口数据模型
                     {
-                        counsellor_name: "",
-                        key_personnel: '',
+                        counsellorName: "",
+                        keyPersonnel: '',
                         processed: '',
                         untreated: ''
                     },],
@@ -178,12 +178,12 @@
                 /*//数据是否为空*/
                 if (arr !== "null") {
                     for (let i = 0; i < len; i++) {
-                        this.xAxis.data[i] = arr[i].counsellor_name
+                        this.xAxis.data[i] = arr[i].counsellorName
                     }
                     for (let j = 0; j < 3; j++) {
                         for (let i = 0; i < len; i++) {
                             if (j === 0) {
-                                this.series[j].data[i] = arr[i].key_personnel
+                                this.series[j].data[i] = arr[i].keyPersonnel
                             } else if (j === 1) {
                                 this.series[j].data[i] = arr[i].processed
                             } else {

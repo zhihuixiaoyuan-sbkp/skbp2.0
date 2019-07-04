@@ -40,15 +40,26 @@ import stulistSearch from "@/pages/fudao/pages/stulistSearch.vue"
 import fudaoHistory from "@/pages/fudao/pages/fudaoHistory.vue"
 import instructorLog from "@/pages/fudao/pages/instructorLog.vue"
 import fudaoHome from "@/pages/fudao/fudaoHome.vue"
-
+import login from "@/pages/login/login.vue"
 Vue.use(Router)
 
 export default new Router({
     routes: [
         {
+            path:'/login',
+            name:login,
+            component:login,
+            meta:{
+                allowBack:true
+            }
+        },
+        {
+            path: '/',
+            redirect: '/login',
+        },
+        {
             path: '/',
             name: 'houqinHome',
-            redirect: '/loding',
             component: houqinHome,
             children: [
                 {

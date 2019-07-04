@@ -37,7 +37,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="stu_num"
+                                    prop="stuNum"
                                     label="学号"
                                     width="180">
                             </el-table-column>
@@ -54,17 +54,17 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="pro_class"
+                                    prop="proClass"
                                     label="专业班级">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="action_name"
+                                    prop="actionName"
                                     label="行为描述">
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="date_time"
+                                    prop="dateTime"
                                     label="违规时间">
                             </el-table-column>
                             <el-table-column
@@ -102,7 +102,7 @@
                             background
                             @current-change="pageChange"
                             layout="prev, pager, next"
-                            :total='20'>
+                            :total='totalCount'>
                     </el-pagination>
                 </div>
             </el-tab-pane>
@@ -123,7 +123,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="stu_num"
+                                    prop="stuNum"
                                     label="学号"
                                     width="180">
                             </el-table-column>
@@ -140,7 +140,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="pro_class"
+                                    prop="proClass"
                                     label="专业班级">
                             </el-table-column>
                             <el-table-column
@@ -150,7 +150,7 @@
                             </el-table-column>
                             <el-table-column
                                     align="center"
-                                    prop="delete_time"
+                                    prop="deleteTime"
                                     label="删除时间">
                             </el-table-column>
                             <el-table-column
@@ -176,7 +176,7 @@
                             background
                             @current-change="pageChange1"
                             layout="prev, pager, next"
-                            :total='20'>
+                            :total='totalCount'>
                     </el-pagination>
                 </div>
             </el-tab-pane>

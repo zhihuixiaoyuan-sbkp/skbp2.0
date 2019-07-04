@@ -1,0 +1,139 @@
+<template>
+    <div>
+        <div class="container">
+            <div class="loginForm">
+                <div class="title">
+                    <img src="./img/title-login.png" alt="">
+                </div>
+                <div class="form">
+                    <p class="p1">
+                        <label for="account">账号：</label>
+                        <input type="text"
+                               class="account"
+                               id="account"
+                               name="userName"
+                               placeholder="请输入账号"
+                               v-model="userName">
+                    </p>
+                    <p class="p2">
+                        <label for="password">密码：</label>
+                        <input type="password"
+                               class="password"
+                               id="password"
+                               name="password"
+                               placeholder="请输入密码"
+                               v-model="password">
+                    </p>
+                    <button class="login" @click="Login">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import axios from "axios"
+    import qs from "qs"
+
+    export default {
+        name: 'Login',
+        data() {
+            return {
+                userName: '',
+                password: ''
+            }
+        },
+        methods: {
+
+            Login() {
+                if(this.userName ==="" && this.password === ""){
+                    this.$message.error('请输入合法值');
+                }else{
+                    if (this.userName === 'test1' && this.password === 'test1') {
+                        axios.post(this.api + '/admin/adminLogin', qs.stringify({
+                            // userName: this.userName,
+                            // password: this.password
+                            userName: '2018009602',
+                            password: 'Aiit@6044137796'
+                        })).then((res) => {
+                            if (res.data.status == 'ok') {
+                                let ses = window.sessionStorage;
+                                let d = JSON.stringify(res.data[0])
+                                ses.setItem('data', d)
+                                alert('登录成功')
+                                this.$router.push('/teacher');
+                            } else {
+                                alert('账号或密码错误')
+                            }
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    }
+                    else {
+                        this.$message.error('密码或账号错误');
+                    }
+                }
+
+
+            }
+        }
+    }
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        background: url("./img/bg-login2.jpg");
+        background-size: 100% 100%;
+        position: fixed;
+    }
+
+    .loginForm {
+        width: 500px;
+        height: 100%;
+        background: #fff;
+        position: fixed;
+        right: 0;
+        top: 0;
+    }
+
+    .title {
+        text-align: center;
+        margin-top: 100px;
+    }
+
+    .title img {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .form .p1, .p2 {
+        margin-top: 40px;
+        margin-left: 100px;
+    }
+
+    .form .account, .password {
+        width: 200px;
+        height: 20px;
+        margin-top: 20px;
+        margin-left: 20px;
+        border-radius: 5px;
+    }
+
+    .form .login {
+        width: 200px;
+        height: 30px;
+        background: #0a9dc7;
+        margin-left: 175px;
+        margin-top: 30px;
+        border-radius: 10px;
+    }
+
+</style>
