@@ -465,8 +465,8 @@
             /*修改操作请求函数*/
             editUser(name, user_num, id, dept, college) {
                 axios.post(this.api + "/sbkp/admin/updateAcoountInfo", qs.stringify({
-                    user_num: user_num,
-                    user_name: name,
+                    userNum: user_num,
+                    userName: name,
                     id: id,
                     dept: dept,
                     college: college
@@ -504,8 +504,8 @@
             /*添加用户请求函数*/
             addUser(user_num, user_name, dept, college) {
                 axios.post(this.api + "/sbkp/admin/saveAcoountInfo", qs.stringify({
-                    user_num: user_num,
-                    user_name: user_name,
+                    userNum: user_num,
+                    userName: user_name,
                     dept: dept,
                     college: college
                 }))
