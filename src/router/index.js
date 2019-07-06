@@ -41,6 +41,7 @@ import fudaoHistory from "@/pages/fudao/pages/fudaoHistory.vue"
 import instructorLog from "@/pages/fudao/pages/instructorLog.vue"
 import fudaoHome from "@/pages/fudao/fudaoHome.vue"
 import login from "@/pages/login/login.vue"
+import loginErro from "@/pages/loginErro/loginErro.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -54,8 +55,16 @@ export default new Router({
             }
         },
         {
+            path:'/loginErro',
+            name:loginErro,
+            component:loginErro,
+            meta:{
+                allowBack:true
+            }
+        },
+        {
             path: '/',
-            redirect: '/login',
+            redirect: '/loginErro',
         },
         {
             path: '/',

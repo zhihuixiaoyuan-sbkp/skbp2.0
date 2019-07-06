@@ -5,13 +5,16 @@
                 <div class="title">
                     <img src="./img/title-login.png" alt="">
                 </div>
+
+
                 <div class="form">
+                    <form id="loginForm" action="http://172.16.211.151/sbkp/login" method="POST" @submit="submit">
                     <p class="p1">
                         <label for="account">账号：</label>
                         <input type="text"
                                class="account"
                                id="account"
-                               name="userName"
+                               name="username"
                                placeholder="请输入账号"
                                v-model="userName">
                     </p>
@@ -24,7 +27,9 @@
                                placeholder="请输入密码"
                                v-model="password">
                     </p>
-                    <button class="login" @click="Login">登录</button>
+                    <!--<button class="login" @click="login">登录</button>-->
+                    <input type="submit" class="login" value="登录">
+                    </form>
                 </div>
             </div>
         </div>
@@ -41,97 +46,99 @@
             return {
                 userName: '',
                 password: '',
-                testObject:{
-                    baoweichu:{
-                        username:"",
-                        password:""
+                // userName: '2018009602',
+                // password: 'Aiit@6044137796',
+                testObject: {
+                    baoweichu: {
+                        username: "",
+                        password: ""
                     },
-                    xueshengchu:{
-                        username:"",
-                        password:""
+                    xueshengchu: {
+                        username: "",
+                        password: ""
                     },
-                    fudaoyuan:{
-                        username:"",
-                        password:""
+                    fudaoyuan: {
+                        username: "",
+                        password: ""
                     },
-                    houqinchu:{
-                        username:"",
-                        password:""
+                    houqinchu: {
+                        username: "",
+                        password: ""
                     },
-                    xinlijiankang:{
-                        username:"",
-                        password:""
+                    xinlijiankang: {
+                        username: "",
+                        password: ""
                     },
-                    guanliyuan:{
-                        username:"",
-                        password:""
+                    guanliyuan: {
+                        username: "",
+                        password: ""
                     },
-                    erjixueyuan:{
-                        username:"",
-                        password:""
+                    erjixueyuan: {
+                        username: "",
+                        password: ""
                     },
 
                 }
             }
         },
         methods: {
-            // loginAxios(){
-            //     if (this.userName === 'test1' && this.password === 'test1') {
-            //         axios.post(this.api + '/admin/adminLogin', qs.stringify({
-            //             // userName: this.userName,
-            //             // password: this.password
-            //             userName: '2018009602',
-            //             password: 'Aiit@6044137796'
-            //         })).then((res) => {
-            //             if (res.data.status == 'ok') {
-            //                 let ses = window.sessionStorage;
-            //                 let d = JSON.stringify(res.data[0])
-            //                 ses.setItem('data', d)
-            //                 alert('登录成功')
-            //                 this.$router.push('/teacher');
-            //             } else {
-            //                 alert('账号或密码错误')
-            //             }
-            //         }).catch(() => {
-            //             this.loading = false
-            //         })
-            //     }
-            //
-            // },
-            Login() {
-                sessionStorage.setItem("name","")
-                sessionStorage.setItem("name1","")
-                if(this.userName ==="" && this.password === ""){
-                    this.$message.error('请输入合法值');
-                }else{
-                    if (this.userName === 'test1' && this.password === 'test1') {
-                        axios.post( 'http://172.16.211.151/sbkp/login', qs.stringify({
-                            // userName: this.userName,
-                            // password: this.password
-                            username: '2018009602',
-                            password: 'Aiit@6044137796'
-                        })).then((res) => {
-                            console.log(111)
-                            if (res.data.status == 'ok') {
-                                let ses = window.sessionStorage;
-                                let d = JSON.stringify(res.data[0])
-                                ses.setItem('data', d)
-                                alert('登录成功')
-                            } else {
-                                alert('账号或密码错误')
-                            }
-                        }).catch(() => {
-                            this.loading = false
-                        })
-                    }
-                    else {
-                        this.$message.error('密码或账号错误');
-                    }
-                }
 
+
+            // login(){
+            //     var loginForm = document.getElementById("loginForm")
+            //      loginForm.action = "http://172.16.211.151/sbkp/login"
+            // },
+            submit:function(e){
+                var s = 1;
+                console.log(123)
+             if(this.userName === "" || this.password === ""){
+                 this.$message.error("请填写合法账户信息")
+                 e.preventDefault();
+             }else {
+                 return true
+             }
+            },
+
+            login() {
+                // username: '2018009602',
+                // password: 'Aiit@6044137796'
+                // sessionStorage.setItem("name","")
+                // sessionStorage.setItem("name1","")
+
+                        // axios.post( process.env.API_HOST + '/sbkp/login', qs.stringify(
+                        //     {
+                        //         username: '2018009602',
+                        //         password: 'Aiit@6044137796'
+                        //     }),
+                        //
+                        // ).then((res) => {
+                        //     console.log(res);
+                        // }).catch(() => {
+                        //     this.loading = false
+                        // })
+                // let data = {
+                //     username: '2018009602',
+                //     password: 'Aiit@6044137796'
+                //
+                // }
+
+                // axios({
+                //     method: 'post',
+                //     url: process.env.API_HOST + '/sbkp/login',
+                //     data:qs.stringify(data),
+                //     headers: {
+                //         'Content-Type': 'application/x-www-form-urlencoded',
+                //     }
+                // }).then(function (res) {
+                //     // window.location='/'
+                //     console.log(res.headers);
+                // });
 
             }
-        }
+
+
+        },
+
     }
 </script>
 

@@ -1,7 +1,10 @@
 <template>
     <div class="header">
         <span class="title">重点人员行为监管系统</span>
-        <span class="exit">退出登录</span>
+        <form action="http://172.16.211.151/sbkp/logout">
+            <input class="exit" type="submit" @click="loginOut" value="退出登录" >
+        </form>
+
         <!--<router-link to="/Message" class="iconfont message">&#xe606;</router-link>-->
         <el-button class="iconfont message" @click="loadMessage" v-show="warningMessage">&#xe606;</el-button>
     </div>
@@ -17,6 +20,21 @@
             }
         },
         methods: {
+            loginOut(){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', this.api1 + "/sbkp/logout");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        console.log(xhr.responseText);
+                    }
+                }
+                // if (method == 'POST') {
+                //     //给指定的HTTP请求头赋值
+                //     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                // }
+                xhr.send()
+
+            },
             loadMessage() {
                 console.log(this.curName)
                 if (this.curName === 'home') {
@@ -47,7 +65,8 @@
                     vm.warningMessage = true
                 }
             })
-        }
+        },
+
     }
 </script>
 
@@ -83,6 +102,10 @@
         right: 40px;
         cursor: pointer;
         letter-spacing: 4px;
+        top: 2px;
+        border: 0;
+        color: #fff;
+        background: transparent;
     }
 
     .message {
