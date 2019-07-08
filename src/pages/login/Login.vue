@@ -142,35 +142,6 @@
                 // sessionStorage.setItem("name","")
                 // sessionStorage.setItem("name1","")
 
-                        // axios.post( process.env.API_HOST + '/sbkp/login', qs.stringify(
-                        //     {
-                        //         username: '2018009602',
-                        //         password: 'Aiit@6044137796'
-                        //     }),
-                        //
-                        // ).then((res) => {
-                        //     console.log(res);
-                        // }).catch(() => {
-                        //     this.loading = false
-                        // })
-                // let data = {
-                //     username: '2018009602',
-                //     password: 'Aiit@6044137796'
-                //
-                // }
-
-                // axios({
-                //     method: 'post',
-                //     url: process.env.API_HOST + '/sbkp/login',
-                //     data:qs.stringify(data),
-                //     headers: {
-                //         'Content-Type': 'application/x-www-form-urlencoded',
-                //     }
-                // }).then(function (res) {
-                //     // window.location='/'
-                //     console.log(res.headers);
-                // });
-
             }
 
 

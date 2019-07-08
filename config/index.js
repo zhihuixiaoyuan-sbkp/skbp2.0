@@ -11,13 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      "/api": {
-        target: "http://172.16.211.151:80/", //设置你调用的接口域名和端口号
-        changeOrigin: true, //跨域
-        pathRewrite: {
-          "^/api": "/"
-        }
-      }
+      // "/api": {
+      //   target: "http://172.16.211.151:80/", //设置你调用的接口域名和端口号
+      //   changeOrigin: true, //跨域
+      //   pathRewrite: {
+      //     "^/api": "/"
+      //   }
+      // }
 
 
     },
