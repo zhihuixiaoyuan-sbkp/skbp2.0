@@ -64,7 +64,7 @@ export default new Router({
         },
         {
             path: '/',
-            redirect: '/loginErro',
+            redirect: '/login',
         },
         {
             path: '/',

@@ -16,7 +16,7 @@
         data(){
             return {
                 code:"",
-                errInfo:["角色名不正确","学生账号无法登陆此系统","账号或密码错误",]
+                errInfo:[" ","角色名不正确","学生账号无法登陆此系统","账号或密码错误",]
             }
         },
 
@@ -28,6 +28,7 @@
             },
             getCode(){
                 this.code = this.$route.query.code
+                console.log(this.$route.query)
             }
         },
         mounted(){
