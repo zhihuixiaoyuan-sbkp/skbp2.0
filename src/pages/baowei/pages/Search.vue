@@ -262,7 +262,6 @@
             modifyForm(addReason){
                 var _this = this;
                 axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
-                        userId: 1,
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }

@@ -441,7 +441,6 @@
             modifyForm(addReason){
                 var _this = this;
                 axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
-                        userId: 1,
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }
@@ -614,6 +613,7 @@
     /*人员添加*/
     /*按钮*/
     .addBtn {
+        outline: none;
         margin-top: 20px;
         font-size: 20px;
         color: #607D8B;
