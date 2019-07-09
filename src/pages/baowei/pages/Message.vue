@@ -420,7 +420,7 @@
 
             // 展示完善筛选条件模态框
             showScreenModal() {
-                axios.get(this.api1+'/sbkp/message/messageListBySearch/actions')
+                axios.get(this.api1+'/sbkp/message/messageListBySearch/rules')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
             },
@@ -564,7 +564,7 @@
             // 获取标签
             getTagsInfoSucc(res) {
                 res = res.data;
-                this.keyword = res.actionList;
+                this.keyword = res.rules;
             },
 
             // 获取筛选结果

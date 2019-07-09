@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import store from './store/index'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -14,13 +13,14 @@ import 'viewerjs/dist/viewer.css'
 import './assets/styles/iconfont.css'
 import G from './api/api'
 import echarts from 'echarts'
+import router from './router'
 
 Vue.use(G);
 Vue.use(ElementUI);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 Vue.prototype.$echarts = echarts;
-Vue.use(Viewer)
+Vue.use(Viewer);
 Viewer.setDefaults({
     Options: {
         'inline': true,

@@ -310,7 +310,8 @@
         methods: {
             // 初始化列表
             getMessageInfo() {
-                axios.get(this.api1+'/sbkp/message/messageList/0/1', {
+                // 重度x危险
+                axios.get(this.api1+'/sbkp/message/messageList/2/1', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -331,7 +332,7 @@
                 this.searchDetection = false;
                 this.label = '请选择';
                 if (this.personnelType === 'first') {
-                    axios.get(this.api1+'/sbkp/message/messageList/0/1', {
+                    axios.get(this.api1+'/sbkp/message/messageList/2/1', {
                         params: {
                             pageNum: this.currentPage,
                             pageSize: 10,
@@ -358,7 +359,7 @@
                 this.label = command;
                 if (this.personnelType === 'first') {
                     if (this.label === '危险' || this.label === '请选择') {
-                        axios.get(this.api1+'/sbkp/message/messageList/0/1', {
+                        axios.get(this.api1+'/sbkp/message/messageList/2/1', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -367,7 +368,7 @@
                             _this.getMessageInfoSucc(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1+'/sbkp/message/messageList/0/2', {
+                        axios.get(this.api1+'/sbkp/message/messageList/2/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -401,7 +402,7 @@
 
             // 展示完善筛选条件模态框
             showScreenModal() {
-                axios.get(this.api1+'/sbkp/message/messageListBySearch/actions')
+                axios.get(this.api1+'/sbkp/message/messageListBySearch/rules')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
             },
@@ -520,7 +521,7 @@
             // 获取标签
             getTagsInfoSucc(res) {
                 res = res.data;
-                this.keyword = res.actionList;
+                this.keyword = res.rules;
             },
 
             // 获取筛选结果

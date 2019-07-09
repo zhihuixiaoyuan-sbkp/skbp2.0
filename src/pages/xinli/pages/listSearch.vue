@@ -38,7 +38,9 @@
                     <td>{{item.mentalStatus}}</td>
                     <!--操作-->
                     <td>
-                        <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">&#xe685;</router-link>
+                        <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">
+                            &#xe685;
+                        </router-link>
                         <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                         <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                     </td>
@@ -54,7 +56,7 @@
             </nav>
         </el-col>
         <!--模态框-修改重点人员-->
-        <el-dialog title="修改重点人员"
+        <el-dialog title="修改心理异常人员信息"
                    class="allModal"
                    width="520px"
                    :visible.sync="modifyDialog"
@@ -92,8 +94,8 @@
                             <span>我的添加原因：</span>
                             <el-tag v-for="historytag in historyAddReason"
                                     :key="historytag"
-                                    type="info"
                                     :disable-transitions="false"
+                                    type="info"
                             >{{historytag}}
                             </el-tag>
                         </div>
@@ -107,17 +109,23 @@
                                 {{tag.name}}
                             </el-tag>
                         </div>
+                        <div class="selection-state">
+                            <span>状态：</span>
+                            <el-radio v-model="formData.radio" label="1">轻度心理异常人员</el-radio>
+                            <el-radio v-model="formData.radio" label="2">重度心理异常人员</el-radio>
+                        </div>
                     </el-form-item>
                 </el-form>
             </div>
             <hr class="boundaryModal">
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="closeModal">取消</el-button>
-                <el-button type="primary" @click="submitModify(formData.addReason)">提交</el-button>
+                <el-button type="primary" @click="submitModify(formData.addReason,formData.radio)">提交
+                </el-button>
             </div>
         </el-dialog>
         <!--模态框-删除重点人员-->
-        <el-dialog title="删除重点人员"
+        <el-dialog title="删除心理异常人员"
                    class="allModal"
                    :visible.sync="delDialog"
                    :close-on-press-escape="false"
@@ -126,7 +134,7 @@
             <hr class="boundaryModal">
             <!--提示文本-->
             <div class="bodyModaldel">
-                <span class="tips">是否确认从列表删除该名重点人员？</span>
+                <span class="tips">是否从列表删除该心理异常人员？</span>
             </div>
             <div slot="footer" class="dialog-footer delbutton">
                 <el-button @click="closeModal">取 消</el-button>
@@ -156,7 +164,8 @@
                 // form表单数据
                 formData: {
                     stuNum: '',
-                    addReason: ''
+                    addReason: '',
+                    radio: '1'
                 },
                 // 记录添加原因
                 addReasonArr: [],
@@ -207,14 +216,14 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
             },
 
             // 修改-提交操作数据处理
-            submitModify(addReason) {
+            submitModify(addReason, radio) {
                 var _this = this;
                 let newTag = {};
                 if (addReason === "") {
@@ -231,13 +240,13 @@
                     for (let j = 0; j < this.showTags.length; j++) {
                         if (this.addReasonArr[i] === this.showTags[j].name) {
                             this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i,1);
+                            this.addReasonArr.splice(i, 1);
                         }
                     }
                 }
                 if (this.addReasonArr.length !== 0) {
                     for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
                             }
                         )).then(function (res) {
@@ -248,22 +257,22 @@
                             _this.showTags.push(newTag);
                             _this.addReasonId.push(res.data.id);
                             addReason = _this.addReasonId.join(",");
-                            _this.modifyForm(addReason);
+                            _this.modifyForm(addReason, radio);
                         });
                     }
-                }else if (this.addReasonArr.length === 0) {
+                } else if (this.addReasonArr.length === 0) {
                     addReason = this.addReasonId.join(",");
-                    this.modifyForm(addReason);
+                    this.modifyForm(addReason, radio);
                 }
             },
 
             // 修改-提交操作调用接口
-            modifyForm(addReason){
+            modifyForm(addReason, radio) {
                 var _this = this;
-                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
-                        userId: 1,
+                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
-                        reasonIds: addReason
+                        reasonIds: addReason,
+                        mentalStatus: radio
                     }
                 )).then(function () {
                     _this.$message({
@@ -286,7 +295,7 @@
 
             // 删除-提交操作
             delStu() {
-                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
@@ -334,7 +343,7 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
@@ -383,19 +392,19 @@
             // 操作完成更新数据表
             changList() {
                 if (this.select === '1') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/stu_num/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }
                     }).then(this.searchList)
                 } else if (this.select === '2') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/name/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }
                     }).then(this.searchList)
                 } else if (this.select === '3') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }

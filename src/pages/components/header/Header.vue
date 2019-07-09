@@ -71,15 +71,6 @@
 </script>
 
 <style scoped>
-    a {
-        color: #fff;
-    }
-
-    a:hover {
-        color: #25309a;
-        text-decoration: transparent
-    }
-
     .header {
         position: relative;
         height: 60px;
@@ -104,6 +95,7 @@
         letter-spacing: 4px;
         top: 2px;
         border: 0;
+        outline: none;
         color: #fff;
         background: transparent;
     }
@@ -112,7 +104,7 @@
         position: absolute;
         font-size: 33px;
         top: 3px;
-        right: 122px;
+        right: 145px;
         font-weight: 600;
 
         outline: none;

@@ -55,7 +55,9 @@
                             <td>{{item.mentalStatus}}</td>
                             <!--操作-->
                             <td>
-                                <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">&#xe685;</router-link>
+                                <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">
+                                    &#xe685;
+                                </router-link>
                                 <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                                 <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                             </td>
@@ -123,7 +125,9 @@
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
-                        <el-button type="primary" @click="submitForm(formData.stuNum,formData.addReason)">提交</el-button>
+                        <el-button type="primary"
+                                   @click="submitForm(formData.stuNum,formData.addReason,formData.radio)">提交
+                        </el-button>
                     </div>
                 </el-dialog>
                 <!--模态框-修改重点人员-->
@@ -191,7 +195,8 @@
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
-                        <el-button type="primary" @click="submitModify(formData.addReason)">提交</el-button>
+                        <el-button type="primary" @click="submitModify(formData.addReason,formData.radio)">提交
+                        </el-button>
                     </div>
                 </el-dialog>
                 <!--模态框-删除重点人员-->
@@ -258,7 +263,7 @@
         methods: {
             // 初始化列表
             getStudentsInfo() {
-                axios.get(this.api1+'/sbkp/personnel/personnelList', {
+                axios.get(this.api1 + '/sbkp/personnel/personnelList', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -273,7 +278,7 @@
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
                     data[i].reasonNames = data[i].reasonNames.join(' ');
-                    if (data[i].mentalStatus === 0) {
+                    if (data[i].mentalStatus === 1) {
                         data[i].mentalStatus = '轻度心理异常'
                     } else {
                         data[i].mentalStatus = '重度心理异常'
@@ -285,14 +290,14 @@
             // 获取关键词搜索的数据
             searchStu() {
                 if (this.select === '1') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/stu_num/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '2') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/name/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '3') {
                     console.log(this.label);
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
                 } else {
                     this.$message({
@@ -309,7 +314,7 @@
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
                     data[i].reasonNames = data[i].reasonNames.join(' ');
-                    if (data[i].mentalStatus === 0) {
+                    if (data[i].mentalStatus === 1) {
                         data[i].mentalStatus = '轻度心理异常'
                     } else {
                         data[i].mentalStatus = '重度心理异常'
@@ -330,14 +335,14 @@
             // 展示添加模态框
             showAddModal() {
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.addDialog = true;
             },
 
             // 添加-提交操作
-            submitForm(stuNum, addReason) {
+            submitForm(stuNum, addReason, radio) {
                 // 提交表单--点击提交or学号input框获得焦点时回车
                 // 判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
                 var reg = /^[0-9]+.?[0-9]*$/;
@@ -365,9 +370,10 @@
                     return false;
                 }
                 addReason = this.addReasonId.join(",");
-                axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
+                axios.post(this.api1 + '/sbkp/personnel/postPersonal', qs.stringify({
                         studentNum: stuNum,
-                        reasonIds: addReason
+                        reasonIds: addReason,
+                        mentalStatus: radio
                     }
                 )).then(function () {
                     _this.$message({
@@ -395,14 +401,14 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
             },
 
             // 修改-提交操作数据处理
-            submitModify(addReason) {
+            submitModify(addReason, radio) {
                 var _this = this;
                 let newTag = {};
                 if (addReason === "") {
@@ -419,13 +425,13 @@
                     for (let j = 0; j < this.showTags.length; j++) {
                         if (this.addReasonArr[i] === this.showTags[j].name) {
                             this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i,1);
+                            this.addReasonArr.splice(i, 1);
                         }
                     }
                 }
                 if (this.addReasonArr.length !== 0) {
                     for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
                             }
                         )).then(function (res) {
@@ -436,22 +442,24 @@
                             _this.showTags.push(newTag);
                             _this.addReasonId.push(res.data.id);
                             addReason = _this.addReasonId.join(",");
-                            _this.modifyForm(addReason);
+                            _this.modifyForm(addReason, radio);
                         });
                     }
-                }else if (this.addReasonArr.length === 0) {
+                } else if (this.addReasonArr.length === 0) {
                     addReason = this.addReasonId.join(",");
-                    this.modifyForm(addReason);
+                    this.modifyForm(addReason, radio);
                 }
             },
 
             // 修改-提交操作调用接口
-            modifyForm(addReason){
+            modifyForm(addReason, radio) {
+                console.log(addReasond)
+                console.log(radio)
                 var _this = this;
-                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
-                        userId: 1,
+                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
-                        reasonIds: addReason
+                        reasonIds: addReason,
+                        mentalStatus: radio
                     }
                 )).then(function () {
                     _this.$message({
@@ -475,7 +483,7 @@
             // 删除-提交操作
             delStu() {
                 var _this = this;
-                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
@@ -535,7 +543,7 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
