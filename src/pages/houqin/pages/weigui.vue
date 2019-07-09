@@ -37,10 +37,10 @@
                 <svg class="icon icon-back icons" aria-hidden="true">
                     <use xlink:href="#icon-daoChu"></use>
                 </svg>
-                <form action="" method="get">
+                <form action="" method="get" @submit="exportInfo">
                     <input  type="text" v-model="valueTime" name="date" hidden />
                     <input  type="text" hidden v-model="value"  name="college"/>
-                    <input id="inputid5" type="submit" hidden @click="exportInfo" />
+                    <input id="inputid5" type="submit" hidden />
                 </form>
 
             </label>
@@ -216,9 +216,9 @@
             /*表格导出*/
             exportInfo() {
                 if (this.isSearch) {
-                    document.getElementsByTagName("form")[0].action = this.api + "/sbkp/census/exportAllRulesList"
+                    document.getElementsByTagName("form")[1].action = this.api + "/sbkp/census/exportAllRulesList"
                 } else {
-                    document.getElementsByTagName("form")[0].action = this.api + "/sbkp/census/exportRulesListBySearch"
+                    document.getElementsByTagName("form")[1].action = this.api + "/sbkp/census/exportRulesListBySearch"
                 }
 
             },

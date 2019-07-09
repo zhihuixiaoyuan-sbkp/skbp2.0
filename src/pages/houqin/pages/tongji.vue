@@ -78,11 +78,11 @@
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
                         <label class="btn2" for="inputid"
-                               @click="exportTable('/sbkp/census/exportAllLogisticsCollege',0)">
+                               >
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action="" method="get">
+                            <form action= ''  method="get" @submit="exportTable('/sbkp/census/exportAllLogisticsCollege',1,2,3)">
                                 <input id="inputid" type="submit" hidden/>
                             </form>
                         </label>
@@ -123,11 +123,11 @@
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
                         <label class="btn2" for="inputid2"
-                               @click="exportTable('/sbkp/census/exportAllLogisticsBuilding',1)">
+                               >
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action="" method="get">
+                            <form action="" method="get" @submit="exportTable('/sbkp/census/exportAllLogisticsBuilding',2,1,3)">
                                 <input id="inputid2" type="submit" hidden/>
                             </form>
                         </label>
@@ -167,11 +167,11 @@
                 <el-tab-pane label="违规人数统计-性别" name="xingbie">
                     <div class="head_box head_box1">
                         <span class="text">更新时间: 2019/06/04 13:00</span>
-                        <label class="btn2" for="inputid3" @click="exportTable('/sbkp/census/exportAllLogisticsSex',2)">
+                        <label class="btn2" for="inputid3" >
                             <svg class="icon icon-back icons" aria-hidden="true">
                                 <use xlink:href="#icon-daoChu"></use>
                             </svg>
-                            <form action="" method="get">
+                            <form action="" method="get" @submit="exportTable('/sbkp/census/exportAllLogisticsSex',3,1,2)">
                                 <input id="inputid3" type="submit" hidden/>
                             </form>
                         </label>
@@ -419,8 +419,10 @@
             },
 
             /*学院/楼栋/性别列表导出*/
-            exportTable(url, num) {
+            exportTable(url, num,num1,num2) {
                 let myform = document.getElementsByTagName("form")
+                myform[num1].action = ""
+                myform[num2].action = ""
                 myform[num].action = this.api + url
             },
         },

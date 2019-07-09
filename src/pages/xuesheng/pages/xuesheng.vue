@@ -26,8 +26,8 @@
                         <svg class="icon icon-back icons" aria-hidden="true">
                             <use xlink:href="#icon-daoChu"></use>
                         </svg>
-                        <form action="" method="get">
-                            <input type="submit" id="input6" hidden @click="exportAllCollege('/sbkp/census/exportAllCollege')">
+                        <form action="" method="get" @submit="exportAllCollege('/sbkp/census/exportAllCollege')">
+                            <input type="submit" id="input6" hidden >
                         </form>
                     </label>
                     <div class="btn">
@@ -134,7 +134,7 @@
 
             /*学生处导出数据请求*/
             exportAllCollege(url){
-                document.getElementsByTagName("form")[0].action = this.api + url
+                document.getElementsByTagName("form")[1].action = this.api + url
             }
         },
         mounted() {

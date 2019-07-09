@@ -8,7 +8,7 @@
 
 
                 <div class="form">
-                    <form id="loginForm" action="http://172.16.211.151/sbkp/login" method="POST" @submit="submit">
+                    <form id="loginForm" action="http://172.16.211.152/sbkp/login" method="POST" @submit="submit">
                     <p class="p1">
                         <label for="account">账号：</label>
                         <input type="text"
@@ -89,8 +89,13 @@
             //      loginForm.action = "http://172.16.211.151/sbkp/login"
             // },
             submit:function(e){
-                var s = 1;
-                console.log(123)
+                try {
+                    sessionStorage.setItem("name","")
+                    sessionStorage.setItem("name1","")
+                }catch (e) {
+                    console.log(e)
+                }
+
              if(this.userName === "" || this.password === ""){
                  this.$message.error("请填写合法账户信息")
                  e.preventDefault();

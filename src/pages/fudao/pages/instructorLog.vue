@@ -235,7 +235,7 @@
             },
             /*撤销操作*/
             handleEdit(id) {
-                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
+                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({logId: id}))
                     .then(this.handleEditCallback)
                     .catch(() =>{
                         this.$message({
@@ -304,7 +304,7 @@
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingHandleSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        user_num:this.user_num,
+                        userNum:this.user_num,
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -326,7 +326,7 @@
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingDeleteSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        user_num:this.user_num,
+                        userNum:this.user_num,
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -347,7 +347,7 @@
             getLogingHandle(){
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingHandle",qs.stringify({
                     curPage:this.curPage,
-                    user_num:this.user_num
+                    userNum:this.user_num
                 }))
                     .then(this.getLogingHandleSearchCallback)
                     .catch(function () {
@@ -357,7 +357,7 @@
             getLogingDelete(){
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingDelete",qs.stringify({
                     curPage:this.curPage,
-                    user_num:this.user_num
+                    userNum:this.user_num
                 }))
                     .then(this.getLogingDeleteSearchCallback)
                     .catch(function () {
@@ -367,6 +367,7 @@
         },
         mounted() {
             this.getLogingHandle()
+            this.user_num = sessionStorage.getItem("userNum")
         }
     }
 </script>
