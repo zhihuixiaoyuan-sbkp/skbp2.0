@@ -407,11 +407,12 @@
                 }
                 this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
-                for (let i = 0; i < this.addReasonArr.length; i++) {
-                    for (let j = 0; j < this.showTags.length; j++) {
-                        if (this.addReasonArr[i] === this.showTags[j].name) {
-                            this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i,1);
+                for (let i = 0; i < this.showTags.length; i++) {
+                    for (let j = 0; j < this.addReasonArr.length; j++) {
+                        if (this.addReasonArr[j] === this.showTags[i].name) {
+                            this.addReasonId.push(this.showTags[i].id);
+                            this.addReasonArr.splice(j, 1);
+                            break;
                         }
                     }
                 }
@@ -488,6 +489,7 @@
                 // 添加模态框数据清除
                 this.formData.stuNum = '';
                 this.formData.addReason = '';
+                this.addReasonId = [];
                 // 删除模态框数据清除
                 this.delNum = '';
                 // 关闭添加模态框

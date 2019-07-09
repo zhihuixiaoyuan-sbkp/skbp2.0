@@ -38,7 +38,9 @@
                     <td>{{item.schoolStatus}}</td>
                     <!--操作-->
                     <td>
-                        <router-link class="iconfont operation" :to="{path:'/fudaoHistory',query:{id:item.id}}">&#xe685;</router-link>
+                        <router-link class="iconfont operation" :to="{path:'/fudaoHistory',query:{id:item.id}}">
+                            &#xe685;
+                        </router-link>
                         <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
                         <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
                     </td>
@@ -148,7 +150,6 @@
                 select: '',
                 list: [],
                 totalNum: 0,
-                listPage: 0,
                 currentPage: 1,
                 addDialog: false,
                 modifyDialog: false,
@@ -207,7 +208,7 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
@@ -227,17 +228,18 @@
                 }
                 this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
-                for (let i = 0; i < this.addReasonArr.length; i++) {
-                    for (let j = 0; j < this.showTags.length; j++) {
-                        if (this.addReasonArr[i] === this.showTags[j].name) {
-                            this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i,1);
+                for (let i = 0; i < this.showTags.length; i++) {
+                    for (let j = 0; j < this.addReasonArr.length; j++) {
+                        if (this.addReasonArr[j] === this.showTags[i].name) {
+                            this.addReasonId.push(this.showTags[i].id);
+                            this.addReasonArr.splice(j, 1);
+                            break;
                         }
                     }
                 }
                 if (this.addReasonArr.length !== 0) {
                     for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
                             }
                         )).then(function (res) {
@@ -251,16 +253,16 @@
                             _this.modifyForm(addReason);
                         });
                     }
-                }else if (this.addReasonArr.length === 0) {
+                } else if (this.addReasonArr.length === 0) {
                     addReason = this.addReasonId.join(",");
                     this.modifyForm(addReason);
                 }
             },
 
             // 修改-提交操作调用接口
-            modifyForm(addReason){
+            modifyForm(addReason) {
                 var _this = this;
-                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
+                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }
@@ -269,7 +271,7 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.getStudentsInfo();
+                    _this.changList();
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -285,11 +287,19 @@
 
             // 删除-提交操作
             delStu() {
-                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
-                }).then(this.changList);
+                }).then(function () {
+                    _this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    });
+                    _this.changList();
+                }).catch(function () {
+                    _this.$message.error('删除失败,请重试！');
+                });
                 // 关闭模态框
                 this.closeModal();
             },
@@ -333,7 +343,7 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
@@ -344,7 +354,6 @@
                                 _this.showTags.push(newTag);
                                 _this.addReasonArr.push(element);
                                 _this.addReasonId.push(res.data.id);
-                                this.changList();
                             });
                         }
                     });
@@ -382,19 +391,19 @@
             // 操作完成更新数据表
             changList() {
                 if (this.select === '1') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/stu_num/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }
                     }).then(this.searchList)
                 } else if (this.select === '2') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/name/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }
                     }).then(this.searchList)
                 } else if (this.select === '3') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label, {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label, {
                         params: {
                             pageNum: this.currentPage,
                         }

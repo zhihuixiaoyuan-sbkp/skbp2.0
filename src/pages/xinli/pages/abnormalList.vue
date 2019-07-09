@@ -397,6 +397,11 @@
                     if (id === this.personList[i].id) {
                         this.formData.stuNum = this.personList[i].stuNum;
                         this.formData.addReason = this.personList[i].reasonNames;
+                        if (this.personList[i].mentalStatus === '轻度心理异常') {
+                            this.formData.radio = '1';
+                        } else {
+                            this.formData.radio = '2';
+                        }
                     }
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
@@ -421,11 +426,12 @@
                 }
                 this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
-                for (let i = 0; i < this.addReasonArr.length; i++) {
-                    for (let j = 0; j < this.showTags.length; j++) {
-                        if (this.addReasonArr[i] === this.showTags[j].name) {
-                            this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i, 1);
+                for (let i = 0; i < this.showTags.length; i++) {
+                    for (let j = 0; j < this.addReasonArr.length; j++) {
+                        if (this.addReasonArr[j] === this.showTags[i].name) {
+                            this.addReasonId.push(this.showTags[i].id);
+                            this.addReasonArr.splice(j, 1);
+                            break;
                         }
                     }
                 }
@@ -453,8 +459,6 @@
 
             // 修改-提交操作调用接口
             modifyForm(addReason, radio) {
-                console.log(addReasond)
-                console.log(radio)
                 var _this = this;
                 axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
@@ -470,7 +474,7 @@
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
-                // 关闭模态框
+                // // 关闭模态框
                 this.closeModal();
             },
 
@@ -505,6 +509,8 @@
                 // 添加模态框数据清除
                 this.formData.stuNum = '';
                 this.formData.addReason = '';
+                this.formData.radio = '1';
+                this.addReasonId = [];
                 // 删除模态框数据清除
                 this.delNum = '';
                 // 关闭添加模态框
