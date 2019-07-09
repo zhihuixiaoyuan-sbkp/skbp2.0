@@ -156,7 +156,6 @@
                 select: '',
                 list: [],
                 totalNum: 0,
-                listPage: 0,
                 currentPage: 1,
                 addDialog: false,
                 modifyDialog: false,
@@ -187,7 +186,7 @@
                 const data = res.personnelList;
                 for (let i = 0; i < data.length; i++) {
                     data[i].reasonNames = data[i].reasonNames.join(' ');
-                    if (data[i].mentalStatus === 0) {
+                    if (data[i].mentalStatus === 1) {
                         data[i].mentalStatus = '轻度心理异常'
                     } else {
                         data[i].mentalStatus = '重度心理异常'
@@ -212,6 +211,11 @@
                     if (id === this.list[i].id) {
                         this.formData.stuNum = this.list[i].stuNum;
                         this.formData.addReason = this.list[i].reasonNames;
+                        if (this.list[i].mentalStatus === '轻度心理异常') {
+                            this.formData.radio = '1';
+                        } else {
+                            this.formData.radio = '2';
+                        }
                     }
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
@@ -236,11 +240,12 @@
                 }
                 this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
-                for (let i = 0; i < this.addReasonArr.length; i++) {
-                    for (let j = 0; j < this.showTags.length; j++) {
-                        if (this.addReasonArr[i] === this.showTags[j].name) {
-                            this.addReasonId.push(this.showTags[j].id);
-                            this.addReasonArr.splice(i, 1);
+                for (let i = 0; i < this.showTags.length; i++) {
+                    for (let j = 0; j < this.addReasonArr.length; j++) {
+                        if (this.addReasonArr[j] === this.showTags[i].name) {
+                            this.addReasonId.push(this.showTags[i].id);
+                            this.addReasonArr.splice(j, 1);
+                            break;
                         }
                     }
                 }
@@ -279,7 +284,7 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.getStudentsInfo();
+                    _this.changList()
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -295,11 +300,20 @@
 
             // 删除-提交操作
             delStu() {
+                var _this = this;
                 axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
-                }).then(this.changList);
+                }).then(function () {
+                    _this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    });
+                    _this.changList();
+                }).catch(function () {
+                    _this.$message.error('删除失败,请重试！');
+                });
                 // 关闭模态框
                 this.closeModal();
             },
@@ -354,7 +368,6 @@
                                 _this.showTags.push(newTag);
                                 _this.addReasonArr.push(element);
                                 _this.addReasonId.push(res.data.id);
-                                this.changList();
                             });
                         }
                     });
