@@ -250,7 +250,7 @@
         methods: {
             // 初始化列表
             getStudentsInfo() {
-                axios.get(this.api1+'/sbkp/personnel/personnelList', {
+                axios.get(this.api1 + '/sbkp/personnel/personnelList', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -277,14 +277,14 @@
             // 获取关键词搜索的数据
             searchStu() {
                 if (this.select === '1') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/stu_num/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '2') {
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/name/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '3') {
                     console.log(this.label);
-                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label)
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
                 } else {
                     this.$message({
@@ -322,7 +322,7 @@
             // 展示添加模态框
             showAddModal() {
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.addDialog = true;
@@ -334,6 +334,7 @@
                 // 判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
                 var reg = /^[0-9]+.?[0-9]*$/;
                 var _this = this;
+                let newTag = {};
                 if (stuNum === "") {
                     // 判断学号是否为空
                     this.$nextTick(() => {
@@ -356,23 +357,64 @@
                     this.$message.error('学号必须为数字值');
                     return false;
                 }
-                addReason = this.addReasonId.join(",");
-                axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
-                        studentNum: stuNum,
-                        reasonIds: addReason
+                this.addReasonArr = addReason.split(" ");
+                this.addReasonId = [];
+                for (let i = 0; i < this.showTags.length; i++) {
+                    for (let j = 0; j < this.addReasonArr.length; j++) {
+                        if (this.addReasonArr[j] === this.showTags[i].name) {
+                            this.addReasonId.push(this.showTags[i].id);
+                            this.addReasonArr.splice(j, 1);
+                            break;
+                        }
                     }
-                )).then(function () {
-                    _this.$message({
-                        message: '添加成功！',
-                        type: 'success'
-                    });
-                    _this.getStudentsInfo();
-                }).catch(function () {
-                    _this.$message.error('添加失败,请重试！');
-                });
-                // 关闭模态框
-                this.closeModal();
-                return true;
+                }
+                if (this.addReasonArr.length !== 0) {
+                    for (let i = 0; i < this.addReasonArr.length; i++) {
+                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
+                                reasonName: this.addReasonArr[i]
+                            }
+                        )).then(function (res) {
+                            newTag = {
+                                id: res.data.id,
+                                name: _this.addReasonArr[i]
+                            };
+                            _this.showTags.push(newTag);
+                            _this.addReasonId.push(res.data.id);
+                            addReason = _this.addReasonId.join(",");
+                            _this.modifyForm(addReason);
+                        });
+                    }
+                } else if (this.addReasonArr.length === 0) {
+                    addReason = this.addReasonId.join(",");
+                    this.modifyForm(addReason);
+                }
+                // this.addReasonArr = addReason.split(" ");
+                // for (let i = 0;i<this.addReasonArr.length;i++){
+                //     for (let j = 0;j<this.showTags.length;j++){
+                //         if (this.addReasonArr[i] === this.showTags[j].name) {
+                //             this.addReasonId.push(this.showTags[j].id)
+                //         }
+                //     }
+                // }
+                // console.log(this.addReasonId)
+                // addReason = this.addReasonId.join(",");
+                // console.log(addReason)
+                // console.log(this.addReasonId)
+                // axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
+                //         studentNum: stuNum,
+                //         reasonIds: addReason
+                //     }
+                // )).then(function () {
+                //     _this.$message({
+                //         message: '添加成功！',
+                //         type: 'success'
+                //     });
+                //     _this.getStudentsInfo();
+                // }).catch(function () {
+                //     _this.$message.error('添加失败,请重试！');
+                // });
+                // // 关闭模态框
+                // this.closeModal();
             },
 
             // 展示修改模态框
@@ -387,7 +429,7 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1+'/sbkp/personnel/reasons')
+                    axios.get(this.api1 + '/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
@@ -418,7 +460,7 @@
                 }
                 if (this.addReasonArr.length !== 0) {
                     for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
                             }
                         )).then(function (res) {
@@ -432,16 +474,16 @@
                             _this.modifyForm(addReason);
                         });
                     }
-                }else if (this.addReasonArr.length === 0) {
+                } else if (this.addReasonArr.length === 0) {
                     addReason = this.addReasonId.join(",");
                     this.modifyForm(addReason);
                 }
             },
 
             // 修改-提交操作调用接口
-            modifyForm(addReason){
+            modifyForm(addReason) {
                 var _this = this;
-                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
+                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }
@@ -467,7 +509,7 @@
             // 删除-提交操作
             delStu() {
                 var _this = this;
-                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
@@ -509,8 +551,6 @@
             handleInputConfirm() {
                 let inputValue = this.formData.addReason;
                 let tags = [];
-                // 新标签数组
-                let newTag = {};
                 var _this = this;
                 if (inputValue) {
                     // 获取输入的数据
@@ -528,32 +568,38 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
-                                newTag = {
-                                    id: res.data.id,
-                                    name: element
-                                };
-                                _this.showTags.push(newTag);
-                                _this.addReasonArr.push(element);
-                                _this.addReasonId.push(res.data.id);
+                                _this.addTag(res, element);
                             });
                         }
                     });
                 }
             },
 
+            addTag(res, element) {
+                // 新标签数组
+                let newTag = {
+                    id: res.data.id,
+                    name: element,
+                    isRule: 1
+                };
+                this.showTags.push(newTag);
+                this.addReasonArr.push(element);
+                this.addReasonId.push(res.data.id);
+            },
+
             // 选择标签
             tagContent(id, name) {
                 let addReasonArr = [];
-                addReasonArr = this.formData.addReason.split(" ");
-                if (addReasonArr.length === 0) {
+                if (this.formData.addReason === '') {
                     // 记录的添加原因为空
                     this.addReasonId.push(id);
-                    this.formData.addReason += name;
+                    this.formData.addReason = name;
                 } else {
+                    addReasonArr = this.formData.addReason.split(" ");
                     // 判断name是否重复
                     for (let i = 0; i < addReasonArr.length; i++) {
                         if (name === addReasonArr[i]) {

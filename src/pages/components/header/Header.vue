@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <span class="title">重点人员行为监管系统</span>
-        <form action="http://172.16.211.152/sbkp/logout">
+        <form action="http://172.16.211.151/sbkp/logout">
             <input class="exit" type="submit" @click="loginOut" value="退出登录" >
         </form>
 
@@ -36,7 +36,6 @@
 
             },
             loadMessage() {
-                console.log(this.curName)
                 if (this.curName === 'home') {
                     // 保卫处报警信息跳转
                     this.$router.push({
@@ -58,9 +57,7 @@
         beforeRouteEnter(to, from, next) {
             // 这里的vm指的就是vue实例，可以用来当做this使用
             next(vm => {
-                // console.log(to.matched[0].name);
                 vm.curName = to.matched[0].name;
-                // console.log(vm.curName)
                 if (vm.curName === 'home' || vm.curName === 'fudaoHome' || vm.curName === 'xinliHome') {
                     vm.warningMessage = true
                 }
