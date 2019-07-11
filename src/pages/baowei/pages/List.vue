@@ -93,7 +93,7 @@
                                           ref="stuNum"
                                           v-model="formData.stuNum"
                                           autocomplete="off"
-                                          @keyup.enter.native="submitForm(formData.stuNum,formData.addReason)"
+                                          @keyup.enter.native="submitAdd(formData.stuNum,formData.addReason)"
                                 ></el-input>
                             </el-form-item>
                             <el-form-item
@@ -121,7 +121,7 @@
                     <hr class="boundaryModal">
                     <div slot="footer" class="dialog-footer">
                         <el-button @click.native="closeModal">取消</el-button>
-                        <el-button type="primary" @click="submitForm(formData.stuNum,formData.addReason)">提交</el-button>
+                        <el-button type="primary" @click="submitAdd(formData.stuNum,formData.addReason)">提交</el-button>
                     </div>
                 </el-dialog>
                 <!--模态框-修改重点人员-->
@@ -250,7 +250,7 @@
         methods: {
             // 初始化列表
             getStudentsInfo() {
-                axios.get(this.api1 + '/sbkp/personnel/personnelList', {
+                axios.get(this.api1+'/sbkp/personnel/personnelList', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -277,14 +277,14 @@
             // 获取关键词搜索的数据
             searchStu() {
                 if (this.select === '1') {
-                    axios.get(this.api1 + '/sbkp/personnel/personnelList/stu_num/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/stu_num/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '2') {
-                    axios.get(this.api1 + '/sbkp/personnel/personnelList/name/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '3') {
                     console.log(this.label);
-                    axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label)
+                    axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
                 } else {
                     this.$message({
@@ -322,14 +322,14 @@
             // 展示添加模态框
             showAddModal() {
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1 + '/sbkp/personnel/reasons')
+                    axios.get(this.api1+'/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.addDialog = true;
             },
 
-            // 添加-提交操作
-            submitForm(stuNum, addReason) {
+            // 添加-提交操作数据处理
+            submitAdd(stuNum, addReason) {
                 // 提交表单--点击提交or学号input框获得焦点时回车
                 // 判断字符串是否为数字 ，判断正整数用/^[1-9]+[0-9]*]*$/
                 var reg = /^[0-9]+.?[0-9]*$/;
@@ -359,6 +359,7 @@
                 }
                 this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
+                // 取未被添加进数组的标签
                 for (let i = 0; i < this.showTags.length; i++) {
                     for (let j = 0; j < this.addReasonArr.length; j++) {
                         if (this.addReasonArr[j] === this.showTags[i].name) {
@@ -369,6 +370,7 @@
                     }
                 }
                 if (this.addReasonArr.length !== 0) {
+                    // 存在新标签
                     for (let i = 0; i < this.addReasonArr.length; i++) {
                         axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
@@ -381,40 +383,34 @@
                             _this.showTags.push(newTag);
                             _this.addReasonId.push(res.data.id);
                             addReason = _this.addReasonId.join(",");
-                            _this.modifyForm(addReason);
+                            _this.addForm(stuNum,addReason);
                         });
                     }
                 } else if (this.addReasonArr.length === 0) {
+                    // 不存在新标签
                     addReason = this.addReasonId.join(",");
-                    this.modifyForm(addReason);
+                    this.addForm(stuNum,addReason);
                 }
-                // this.addReasonArr = addReason.split(" ");
-                // for (let i = 0;i<this.addReasonArr.length;i++){
-                //     for (let j = 0;j<this.showTags.length;j++){
-                //         if (this.addReasonArr[i] === this.showTags[j].name) {
-                //             this.addReasonId.push(this.showTags[j].id)
-                //         }
-                //     }
-                // }
-                // console.log(this.addReasonId)
-                // addReason = this.addReasonId.join(",");
-                // console.log(addReason)
-                // console.log(this.addReasonId)
-                // axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
-                //         studentNum: stuNum,
-                //         reasonIds: addReason
-                //     }
-                // )).then(function () {
-                //     _this.$message({
-                //         message: '添加成功！',
-                //         type: 'success'
-                //     });
-                //     _this.getStudentsInfo();
-                // }).catch(function () {
-                //     _this.$message.error('添加失败,请重试！');
-                // });
-                // // 关闭模态框
-                // this.closeModal();
+            },
+
+            // 添加-提交操作调用接口
+            addForm(stuNum,addReason) {
+                var _this = this;
+                axios.post(this.api1+'/sbkp/personnel/postPersonal', qs.stringify({
+                        studentNum: stuNum,
+                        reasonIds: addReason
+                    }
+                )).then(function () {
+                    _this.$message({
+                        message: '添加成功！',
+                        type: 'success'
+                    });
+                    _this.getStudentsInfo();
+                }).catch(function () {
+                    _this.$message.error('添加失败,请重试！');
+                });
+                // 关闭模态框
+                this.closeModal();
             },
 
             // 展示修改模态框
@@ -429,7 +425,7 @@
                 }
                 this.historyAddReason = this.formData.addReason.split(" ");
                 if (this.showTags.length === 0) {
-                    axios.get(this.api1 + '/sbkp/personnel/reasons')
+                    axios.get(this.api1+'/sbkp/personnel/reasons')
                         .then(this.getTagsInfoSucc);
                 }
                 this.modifyDialog = true;
@@ -460,7 +456,7 @@
                 }
                 if (this.addReasonArr.length !== 0) {
                     for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
+                        axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
                                 reasonName: this.addReasonArr[i]
                             }
                         )).then(function (res) {
@@ -474,16 +470,16 @@
                             _this.modifyForm(addReason);
                         });
                     }
-                } else if (this.addReasonArr.length === 0) {
+                }else if (this.addReasonArr.length === 0) {
                     addReason = this.addReasonId.join(",");
                     this.modifyForm(addReason);
                 }
             },
 
             // 修改-提交操作调用接口
-            modifyForm(addReason) {
+            modifyForm(addReason){
                 var _this = this;
-                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
+                axios.post(this.api1+'/sbkp/personnel/putReasons', qs.stringify({
                         personnelId: this.modifyNum,
                         reasonIds: addReason
                     }
@@ -509,7 +505,7 @@
             // 删除-提交操作
             delStu() {
                 var _this = this;
-                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
+                axios.get(this.api1+'/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
                     }
@@ -551,6 +547,7 @@
             handleInputConfirm() {
                 let inputValue = this.formData.addReason;
                 let tags = [];
+                let newTag = {};
                 var _this = this;
                 if (inputValue) {
                     // 获取输入的数据
@@ -568,27 +565,21 @@
                             return i === element;
                         });
                         if (index < 0) {
-                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
+                            axios.post(this.api1+'/sbkp/personnel/postDefinedReason', qs.stringify({
                                     reasonName: element
                                 }
                             )).then(function (res) {
-                                _this.addTag(res, element);
+                                newTag = {
+                                    id: res.data.id,
+                                    name: element,
+                                };
+                                _this.showTags.push(newTag);
+                                // _this.addReasonArr.push(element);
+                                // _this.addReasonId.push(res.data.id);
                             });
                         }
                     });
                 }
-            },
-
-            addTag(res, element) {
-                // 新标签数组
-                let newTag = {
-                    id: res.data.id,
-                    name: element,
-                    isRule: 1
-                };
-                this.showTags.push(newTag);
-                this.addReasonArr.push(element);
-                this.addReasonId.push(res.data.id);
             },
 
             // 选择标签
