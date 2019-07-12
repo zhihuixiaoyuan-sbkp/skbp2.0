@@ -237,20 +237,18 @@
             },
             /*撤销操作*/
             handleEdit(id) {
-                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({logId: id}))
+                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
                     .then(this.handleEditCallback)
-                    .catch(() =>{
-                        this.$message({
-                            type: "danger",
-                            message
-                        })
-                    })
+                    .catch(function () {
+                        console.log("请求出错")
+                        }
+                    )
             },
             /*撤销刷新列表*/
             handleEditCallback(){
                 this.$message({
                     type: "success",
-                    message
+                    message:"删除成功"
                 })
                 if (this.notDelete && this.notSearch) { //处于处理选卡，且没有进行搜索
                     this.getLogingHandle()

@@ -235,7 +235,7 @@
             },
             /*撤销操作*/
             handleEdit(id) {
-                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({logId: id}))
+                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
                     .then(this.handleEditCallback)
                     .catch(() =>{
                         this.$message({

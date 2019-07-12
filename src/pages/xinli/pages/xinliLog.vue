@@ -158,6 +158,7 @@
                                     align="center"
                                     prop="mindStatus"
                                     label="状态"
+                                    :formatter="filterStatus1"
 
                             >
                             </el-table-column>
@@ -224,6 +225,15 @@
                     return "已忽略"
                 }
             },
+            filterStatus1(row, cellValue) {
+                if (cellValue === 0) {
+                    return "心理正常"
+                } else if (cellValue === 1) {
+                    return "轻度异常"
+                }else{
+                    return "重度异常"
+                }
+            },
             /*选项卡切换*/
             handleClick(event) {
                 this.notSearch = true
@@ -247,7 +257,7 @@
             },
             /*撤销操作*/
             handleEdit(id) {
-                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({logId: id}))
+                axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
                     .then(this.handleEditCallback)
                     .catch(() =>{
                         this.$message({
