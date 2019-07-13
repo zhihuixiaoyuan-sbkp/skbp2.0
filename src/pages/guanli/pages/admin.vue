@@ -92,7 +92,7 @@
                             <el-divider class="el-divider"></el-divider>
                             <span style="font-size: 20px">
                             <span>{{item.dateTime}}</span>
-                            <span>{{item.dept}}账号{{item.account}}处理{{item.name}}的报警信息</span>
+                            <span>{{item.dept}}账号{{item.account}}删除{{item.name}}的重点人员信息</span>
                         </span>
                             <span style="position: absolute;right: 50px">
                             <el-button type="danger" icon="el-icon-delete" circle
@@ -229,6 +229,7 @@
 
             /*选项卡切换事件*/
             handleClick(event) {
+                this.valueTime = this.timeTool( new Date())
                 this.curPage = 1
                 this.notDelete = !this.notDelete
                 if (this.notDelete) {
