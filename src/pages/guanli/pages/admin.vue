@@ -36,7 +36,7 @@
                         <span class="dataText">{{nowDate}}</span>
                         <div class="rowBox" style="text-align: center">
                             <el-divider class="el-divider"></el-divider>
-                            <span style="font-size: 20px;text-align: center">无数据</span>
+                            <span style="font-size: 20px;text-align: center">今日无数据</span>
                         </div>
                         <div class="rowBox">
                             <el-divider class="el-divider"></el-divider>
@@ -144,7 +144,12 @@
                     {
                         value: '心理健康中心',
                         label: '心理健康中心'
-                    },]
+                    },
+                    {
+                        value: '辅导员',
+                        label: '辅导员'
+                    },
+                ]
             }
         },
         methods: {

@@ -21,82 +21,7 @@
         <el-divider class="el-divider"></el-divider>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="处理" name="dealWith">
-                <div class="tableBox">
-                    <span class="dataText">今日</span>
-                    <div class="rowBox">
-                        <el-divider class="el-divider"></el-divider>
-                        <el-table
-                                :data="logList"
-                                style="width: 100%"
-                                align="center">
-                            <el-table-column
-                                    align="center"
-                                    type=index
-                                    label="序号"
-                                    width="50">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="stuNum"
-                                    label="学号"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="name"
-                                    label="姓名">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="gender"
-                                    label="性别"
-                                    width="50">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="proClass"
-                                    label="专业班级">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="actionName"
-                                    label="行为描述">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="dateTime"
-                                    label="违规时间">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="status"
-                                    label="状态"
-                                    width="60"
-                                    :formatter="filterStatus">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop=""
-                                    label="备注">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    label="操作">
-                                <template slot-scope="scope">
-                                    <el-button
-                                            background="red"
-                                            size="mini"
-                                            @click="handleEdit(scope.row.id)">撤销
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                    <div class="rowBox">
-                        <el-divider class="el-divider"></el-divider>
-                    </div>
-
-                </div>
+                <handle :logList="logList" @handleEdit="handleEdit"></handle>
                 <div class="foot">
                     <el-pagination
                             background
@@ -107,70 +32,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="删除" name="delete">
-                <div class="tableBox">
-                    <span class="dataText">今日</span>
-                    <div class="rowBox">
-                        <el-divider class="el-divider"></el-divider>
-                        <el-table
-                                :data="logList"
-                                style="width: 100%"
-                                align="center">
-                            <el-table-column
-                                    align="center"
-                                    type=index
-                                    label="序号"
-                                    width="50">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="stuNum"
-                                    label="学号"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="name"
-                                    label="姓名">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="gender"
-                                    label="性别"
-                                    width="50">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="proClass"
-                                    label="专业班级">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="reason"
-                                    label="原因">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="deleteTime"
-                                    label="删除时间">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    label="操作"
-                                    width="80">
-                                <template slot-scope="scope">
-                                    <el-button
-                                            size="mini"
-                                            @click="handleEdit(scope.row.id)">撤销
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                    <div class="rowBox">
-                        <el-divider class="el-divider"></el-divider>
-                    </div>
-
-                </div>
+                <deletable :logList="logList" @handleEdit="handleEdit"></deletable>
                 <div class="foot">
                     <el-pagination
                             background
@@ -187,6 +49,8 @@
 <script>
     import axios from "axios"
     import qs from "qs"
+    import handle from "../../components/handleTable/handle"
+    import deletable from "../../components/deleteTable/deleteTable"
 
     export default {
         name: "admin",
@@ -194,9 +58,9 @@
             return {
                 notSearch:true,
                 notDelete: true,
-                user_num:"123",
+                user_num:"",
                 valueTime: new Date(),
-                logList: [],
+                logList:[],
                 curPage: 1,
                 totalCount: 0,
                 activeName: "dealWith",
@@ -204,16 +68,12 @@
 
             }
         },
+        components:{
+            handle,
+            deletable
+
+        },
         methods: {
-            filterStatus(row, cellValue) {
-                if (cellValue === 0) {
-                    return "未处理"
-                } else if (cellValue === 1) {
-                    return "已处理"
-                } else {
-                    return "已忽略"
-                }
-            },
             /*选项卡切换*/
             handleClick(event) {
                 this.notSearch = true
@@ -237,18 +97,16 @@
             handleEdit(id) {
                 axios.post(this.api + "/sbkp/loging/logingRevoke", qs.stringify({log_id: id}))
                     .then(this.handleEditCallback)
-                    .catch(() =>{
-                        this.$message({
-                            type: "danger",
-                            message
-                        })
+                    .catch(function () {
+                        console.log("请求出错")
                     })
+
             },
             /*撤销刷新列表*/
             handleEditCallback(){
                 this.$message({
                     type: "success",
-                    message
+                    message:"撤销成功"
                 })
                 if (this.notDelete && this.notSearch) { //处于处理选卡，且没有进行搜索
                     this.getLogingHandle()
@@ -304,7 +162,7 @@
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingHandleSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        userNum:this.user_num,
+                        user_num:this.user_num,
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -326,7 +184,7 @@
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingDeleteSearch", qs.stringify(
                     {
                         curPage: this.curPage,
-                        userNum:this.user_num,
+                        user_num:this.user_num,
                         date: this.timeTool(this.valueTime)
                     }))
                     .then(
@@ -347,7 +205,7 @@
             getLogingHandle(){
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingHandle",qs.stringify({
                     curPage:this.curPage,
-                    userNum:this.user_num
+                    user_num:this.user_num
                 }))
                     .then(this.getLogingHandleSearchCallback)
                     .catch(function () {
@@ -357,7 +215,7 @@
             getLogingDelete(){
                 axios.post(this.api + "/sbkp/loging/getInstructorLogingDelete",qs.stringify({
                     curPage:this.curPage,
-                    userNum:this.user_num
+                    user_num:this.user_num
                 }))
                     .then(this.getLogingDeleteSearchCallback)
                     .catch(function () {
@@ -366,8 +224,8 @@
             }
         },
         mounted() {
-            this.getLogingHandle()
             this.user_num = sessionStorage.getItem("userNum")
+            this.getLogingHandle()
         }
     }
 </script>
@@ -420,3 +278,155 @@
     }
 
 </style>
+<!--
+<div class="tableBox">
+                    <span class="dataText">今日</span>
+                    <div class="rowBox">
+                        <el-divider class="el-divider"></el-divider>
+                        <el-table
+                                :data="logList"
+                                style="width: 100%"
+                                align="center">
+                            <el-table-column
+                                    align="center"
+                                    type=index
+                                    label="序号"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="stuNum"
+                                    label="学号"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="name"
+                                    label="姓名">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="gender"
+                                    label="性别"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="proClass"
+                                    label="专业班级">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="actionName"
+                                    label="行为描述">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="dateTime"
+                                    label="违规时间">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="status"
+                                    label="状态"
+                                    width="60"
+                                    :formatter="filterStatus">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop=""
+                                    label="备注"
+                                    :formatter="filterStatus2">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    label="操作">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            background="red"
+                                            size="mini"
+                                            @click="handleEdit(scope.row.id)">撤销
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="rowBox">
+                        <el-divider class="el-divider"></el-divider>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="tableBox">
+                    <span class="dataText">今日</span>
+                    <div class="rowBox">
+                        <el-divider class="el-divider"></el-divider>
+                        <el-table
+                                :data="logList"
+                                style="width: 100%"
+                                align="center">
+                            <el-table-column
+                                    align="center"
+                                    type=index
+                                    label="序号"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="stuNum"
+                                    label="学号"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="name"
+                                    label="姓名">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="gender"
+                                    label="性别"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="proClass"
+                                    label="专业班级">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="reason"
+                                    label="原因"
+                                    :formatter="filterStatus1">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    prop="deleteTime"
+                                    label="删除时间">
+                            </el-table-column>
+                            <el-table-column
+                                    align="center"
+                                    label="操作"
+                                    width="80">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            @click="handleEdit(scope.row.id)">撤销
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="rowBox">
+                        <el-divider class="el-divider"></el-divider>
+                    </div>
+
+                </div>
+-->
