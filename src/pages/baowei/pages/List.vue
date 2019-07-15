@@ -557,7 +557,6 @@
                 // 添加模态框数据清除
                 this.formData.stuNum = '';
                 this.formData.addReason = '';
-                this.addReasonId = [];
                 // 删除模态框数据清除
                 this.delNum = '';
                 // 关闭添加模态框

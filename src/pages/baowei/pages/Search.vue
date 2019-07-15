@@ -255,11 +255,9 @@
                                 url: _this.api1 + '/sbkp/personnel/postDefinedReason',
                                 async: false,
                                 data: {"reasonName": element},
-                                // contentType: 'application/json;charset=utf-8',
                                 type: 'POST',
                                 dataType: 'json',
                                 success(data) {
-                                    // console.log(data)
                                     newTag = {
                                         id: data.id,
                                         name: element,
@@ -271,7 +269,7 @@
                         }
                     });
                     addReason = this.addReasonId.join(',')
-                    this.modifyForm(addReason)
+                    this.modifyForm(addReason);
                 }
             },
 
@@ -287,7 +285,7 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.getStudentsInfo();
+                    _this.changList();
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -380,11 +378,10 @@
             // 选择标签
             tagContent(id, name) {
                 let addReasonArr = [];
-                // 选择标签
-                if (this.addReasonId.length === 0) {
+                if (this.formData.addReason === '') {
                     // 记录的添加原因为空
                     this.addReasonId.push(id);
-                    this.formData.addReason += name;
+                    this.formData.addReason = name;
                 } else {
                     addReasonArr = this.formData.addReason.split(" ");
                     // 判断name是否重复

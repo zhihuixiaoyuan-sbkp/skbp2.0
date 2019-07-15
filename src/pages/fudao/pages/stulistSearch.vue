@@ -260,7 +260,6 @@
                                 type: 'POST',
                                 dataType: 'json',
                                 success(data) {
-                                    // console.log(data)
                                     newTag = {
                                         id: data.id,
                                         name: element,
@@ -271,7 +270,7 @@
                             })
                         }
                     });
-                    addReason = this.addReasonId.join(',')
+                    addReason = this.addReasonId.join(',');
                     this.modifyForm(addReason)
                 }
             },
@@ -304,6 +303,7 @@
 
             // 删除-提交操作
             delStu() {
+                var _this = this;
                 axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
                     params: {
                         personnelId: this.delNum
