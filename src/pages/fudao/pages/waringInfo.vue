@@ -19,7 +19,7 @@
                         <tr class="header">
                             <td>序号</td>
                             <td>姓名</td>
-                            <td>辅导员</td>
+                            <td>班级</td>
                             <td>时间</td>
                             <td>行为描述</td>
                             <td>位置</td>
@@ -31,55 +31,34 @@
                         <tbody v-for="(item,index) in messageList">
                         <tr class="body">
                             <td>{{index+1}}</td>
-                            <td>
+                            <td @click="searchstuLink(item.stuNum)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
-                                        <tr>
-                                            <td>班级:</td>
-                                            <td>{{item.proClass}}</td>
-                                        </tr>
                                         <tr>
                                             <td>学号:</td>
                                             <td>{{item.stuNum}}</td>
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.studentLink}}</td>
+                                            <td v-cloak>{{stuLink}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.name}}</span>
                                 </el-popover>
                             </td>
-                            <td>
-                                <el-popover
-                                        placement="right"
-                                        width="250"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>工号:</td>
-                                            <td>{{item.counsellorId}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td>{{item.counsellorLink}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.counsellorName}}</span>
-                                </el-popover>
-                            </td>
+                            <td>{{item.proClass}}</td>
                             <td>{{item.dateTime}}</td>
                             <td>{{item.actionName}}</td>
                             <td>{{item.location}}</td>
                             <td>
-                                <viewer><img style="height: 50px;"
-                                             src="item.singleImgUrl"/>
-                                    <img style="height: 50px;"
-                                         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561526807777&di=41900df32e8b82da893f3c122c962160&imgtype=0&src=http%3A%2F%2F2c.zol-img.com.cn%2Fproduct%2F120_500x2000%2F526%2FceEtqxqa1AZ6I.jpg"/>
-                                </viewer>
+                                <!--<viewer><img style="height: 50px;"-->
+                                <!--src="item.singleImgUrl"/>-->
+                                <!--<img style="height: 50px;"-->
+                                <!--src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561526807777&di=41900df32e8b82da893f3c122c962160&imgtype=0&src=http%3A%2F%2F2c.zol-img.com.cn%2Fproduct%2F120_500x2000%2F526%2FceEtqxqa1AZ6I.jpg"/>-->
+                                <!--</viewer>-->
+                                图片x2
                             </td>
                             <td>
                                 <el-button type="info" plain @click="showHandleDialog(item.id)">处理状态</el-button>
@@ -113,7 +92,7 @@
                         <tr class="header">
                             <td>序号</td>
                             <td>姓名</td>
-                            <td>辅导员</td>
+                            <td>班级</td>
                             <td>时间</td>
                             <td>行为描述</td>
                             <td>位置</td>
@@ -125,46 +104,24 @@
                         <tbody v-for="(item,index) in messageList">
                         <tr class="body">
                             <td>{{index+1}}</td>
-                            <td>
+                            <td @click="searchstuLink(item.stuNum)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
-                                        <tr>
-                                            <td>班级:</td>
-                                            <td>{{item.proClass}}</td>
-                                        </tr>
                                         <tr>
                                             <td>学号:</td>
                                             <td>{{item.stuNum}}</td>
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.studentLink}}</td>
+                                            <td>{{stuLink}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.name}}</span>
                                 </el-popover>
                             </td>
-                            <td>
-                                <el-popover
-                                        placement="right"
-                                        width="250"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>工号:</td>
-                                            <td>{{item.counsellorId}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td>{{item.counsellorLink}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.counsellorName}}</span>
-                                </el-popover>
-                            </td>
+                            <td>{{item.proClass}}</td>
                             <td>{{item.dateTime}}</td>
                             <td>{{item.actionName}}</td>
                             <td>{{item.location}}</td>
@@ -300,14 +257,16 @@
     import qs from 'qs'
 
     export default {
-        name: "waringInfo",
+        name: "Message",
         data() {
             return {
+                label: '请选择',
+                stuLink: '',
                 messageList: [],
+                tchInfo:[],
                 totalNum: 0,
                 currentPage: 1,
                 personnelType: 'first',
-                label: '请选择',
                 screenDialog: false,
                 handleDialog: false,
                 addDialog: false,
@@ -341,7 +300,7 @@
             getMessageInfoSucc(res) {
                 res = res.data;
                 this.totalNum = res.totalNum;
-                this.messageList = res.messagePersonnelList;
+                this.messageList = res.messageList;
             },
 
             // 切换重点&非重点
@@ -418,9 +377,35 @@
                 }
             },
 
+            searchstuLink(number){
+                var _this = this;
+                this.stuLink = '';
+                axios.get(this.api1+'/sbkp/message/personnelDetail', {
+                    params: {
+                        number: number,
+                    }
+                }).then(function (res) {
+                    res = res.data;
+                    res = res.data;
+                    _this.stuLink = res.link;
+                });
+            },
+
+            searchLink(name){
+                var _this = this;
+                axios.get(this.api1+'/sbkp/message/counsellorDetail', {
+                    params: {
+                        counsellorName: name,
+                    }
+                }).then(function (res) {
+                    res = res.data;
+                    _this.tchInfo = res.data;
+                });
+            },
+
             // 展示完善筛选条件模态框
             showScreenModal() {
-                axios.get(this.api1+'/sbkp/message/messageListBySearch/actions')
+                axios.get(this.api1+'/sbkp/message/messageListBySearch/rules')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
             },
@@ -564,7 +549,7 @@
             // 获取标签
             getTagsInfoSucc(res) {
                 res = res.data;
-                this.keyword = res.actionList;
+                this.keyword = res.rules;
             },
 
             // 获取筛选结果
@@ -597,6 +582,10 @@
 </script>
 
 <style scoped>
+    [v-cloak] {
+        display: none !important;
+    }
+
     button {
         outline: none;
         cursor: pointer;
@@ -690,6 +679,13 @@
         height: 60px;
         font-size: 18px;
         color: #5C5B5C;
+    }
+
+    .table {
+        margin-bottom: 0;
+        border: 1px solid #dedede;
+        color: grey;
+        font-size: 15px;
     }
 
     /*分页*/

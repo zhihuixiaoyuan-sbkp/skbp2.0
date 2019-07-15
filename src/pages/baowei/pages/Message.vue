@@ -46,7 +46,7 @@
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{stuLink}}</td>
+                                            <td v-cloak>{{stuLink}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.name}}</span>
@@ -417,6 +417,7 @@
                 }
             },
 
+            // 展示学生信息
             searchstuLink(number){
                 var _this = this;
                 this.stuLink = '';
@@ -431,6 +432,7 @@
                 });
             },
 
+            // 展示辅导员信息
             searchLink(name){
                 var _this = this;
                 axios.get(this.api1+'/sbkp/message/counsellorDetail', {
@@ -622,6 +624,10 @@
 </script>
 
 <style scoped>
+    [v-cloak] {
+        display: none !important;
+    }
+
     button {
         outline: none;
         cursor: pointer;

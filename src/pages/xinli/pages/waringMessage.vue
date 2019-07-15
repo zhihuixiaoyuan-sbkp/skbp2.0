@@ -31,10 +31,9 @@
                         <tbody v-for="(item,index) in messageList">
                         <tr class="body">
                             <td>{{index+1}}</td>
-                            <td>
+                            <td @click="searchstuLink(item.stuNum)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
                                         <tr>
@@ -47,25 +46,24 @@
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.studentLink}}</td>
+                                            <td v-cloak>{{stuLink}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.name}}</span>
                                 </el-popover>
                             </td>
-                            <td>
+                            <td @click="searchLink(item.counsellorName)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
                                         <tr>
                                             <td>工号:</td>
-                                            <td>{{item.counsellorId}}</td>
+                                            <td>{{tchInfo.number}}</td>
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.counsellorLink}}</td>
+                                            <td>{{tchInfo.link}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.counsellorName}}</span>
@@ -125,10 +123,9 @@
                         <tbody v-for="(item,index) in messageList">
                         <tr class="body">
                             <td>{{index+1}}</td>
-                            <td>
+                            <td @click="searchstuLink(item.stuNum)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
                                         <tr>
@@ -141,25 +138,24 @@
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.studentLink}}</td>
+                                            <td v-cloak>{{stuLink}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.name}}</span>
                                 </el-popover>
                             </td>
-                            <td>
+                            <td @click="searchLink(item.counsellorName)">
                                 <el-popover
                                         placement="right"
-                                        width="250"
                                         trigger="click">
                                     <table class="table">
                                         <tr>
                                             <td>工号:</td>
-                                            <td>{{item.counsellorId}}</td>
+                                            <td>{{tchInfo.number}}</td>
                                         </tr>
                                         <tr>
                                             <td>联系方式:</td>
-                                            <td>{{item.counsellorLink}}</td>
+                                            <td>{{tchInfo.link}}</td>
                                         </tr>
                                     </table>
                                     <span class="mes" slot="reference">{{item.counsellorName}}</span>
@@ -400,6 +396,34 @@
                 }
             },
 
+            // 展示学生信息
+            searchstuLink(number){
+                var _this = this;
+                this.stuLink = '';
+                axios.get(this.api1+'/sbkp/message/personnelDetail', {
+                    params: {
+                        number: number,
+                    }
+                }).then(function (res) {
+                    res = res.data;
+                    res = res.data;
+                    _this.stuLink = res.link;
+                });
+            },
+
+            // 展示辅导员信息
+            searchLink(name){
+                var _this = this;
+                axios.get(this.api1+'/sbkp/message/counsellorDetail', {
+                    params: {
+                        counsellorName: name,
+                    }
+                }).then(function (res) {
+                    res = res.data;
+                    _this.tchInfo = res.data;
+                });
+            },
+
             // 展示完善筛选条件模态框
             showScreenModal() {
                 axios.get(this.api1+'/sbkp/message/messageListBySearch/rules')
@@ -554,6 +578,10 @@
 </script>
 
 <style scoped>
+    [v-cloak] {
+        display: none !important;
+    }
+
     button {
         outline: none;
         cursor: pointer;
@@ -647,6 +675,13 @@
         height: 60px;
         font-size: 18px;
         color: #5C5B5C;
+    }
+
+    .table {
+        margin-bottom: 0;
+        border: 1px solid #dedede;
+        color: grey;
+        font-size: 15px;
     }
 
     /*分页*/
