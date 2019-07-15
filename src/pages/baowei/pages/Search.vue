@@ -217,6 +217,7 @@
             submitModify(addReason) {
                 var _this = this;
                 let newTag = {};
+                let tags = [];
                 if (addReason === "") {
                     // 判断添加原因是否为空
                     this.$nextTick(() => {
@@ -225,36 +226,52 @@
                     this.$message.error('添加原因不能为空');
                     return false;
                 }
-                this.addReasonArr = addReason.split(" ");
                 this.addReasonId = [];
-                for (let i = 0; i < this.showTags.length; i++) {
-                    for (let j = 0; j < this.addReasonArr.length; j++) {
-                        if (this.addReasonArr[j] === this.showTags[i].name) {
-                            this.addReasonId.push(this.showTags[i].id);
-                            this.addReasonArr.splice(j, 1);
-                            break;
+                this.addReasonArr = addReason.split(" ");
+                for (let i = 0; i < this.addReasonArr.length; i++) {
+                    for (let j = 0; j < this.showTags.length; j++) {
+                        if (this.addReasonArr[i] === this.showTags[j].name) {
+                            this.addReasonId.push(this.showTags[j].id)
                         }
                     }
                 }
-                if (this.addReasonArr.length !== 0) {
-                    for (let i = 0; i < this.addReasonArr.length; i++) {
-                        axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
-                                reasonName: this.addReasonArr[i]
-                            }
-                        )).then(function (res) {
-                            newTag = {
-                                id: res.data.id,
-                                name: _this.addReasonArr[i]
-                            };
-                            _this.showTags.push(newTag);
-                            _this.addReasonId.push(res.data.id);
-                            addReason = _this.addReasonId.join(",");
-                            _this.modifyForm(addReason);
+                if (addReason) {
+                    // 判断数组不为空
+                    this.addReasonArr.filter(item => {
+                        return item !== '' && item !== undefined;
+                    });
+                    // 循环数据进行对比
+                    this.addReasonArr.forEach(element => {
+                        // 取出对象中的name
+                        for (let i = 0; i < this.showTags.length; i++) {
+                            tags[i] = this.showTags[i].name
+                        }
+                        // 获取索引位置，获取不到添加进数组
+                        let index = tags.findIndex(i => {
+                            return i === element;
                         });
-                    }
-                } else if (this.addReasonArr.length === 0) {
-                    addReason = this.addReasonId.join(",");
-                    this.modifyForm(addReason);
+                        if (index < 0) {
+                            $.ajax({
+                                url: _this.api1 + '/sbkp/personnel/postDefinedReason',
+                                async: false,
+                                data: {"reasonName": element},
+                                // contentType: 'application/json;charset=utf-8',
+                                type: 'POST',
+                                dataType: 'json',
+                                success(data) {
+                                    // console.log(data)
+                                    newTag = {
+                                        id: data.id,
+                                        name: element,
+                                    };
+                                    _this.showTags.push(newTag);
+                                    _this.addReasonId.push(data.id)
+                                }
+                            })
+                        }
+                    });
+                    addReason = this.addReasonId.join(',')
+                    this.modifyForm(addReason)
                 }
             },
 
@@ -270,7 +287,7 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.changList();
+                    _this.getStudentsInfo();
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -363,13 +380,13 @@
             // 选择标签
             tagContent(id, name) {
                 let addReasonArr = [];
-                addReasonArr = this.formData.addReason.split(" ");
                 // 选择标签
                 if (this.addReasonId.length === 0) {
                     // 记录的添加原因为空
                     this.addReasonId.push(id);
                     this.formData.addReason += name;
                 } else {
+                    addReasonArr = this.formData.addReason.split(" ");
                     // 判断name是否重复
                     for (let i = 0; i < addReasonArr.length; i++) {
                         if (name === addReasonArr[i]) {
