@@ -50,7 +50,7 @@
                                 align="center"
                                 prop="status"
                                 label="状态"
-                                width="60"
+                                width="90"
                                 :formatter="filterStatus">
                         </el-table-column>
                         <el-table-column

@@ -189,6 +189,13 @@
                     })
             },
             deleteCallback(res) {
+                let data = res.data
+                if (data.status === "ok") {
+                    this.$message({
+                        type: "success",
+                        message: "删除成功"
+                    })
+                }
                 if (this.notDelete && this.isSearch) { //处于处理选卡，且没有进行搜索
                     this.getAdminHandle()
                 }
@@ -201,13 +208,7 @@
                 if(!this.notDelete && !this.isSearch){ //处于删除选项卡，且进行了搜索
                     this.getAdminDeleteSearch()
                 }
-                let data = res.data
-                if (data.status === "ok") {
-                    this.$message({
-                        type: "success",
-                        message: "删除成功"
-                    })
-                }
+
             },
 
             /*点击分页事件*/
