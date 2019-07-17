@@ -10,7 +10,7 @@
                 <div class="search">
                     <!--下拉框-搜索筛选-->
                     <el-input placeholder="请输入内容" v-model="label" class="input-with-select">
-                        <el-select v-model="select" slot="prepend" placeholder="请选择">
+                        <el-select v-model="select" slot="prepend" placeholder="姓名">
                             <el-option label="学号" value="1"></el-option>
                             <el-option label="姓名" value="2"></el-option>
                             <el-option label="学院" value="3"></el-option>
@@ -23,47 +23,7 @@
                 <!--主体-->
                 <el-col :span="24" class="table-wrapper">
                     <!--表格-->
-                    <table class="list" id="table">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>学号</td>
-                            <td>姓名</td>
-                            <td>性别</td>
-                            <td>学院</td>
-                            <td>专业班级</td>
-                            <td>添加原因</td>
-                            <td>状态</td>
-                            <td>更多操作</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody v-for="(item,index) in personList">
-                        <tr class="body">
-                            <td>{{index+1}}</td>
-                            <td>{{item.stuNum}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <el-tooltip class="item" effect="light" :content=item.college placement="right">
-                                <td>{{item.college}}</td>
-                            </el-tooltip>
-                            <td>{{item.proClass}}</td>
-                            <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right">
-                                <td>{{item.reasonNames}}</td>
-                            </el-tooltip>
-                            <td>{{item.mentalStatus}}</td>
-                            <!--操作-->
-                            <td>
-                                <router-link class="iconfont operation" :to="{path:'/xinliHistory',query:{id:item.id}}">
-                                    &#xe685;
-                                </router-link>
-                                <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
-                                <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <person-table :personList="personList" :curPath="curPath" @getModyfyId="showModifyModal" @getDeleteId="showDelModal"></person-table>
                     <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
@@ -224,16 +184,20 @@
 <script>
     import axios from 'axios'
     import qs from 'qs'
+    import personTable from '../../components/personTable/personTable'
 
     export default {
         name: "abnormalList",
         data() {
             return {
+                // 当前页面路由path值
+                curPath: "",
+                // 人员列表
                 personList: [],
                 totalNum: 0,
-                // 下拉框
+                // 搜索框
                 label: '',
-                select: '',
+                select: '2',
                 // 搜索后的数据表
                 stuList: [],
                 // 分页
@@ -299,12 +263,6 @@
                     console.log(this.label);
                     axios.get(this.api1 + '/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '请选择要查找的信息类型',
-                        type: 'error'
-                    });
                 }
             },
 
@@ -661,7 +619,15 @@
         },
         mounted() {
             this.getStudentsInfo()//挂载组件
-        }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.curPath = to.matched[1].path;
+            });
+        },
+        components: {
+            personTable
+        },
     }
 </script>
 

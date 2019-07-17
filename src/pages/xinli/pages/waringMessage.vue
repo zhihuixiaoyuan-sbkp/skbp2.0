@@ -13,78 +13,9 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                     <hr class="boundary">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>姓名</td>
-                            <td>辅导员</td>
-                            <td>时间</td>
-                            <td>行为描述</td>
-                            <td>位置</td>
-                            <td>现场照片</td>
-                            <td>操作</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody v-for="(item,index) in messageList">
-                        <tr class="body">
-                            <td>{{index+1}}</td>
-                            <td @click="searchstuLink(item.stuNum)">
-                                <el-popover
-                                        placement="right"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>班级:</td>
-                                            <td>{{item.proClass}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>学号:</td>
-                                            <td>{{item.stuNum}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td v-cloak>{{stuLink}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.name}}</span>
-                                </el-popover>
-                            </td>
-                            <td @click="searchLink(item.counsellorName)">
-                                <el-popover
-                                        placement="right"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>工号:</td>
-                                            <td>{{tchInfo.number}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td>{{tchInfo.link}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.counsellorName}}</span>
-                                </el-popover>
-                            </td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.actionName}}</td>
-                            <td>{{item.location}}</td>
-                            <td>
-                                <viewer><img style="height: 50px;"
-                                             src="item.singleImgUrl"/>
-                                    <img style="height: 50px;"
-                                         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561526807777&di=41900df32e8b82da893f3c122c962160&imgtype=0&src=http%3A%2F%2F2c.zol-img.com.cn%2Fproduct%2F120_500x2000%2F526%2FceEtqxqa1AZ6I.jpg"/>
-                                </viewer>
-                            </td>
-                            <td>
-                                <el-button type="info" plain @click="showHandleDialog(item.id)">处理状态</el-button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <!--表格-->
+                    <info-table :messageList="messageList" :personnelType="personnelType"
+                                @getHandleId="showHandleDialog"></info-table>
                     <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
@@ -105,78 +36,10 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                     <hr class="boundary">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>姓名</td>
-                            <td>辅导员</td>
-                            <td>时间</td>
-                            <td>行为描述</td>
-                            <td>位置</td>
-                            <td>现场照片</td>
-                            <td>操作</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody v-for="(item,index) in messageList">
-                        <tr class="body">
-                            <td>{{index+1}}</td>
-                            <td @click="searchstuLink(item.stuNum)">
-                                <el-popover
-                                        placement="right"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>班级:</td>
-                                            <td>{{item.proClass}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>学号:</td>
-                                            <td>{{item.stuNum}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td v-cloak>{{stuLink}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.name}}</span>
-                                </el-popover>
-                            </td>
-                            <td @click="searchLink(item.counsellorName)">
-                                <el-popover
-                                        placement="right"
-                                        trigger="click">
-                                    <table class="table">
-                                        <tr>
-                                            <td>工号:</td>
-                                            <td>{{tchInfo.number}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>联系方式:</td>
-                                            <td>{{tchInfo.link}}</td>
-                                        </tr>
-                                    </table>
-                                    <span class="mes" slot="reference">{{item.counsellorName}}</span>
-                                </el-popover>
-                            </td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.actionName}}</td>
-                            <td>{{item.location}}</td>
-                            <td>
-                                <viewer><img style="height: 50px;"
-                                             src="item.singleImgUrl"/>
-                                    <img style="height: 50px;"
-                                         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561526807777&di=41900df32e8b82da893f3c122c962160&imgtype=0&src=http%3A%2F%2F2c.zol-img.com.cn%2Fproduct%2F120_500x2000%2F526%2FceEtqxqa1AZ6I.jpg"/>
-                                </viewer>
-                            </td>
-                            <td>
-                                <el-button type="info" plain @click="showHandleDialog(item.id)">处理状态</el-button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <!--表格-->
+                    <info-table :messageList="messageList" :curPath="curPath" :personnelType="personnelType"
+                                @getHandleId="showHandleDialog"></info-table>
+                    <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
@@ -276,19 +139,21 @@
 <script>
     import axios from 'axios'
     import qs from 'qs'
+    import infoTable from '../../components/infoTable/infoTable'
 
     export default {
         name: "waringMessage",
         data() {
             return {
+                curPath: '',
                 messageList: [],
                 totalNum: 0,
                 currentPage: 1,
                 personnelType: 'first',
-                label: '请选择',
+                label: '危险',
                 screenDialog: false,
                 handleDialog: false,
-                searchDetection:false,
+                searchDetection: false,
                 p(s) {
                     return s < 10 ? '0' + s : s
                 },
@@ -307,7 +172,7 @@
             // 初始化列表
             getMessageInfo() {
                 // 重度x危险
-                axios.get(this.api1+'/sbkp/message/messageList/2/1', {
+                axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
                     params: {
                         pageNum: this.currentPage,
                         pageSize: 10,
@@ -319,16 +184,15 @@
             getMessageInfoSucc(res) {
                 res = res.data;
                 this.totalNum = res.totalNum;
-                this.messageList = res.messagePersonnelList;
+                this.messageList = res.messageList;
             },
 
             // 切换重点&非重点
             handleClick() {
                 var _this = this;
                 this.searchDetection = false;
-                this.label = '请选择';
                 if (this.personnelType === 'first') {
-                    axios.get(this.api1+'/sbkp/message/messageList/2/1', {
+                    axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
                         params: {
                             pageNum: this.currentPage,
                             pageSize: 10,
@@ -337,7 +201,7 @@
                         _this.getMessageInfoSucc(res);
                     });
                 } else if (this.personnelType === 'second') {
-                    axios.get(this.api1+'/sbkp/message/messageList/1/1', {
+                    axios.get(this.api1 + '/sbkp/message/messageMentalList/1/1', {
                         params: {
                             pageNum: this.currentPage,
                             pageSize: 10,
@@ -354,8 +218,8 @@
                 this.searchDetection = false;
                 this.label = command;
                 if (this.personnelType === 'first') {
-                    if (this.label === '危险' || this.label === '请选择') {
-                        axios.get(this.api1+'/sbkp/message/messageList/2/1', {
+                    if (this.label === '危险') {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -364,7 +228,7 @@
                             _this.getMessageInfoSucc(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1+'/sbkp/message/messageList/2/2', {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/2/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -374,8 +238,8 @@
                         });
                     }
                 } else if (this.personnelType === 'second') {
-                    if (this.label === '危险' || this.label === '请选择') {
-                        axios.get(this.api1+'/sbkp/message/messageList/1/1', {
+                    if (this.label === '危险') {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/1/1', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -384,7 +248,7 @@
                             _this.getMessageInfoSucc(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1+'/sbkp/message/messageList/1/2', {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/1/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
@@ -396,37 +260,9 @@
                 }
             },
 
-            // 展示学生信息
-            searchstuLink(number){
-                var _this = this;
-                this.stuLink = '';
-                axios.get(this.api1+'/sbkp/message/personnelDetail', {
-                    params: {
-                        number: number,
-                    }
-                }).then(function (res) {
-                    res = res.data;
-                    res = res.data;
-                    _this.stuLink = res.link;
-                });
-            },
-
-            // 展示辅导员信息
-            searchLink(name){
-                var _this = this;
-                axios.get(this.api1+'/sbkp/message/counsellorDetail', {
-                    params: {
-                        counsellorName: name,
-                    }
-                }).then(function (res) {
-                    res = res.data;
-                    _this.tchInfo = res.data;
-                });
-            },
-
             // 展示完善筛选条件模态框
             showScreenModal() {
-                axios.get(this.api1+'/sbkp/message/messageListBySearch/rules')
+                axios.get(this.api1 + '/sbkp/message/messageListBySearch/rules')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
             },
@@ -435,10 +271,16 @@
             submitForm() {
                 var _this = this;
                 let screenDataId = [];
-                const d1 = new Date(this.screenData.time1);
-                const d2 = new Date(this.screenData.time2);
-                let time1 = d1.getFullYear() + '-' + this.p((d1.getMonth() + 1)) + '-' + this.p(d1.getDate());
-                let time2 = d2.getFullYear() + '-' + this.p((d2.getMonth() + 1)) + '-' + this.p(d2.getDate());
+                let time1, time2;
+                if (this.screenData.time1 == null || this.screenData.time2 == null) {
+                    time1 = 'NaN-NaN-NaN';
+                    time2 = 'NaN-NaN-NaN';
+                } else {
+                    const d1 = new Date(this.screenData.time1);
+                    const d2 = new Date(this.screenData.time2);
+                    time1 = d1.getFullYear() + '-' + this.p((d1.getMonth() + 1)) + '-' + this.p(d1.getDate());
+                    time2 = d2.getFullYear() + '-' + this.p((d2.getMonth() + 1)) + '-' + this.p(d2.getDate());
+                }
                 for (let i = 0; i < this.screenData.screenReason.length; i++) {
                     for (let j = 0; j < this.keyword.length; j++) {
                         if (this.screenData.screenReason[i] === this.keyword[j].name) {
@@ -446,10 +288,10 @@
                         }
                     }
                 }
-                let personnelType = 0;
+                let personnelType = 2;
                 let levelId = 1;
                 if (this.personnelType === 'first') {
-                    personnelType = 0;
+                    personnelType = 2;
                 } else if (this.personnelType === 'second') {
                     personnelType = 1;
                 }
@@ -459,9 +301,9 @@
                     levelId = 1;
                 }
                 if (time1 === 'NaN-NaN-NaN' || time2 === 'NaN-NaN-NaN') {
-                    axios.post(this.api1+"/sbkp/message/messageListBySearch", qs.stringify({
-                            isKey: personnelType,
+                    axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             levelId: levelId,
+                            mentalStatus: personnelType,
                             actionIds: screenDataId,
                             name: this.screenData.stuName,
                             pageNum: this.currentPage,
@@ -471,9 +313,9 @@
                         _this.getSearchInfoSucc(res);
                     });
                 } else {
-                    axios.post(this.api1+"/sbkp/message/messageListBySearch", qs.stringify({
-                            isKey: personnelType,
+                    axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             levelId: levelId,
+                            mentalStatus: personnelType,
                             startTime: time1,
                             endTime: time2,
                             actionIds: screenDataId,
@@ -499,7 +341,7 @@
             // 处理报警信息
             handleMessage() {
                 var _this = this;
-                axios.post(this.api1+'/sbkp/message/putKeyMessageStatus/1', qs.stringify({
+                axios.post(this.api1 + '/sbkp/message/putKeyMessageStatus/1', qs.stringify({
                         messageId: this.messageId,
                         remark: this.remark
                     }
@@ -518,7 +360,7 @@
             // 忽略报警信息
             ignoreMessage() {
                 var _this = this;
-                axios.post(this.api1+'/sbkp/message/putKeyMessageStatus/2', qs.stringify({
+                axios.post(this.api1 + '/sbkp/message/putKeyMessageStatus/2', qs.stringify({
                         messageId: this.messageId,
                         remark: this.remark
                     }
@@ -566,36 +408,29 @@
                     this.screenData.screenReason = [];
                     this.screenData.name = '';
                     this.getMessageInfo();
-                }else if(this.searchDetection === true) {
+                } else if (this.searchDetection === true) {
                     this.submitForm();
                 }
             },
         },
         mounted() {
             this.getMessageInfo();
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.curPath = to.matched[1].path;
+            });
+        },
+        components: {
+            infoTable
         }
     }
 </script>
 
 <style scoped>
-    [v-cloak] {
-        display: none !important;
-    }
-
     button {
         outline: none;
         cursor: pointer;
-    }
-
-    img {
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
-    }
-
-    td {
-        border-bottom: 1px solid #DEDEDE;
     }
 
     .content {
@@ -650,38 +485,6 @@
         height: 3px;
         border: 0;
         background: #E0E0E0;
-    }
-
-    /*表格*/
-    .list {
-        width: 100%;
-        border: 0;
-        border-spacing: 0;
-        border-collapse: collapse;
-        text-align: center;
-        padding: 0 20px;
-        white-space: nowrap;
-    }
-
-    /*表头*/
-    .header {
-        height: 45px;
-        font-size: 18px;
-        color: #101010;
-    }
-
-    /*主体*/
-    .body {
-        height: 60px;
-        font-size: 18px;
-        color: #5C5B5C;
-    }
-
-    .table {
-        margin-bottom: 0;
-        border: 1px solid #dedede;
-        color: grey;
-        font-size: 15px;
     }
 
     /*分页*/
