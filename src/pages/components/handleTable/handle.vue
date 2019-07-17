@@ -44,13 +44,13 @@
                         <el-table-column
                                 align="center"
                                 prop="dateTime"
-                                label="违规时间">
+                                label="处理时间">
                         </el-table-column>
                         <el-table-column
                                 align="center"
                                 prop="status"
                                 label="状态"
-                                width="60"
+                                width="90"
                                 :formatter="filterStatus">
                         </el-table-column>
                         <el-table-column

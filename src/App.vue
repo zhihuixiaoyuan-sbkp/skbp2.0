@@ -14,12 +14,14 @@
     html {
         position:relative;
         min-height: 100%;
+        width: 100%;
         /*padding-bottom: 108px;*/
     }
 
     body {
         margin: 0;
-        min-width: 1550px;
+        /*min-width: 1550px;*/
         height: 100%;
+
     }
 </style>
