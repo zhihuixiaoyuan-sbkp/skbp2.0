@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <!--内容-->
-        <tbody v-for="(item,index) in messageList">
+        <tbody v-for="(item,index) in messageList" v-show="showList">
         <tr class="body">
             <td>{{index+1}}</td>
             <td @click="searchstuLink(item.stuNum)">
@@ -86,6 +86,11 @@
             </td>
         </tr>
         </tbody>
+        <tbody v-show="showMessage">
+        <td class="message" colspan="8">
+            暂无数据
+        </td>
+        </tbody>
     </table>
 </template>
 
@@ -101,12 +106,14 @@
         },
         data() {
             return {
+                showList:false,
                 stuLink: '',
                 tchInfo: [],
                 showFudao: true,
                 showClass: false,
                 showHandle: true,
                 showAdd: false,
+                showMessage:false
             }
         },
         methods: {
@@ -169,6 +176,16 @@
                     this.showAdd = false;
                 }
             },
+
+            messageList: function (newVal, oldVal) {
+                if (newVal.length === 0) {
+                    this.showList = false;
+                    this.showMessage = true;
+                } else {
+                    this.showList = true;
+                    this.showMessage = false;
+                }
+            }
         },
     }
 </script>
@@ -219,5 +236,12 @@
         border: 1px solid #dedede;
         color: grey;
         font-size: 15px;
+    }
+
+    .message {
+        height: 160px;
+        line-height: 160px;
+        text-align: center;
+        color: #909399;
     }
 </style>

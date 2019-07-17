@@ -15,8 +15,8 @@
         </tr>
         </thead>
         <!--内容-->
-        <tbody>
-        <tr class="body" v-for="(item,index) in historyList">
+        <tbody v-for="(item,index) in historyList" v-show="showList">
+        <tr class="body">
             <td>{{index+1}}</td>
             <td>{{item.stuNum}}</td>
             <td>{{item.name}}</td>
@@ -28,6 +28,11 @@
             <td>{{item.statusName}}</td>
         </tr>
         </tbody>
+        <tbody v-show="showMessage">
+        <td class="message" colspan="9">
+            暂无数据
+        </td>
+        </tbody>
     </table>
 </template>
 
@@ -36,7 +41,24 @@
         name:'historyTable',
         props:{
             historyList:Array
-        }
+        },
+        data() {
+            return {
+                showList:false,
+                showMessage:false
+            }
+        },
+        watch: {
+            historyList: function (newVal, oldVal) {
+                if (newVal.length === 0) {
+                    this.showList = false;
+                    this.showMessage = true;
+                } else {
+                    this.showList = true;
+                    this.showMessage = false;
+                }
+            }
+        },
     }
 </script>
 
@@ -67,5 +89,12 @@
         border-right: 1px solid #BBBBBB;
         font-size: 18px;
         color: #5C5B5C;
+    }
+
+    .message {
+        height: 140px;
+        line-height: 140px;
+        text-align: center;
+        color: #909399;
     }
 </style>

@@ -16,7 +16,7 @@
         </tr>
         </thead>
         <!--内容-->
-        <tbody v-for="(item,index) in personList">
+        <tbody v-for="(item,index) in personList" v-show="showList">
         <tr class="body">
             <td>{{index+1}}</td>
             <td>{{item.stuNum}}</td>
@@ -36,13 +36,19 @@
             <!--操作-->
             <td>
                 <router-link class="iconfont operation" :to="{path:historyPath,query:{id:item.id}}">
-                &#xe685;
+                    &#xe685;
                 </router-link>
-                <router-link class="iconfont operation" to="/Footprint" v-show="showFootprint">&#xe677;</router-link>
+                <router-link class="iconfont operation" to="/Footprint" v-show="showFootprint">&#xe677;
+                </router-link>
                 <span class="iconfont operation" @click="modyfyId(item.id)">&#xe64b;</span>
                 <span class="iconfont operation" @click="deleteId(item.id)">&#xe639;</span>
             </td>
         </tr>
+        </tbody>
+        <tbody v-show="showMessage">
+        <td class="message" colspan="9">
+            暂无数据
+        </td>
         </tbody>
     </table>
 </template>
@@ -52,10 +58,12 @@
         name: "personTable",
         data() {
             return {
+                showList: false,
                 historyPath: '',
                 showFootprint: false,
                 showSchoolStatus: true,
                 showXinli: false,
+                showMessage: false,
             }
         },
         props: {
@@ -88,6 +96,16 @@
                     this.showXinli = true;
                     this.showSchoolStatus = false;
                     this.historyPath = '/xinliHistory';
+                }
+            },
+
+            personList: function (newVal, oldVal) {
+                if (newVal.length === 0) {
+                    this.showList = false;
+                    this.showMessage = true;
+                } else {
+                    this.showList = true;
+                    this.showMessage = false;
                 }
             }
         },
@@ -147,5 +165,12 @@
     .operation:hover {
         color: #457aec;
         text-decoration: transparent
+    }
+
+    .message {
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        color: #909399;
     }
 </style>
