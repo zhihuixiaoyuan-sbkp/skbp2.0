@@ -191,6 +191,7 @@
             handleClick() {
                 var _this = this;
                 this.searchDetection = false;
+                this.label='危险';
                 if (this.personnelType === 'first') {
                     axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
                         params: {
