@@ -348,8 +348,6 @@
                     levelId = 1;
                 }
                 if (time1 === 'NaN-NaN-NaN' || time2 === 'NaN-NaN-NaN' || time1 === 'null' || time2 === 'null') {
-                    console.log('time为空')
-                    console.log(time1)
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
                             levelId: levelId,

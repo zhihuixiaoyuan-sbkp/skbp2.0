@@ -239,7 +239,6 @@
                                 type: 'POST',
                                 dataType: 'json',
                                 success(data) {
-                                    // console.log(data)
                                     newTag = {
                                         id: data.id,
                                         name: element,

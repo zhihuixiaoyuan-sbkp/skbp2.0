@@ -7,7 +7,9 @@
         <el-tabs v-model="ruleType" type="card" @tab-click="selectionRules">
             <el-tab-pane label="晚归" name="first">
                 <div class="tableBorder">
+                    <!--表格-->
                     <history-table :historyList="historyList"></history-table>
+                    <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"

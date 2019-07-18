@@ -246,7 +246,6 @@
                     axios.get(this.api1+'/sbkp/personnel/personnelList/name/' + this.label)
                         .then(this.searchList)
                 } else if (this.select === '3') {
-                    console.log(this.label);
                     axios.get(this.api1+'/sbkp/personnel/personnelList/college/' + this.label)
                         .then(this.searchList)
                 }
@@ -447,7 +446,6 @@
                                 type: 'POST',
                                 dataType: 'json',
                                 success(data) {
-                                    // console.log(data)
                                     newTag = {
                                         id: data.id,
                                         name: element,
