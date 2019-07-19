@@ -21,7 +21,9 @@
             </el-tab-pane>
             <el-tab-pane label="夜不归宿" name="second">
                 <div class="tableBorder">
+                    <!--表格-->
                     <history-table :historyList="historyList"></history-table>
+                    <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
