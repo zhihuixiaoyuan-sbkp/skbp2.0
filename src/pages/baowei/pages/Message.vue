@@ -14,7 +14,8 @@
                     </el-dropdown>
                     <hr class="boundary">
                     <!--表格-->
-                    <info-table :messageList="messageList" :personnelType="personnelType" @getHandleId="showHandleDialog"></info-table>
+                    <info-table :messageList="messageList" :personnelType="personnelType"
+                                @getHandleId="showHandleDialog"></info-table>
                     <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
@@ -36,7 +37,8 @@
                     </el-dropdown>
                     <hr class="boundary">
                     <!--表格-->
-                    <info-table :messageList="messageList" :personnelType="personnelType" @getAddId="showAddDialog"></info-table>
+                    <info-table :messageList="messageList" :personnelType="personnelType"
+                                @getAddId="showAddDialog"></info-table>
                     <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
@@ -206,7 +208,7 @@
             handleClick() {
                 var _this = this;
                 this.searchDetection = false;
-                this.label='危险';
+                this.label = '危险';
                 if (this.personnelType === 'first') {
                     axios.get(this.api1 + '/sbkp/message/messageList/0/1', {
                         params: {
@@ -319,7 +321,7 @@
                 if (time1 === 'NaN-NaN-NaN' || time2 === 'NaN-NaN-NaN') {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
-                            levelId: levelId,
+                            levelCode: levelId,
                             actionIds: screenDataId,
                             name: this.screenData.stuName,
                             pageNum: this.currentPage,
@@ -331,7 +333,7 @@
                 } else {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
-                            levelId: levelId,
+                            levelCode: levelId,
                             startTime: time1,
                             endTime: time2,
                             actionIds: screenDataId,

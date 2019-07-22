@@ -38,7 +38,9 @@
                 <router-link class="iconfont operation" :to="{path:historyPath,query:{id:item.id}}">
                     &#xe685;
                 </router-link>
-                <span class="iconfont operation" @click="Footprint" v-show="showFootprint">&#xe677;</span>
+                <router-link class="iconfont operation" to="/Footprint" v-show="showFootprint">
+                    &#xe677;
+                </router-link>
                 <span class="iconfont operation" @click="modyfyId(item.id)">&#xe64b;</span>
                 <span class="iconfont operation" @click="deleteId(item.id)">&#xe639;</span>
             </td>

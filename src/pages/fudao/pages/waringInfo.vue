@@ -209,7 +209,7 @@
             handleClick() {
                 var _this = this;
                 this.searchDetection = false;
-                this.label='危险';
+                this.label = '危险';
                 if (this.personnelType === 'first') {
                     axios.get(this.api1 + '/sbkp/message/messageList/0/1', {
                         params: {
@@ -350,7 +350,7 @@
                 if (time1 === 'NaN-NaN-NaN' || time2 === 'NaN-NaN-NaN' || time1 === 'null' || time2 === 'null') {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
-                            levelId: levelId,
+                            levelCode: levelId,
                             actionIds: screenDataId,
                             name: this.screenData.stuName,
                             pageNum: this.currentPage,
@@ -362,7 +362,7 @@
                 } else {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
-                            levelId: levelId,
+                            levelCode: levelId,
                             startTime: time1,
                             endTime: time2,
                             actionIds: screenDataId,
