@@ -1,46 +1,15 @@
 <template>
     <div class="content">
-        <!--<router-link class="iconfont back" to="/List">&#xe63f;</router-link>-->
-        <!--&nbsp;-->
-        <!--<span class="title">历史记录</span>-->
         <button class="iconfont back" @click="updateList">
             <span class="iconfont add">&#xe63f;</span>&nbsp;历史记录
         </button>
         <hr class="boundary">
-
         <el-tabs v-model="ruleType" type="card" @tab-click="selectionRules">
             <el-tab-pane label="晚归" name="first">
                 <div class="tableBorder">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>学号</td>
-                            <td>姓名</td>
-                            <td>性别</td>
-                            <td>学院</td>
-                            <td>专业班级</td>
-                            <td>违规时间</td>
-                            <td>备注</td>
-                            <td>状态</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody>
-                        <tr class="body" v-for="(item,index) in historyList">
-                            <td>{{index+1}}</td>
-                            <td>{{item.stuNum}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.college}}</td>
-                            <td>{{item.proClass}}</td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.remark}}</td>
-                            <td>{{item.statusName}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <!--表格-->
+                    <history-table :historyList="historyList"></history-table>
+                    <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
@@ -52,36 +21,9 @@
             </el-tab-pane>
             <el-tab-pane label="夜不归宿" name="second">
                 <div class="tableBorder">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>学号</td>
-                            <td>姓名</td>
-                            <td>性别</td>
-                            <td>学院</td>
-                            <td>专业班级</td>
-                            <td>违规时间</td>
-                            <td>备注</td>
-                            <td>状态</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody>
-                        <tr class="body" v-for="(item,index) in historyList">
-                            <td>{{index+1}}</td>
-                            <td>{{item.stuNum}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.college}}</td>
-                            <td>{{item.proClass}}</td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.remark}}</td>
-                            <td>{{item.statusName}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <!--表格-->
+                    <history-table :historyList="historyList"></history-table>
+                    <!--分页-->
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
@@ -93,36 +35,7 @@
             </el-tab-pane>
             <el-tab-pane label="蜗居" name="third">
                 <div class="tableBorder">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>学号</td>
-                            <td>姓名</td>
-                            <td>性别</td>
-                            <td>学院</td>
-                            <td>专业班级</td>
-                            <td>违规时间</td>
-                            <td>备注</td>
-                            <td>状态</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody>
-                        <tr class="body" v-for="(item,index) in historyList">
-                            <td>{{index+1}}</td>
-                            <td>{{item.stuNum}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.college}}</td>
-                            <td>{{item.proClass}}</td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.remark}}</td>
-                            <td>{{item.statusName}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <history-table :historyList="historyList"></history-table>
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
@@ -134,36 +47,7 @@
             </el-tab-pane>
             <el-tab-pane label="非正常时段离校" name="fourth">
                 <div class="tableBorder">
-                    <table class="list">
-                        <!--表头-->
-                        <thead>
-                        <tr class="header">
-                            <td>序号</td>
-                            <td>学号</td>
-                            <td>姓名</td>
-                            <td>性别</td>
-                            <td>学院</td>
-                            <td>专业班级</td>
-                            <td>违规时间</td>
-                            <td>备注</td>
-                            <td>状态</td>
-                        </tr>
-                        </thead>
-                        <!--内容-->
-                        <tbody>
-                        <tr class="body" v-for="(item,index) in historyList">
-                            <td>{{index+1}}</td>
-                            <td>{{item.stuNum}}</td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.gender}}</td>
-                            <td>{{item.college}}</td>
-                            <td>{{item.proClass}}</td>
-                            <td>{{item.dateTime}}</td>
-                            <td>{{item.remark}}</td>
-                            <td>{{item.statusName}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <history-table :historyList="historyList"></history-table>
                     <nav class="block">
                         <el-pagination layout="prev, pager, next"
                                        @current-change="pageNum"
@@ -179,6 +63,7 @@
 
 <script>
     import axios from 'axios'
+    import historyTable from '../../components/historyTable/historyTable'
 
     export default {
         name: "History",
@@ -195,7 +80,7 @@
         methods: {
             // 获取历史记录
             getHistoryInfo() {
-                axios.get(this.api1+'/sbkp/personnel/histories/' + this.rule, {
+                axios.get(this.api1 + '/sbkp/personnel/histories/' + this.rule, {
                     params: {
                         personnelId: this.id,
                         pageNum: this.currentPage,
@@ -215,13 +100,13 @@
             selectionRules() {
                 if (this.ruleType === 'first') {
                     // 晚归
-                    this.rule = 3
+                    this.rule = 1
                 } else if (this.ruleType === 'second') {
                     // 夜不归宿
                     this.rule = 2
                 } else if (this.ruleType === 'third') {
                     // 蜗居
-                    this.rule = 1
+                    this.rule = 3
                 } else if (this.ruleType === 'fourth') {
                     // 非正常时段离校
                     this.rule = 4
@@ -234,7 +119,7 @@
                 this.currentPage = currentPage;
                 if (this.searchDetection === false) {
                     this.getMessageInfo();
-                }else if(this.searchDetection === true) {
+                } else if (this.searchDetection === true) {
                     this.submitForm();
                 }
             },
@@ -247,11 +132,12 @@
             },
         },
         mounted() {
+            this.id = this.$route.query.id;//获取上个页面传递的id,在下面获取数据的时候先提交id
             this.getHistoryInfo();
         },
-        created() {
-            this.id = this.$route.query.id;//获取上个页面传递的id,在下面获取数据的时候先提交id
-        },
+        components: {
+            historyTable
+        }
     }
 </script>
 
@@ -259,10 +145,6 @@
     button {
         outline: none;
         cursor: pointer;
-    }
-
-    td {
-        border-bottom: 1px solid #BBBBBB;
     }
 
     .content {
@@ -313,30 +195,6 @@
     .tableBorder {
         border: 1px solid #E4E7ED;
         padding: 20px 40px;
-    }
-
-    /*表格*/
-    .list {
-        width: 100%;
-        border: 0;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    /*表头*/
-    .header {
-        height: 40px;
-        font-size: 16px;
-        color: #6E6D6E;
-    }
-
-    /*主体*/
-    .body {
-        height: 60px;
-        border-left: 1px solid #BBBBBB;
-        border-right: 1px solid #BBBBBB;
-        font-size: 18px;
-        color: #5C5B5C;
     }
 
     /*分页*/

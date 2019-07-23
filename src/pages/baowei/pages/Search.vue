@@ -6,46 +6,8 @@
         <hr class="boundary">
         <el-col :span="24" class="table-wrapper">
             <!--表格-->
-            <table class="list" id="table">
-                <!--表头-->
-                <thead>
-                <tr class="header">
-                    <td>序号</td>
-                    <td>学号</td>
-                    <td>姓名</td>
-                    <td>性别</td>
-                    <td>学院</td>
-                    <td>专业班级</td>
-                    <td>添加原因</td>
-                    <td>在校状态</td>
-                    <td>更多操作</td>
-                </tr>
-                </thead>
-                <!--内容-->
-                <tbody v-for="(item,index) in list">
-                <tr class="body">
-                    <td>{{index+1}}</td>
-                    <td>{{item.stuNum}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.gender}}</td>
-                    <el-tooltip class="item" effect="light" :content=item.college placement="right">
-                        <td>{{item.college}}</td>
-                    </el-tooltip>
-                    <td>{{item.proClass}}</td>
-                    <el-tooltip class="item" effect="light" :content=item.reasonNames placement="right">
-                        <td>{{item.reasonNames}}</td>
-                    </el-tooltip>
-                    <td>{{item.schoolStatus}}</td>
-                    <!--操作-->
-                    <td>
-                        <router-link class="iconfont operation" to="/History">&#xe685;</router-link>
-                        <router-link class="iconfont operation" to="/Footprint">&#xe677;</router-link>
-                        <span class="iconfont operation" @click="showModifyModal(item.id)">&#xe64b;</span>
-                        <span class="iconfont operation" @click="showDelModal(item.id)">&#xe639;</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <person-table :personList="list" :curPath="curPath" @getModyfyId="showModifyModal"
+                          @getDeleteId="showDelModal"></person-table>
             <nav class="block">
                 <el-pagination layout="prev, pager, next"
                                @current-change="pageNum"
@@ -140,16 +102,22 @@
 <script>
     import axios from 'axios'
     import qs from 'qs'
+    import personTable from '../../components/personTable/personTable'
 
     export default {
         name: "Search",
         data() {
             return {
+                // 当前页面路由path值
+                curPath: '',
+                // 搜索数据
                 label: '',
                 select: '',
+                // 表格数据
                 list: [],
                 totalNum: 0,
                 currentPage: 1,
+                // 模态框
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -430,7 +398,15 @@
             this.select = this.$route.params.select;
             this.list = this.$route.params.list;
             this.totalNum = this.$route.params.totalNum;
-        }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.curPath = to.matched[1].path;
+            });
+        },
+        components: {
+            personTable
+        },
     }
 </script>
 
@@ -438,20 +414,6 @@
     button {
         outline: none;
         cursor: pointer;
-    }
-
-    table {
-        /*width:30em;*/
-        table-layout: fixed;
-    }
-
-    td {
-        width: 100%;
-        word-break: keep-all;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        border-bottom: 1px solid #BBBBBB;
     }
 
     .content {
@@ -481,42 +443,6 @@
         height: 3px;
         border: 0;
         background: #BBBBBB;
-    }
-
-    /*表格*/
-    .list {
-        width: 100%;
-        border: 0;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    /*表头*/
-    .header {
-        height: 40px;
-        font-size: 18px;
-        color: #4D4C4D;
-    }
-
-    /*主体*/
-    .body {
-        height: 60px;
-        border-left: 1px solid #BBBBBB;
-        border-right: 1px solid #BBBBBB;
-        font-size: 20px;
-        color: #5C5B5C;
-    }
-
-    /*操作*/
-    .operation {
-        font-size: 25px;
-        cursor: pointer;
-        color: #5C5B5C;
-    }
-
-    .operation:hover {
-        color: #457aec;
-        text-decoration: transparent
     }
 
     /*分页*/

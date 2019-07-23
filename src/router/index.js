@@ -9,6 +9,7 @@ import List from "@/pages/baowei/pages/List.vue"
 import Log from "@/pages/baowei/pages/Log.vue"
 import History from "@/pages/baowei/pages/History.vue"
 import Search from "@/pages/baowei/pages/Search.vue"
+import Footprint from "@/pages/baowei/pages/Footprint.vue"
 
 import tongji from "@/pages/houqin/pages/tongji.vue"
 import loding from "@/pages/houqin/pages/loding.vue"
@@ -185,6 +186,14 @@ export default new Router({
                         default: Search,
                         top: Header,
                         aside: Sidebar,
+                    }
+                },
+                {
+                    path: '/Footprint',
+                    name: '历史轨迹',
+                    components: {
+                        default: Footprint,
+                        top: Header,
                     }
                 }
             ]
