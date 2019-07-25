@@ -15,6 +15,10 @@
     import echarts from 'echarts'
     export default {
         props:{
+            flag:{
+                type:String,
+                default:"0"
+            },
             echartStyle: {
                 type: Object,
                 default() {
@@ -47,12 +51,11 @@
         },
         mounted () {
             // 调用绘制图表的方法
-            this.draw();
+            this.draw(this.flag);
         },
         methods: {
-            draw () {
+            draw (flag) {
                 // 实例化echarts对象
-                console.log(1)
                 var myChart = echarts.init(this.$refs.bar)
                 // 绘制条形图
                 myChart.setOption({
@@ -71,13 +74,31 @@
                     // X轴
                     xAxis: this.xAxis,
                     // Y轴
-                    yAxis: {
+                    yAxis: flag === "0" ? [{
                         name: '人数',
                         minInterval: 1,
                         splitLine:{
                             show:true
                         },
                     },
+                        {
+                            type: 'value',
+                            name: '违规人员',
+                            axisLabel: {
+                                formatter: '{value}人'
+                            },
+                            splitLine: {
+                                show: true
+                            }
+                        }
+                    ] : [{
+                        name: '人数',
+                        minInterval: 1,
+                        splitLine:{
+                            show:true
+                        },
+                    }
+                    ],
                     // 数据
                     series: this.series
                 })

@@ -104,8 +104,26 @@
                     return "重度异常"
                 }
             },
+            open(id) {
+                this.$confirm('确认撤销?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$emit('handleEdit',id)
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '撤销成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消撤销'
+                    });
+                });
+            },
             handleEdit(id){
-                this.$emit('handleEdit',id)
+                this.open(id)
             },
         }
     }

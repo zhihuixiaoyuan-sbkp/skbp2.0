@@ -191,12 +191,18 @@
                 yAxis: {},
                 // 数据
                 series: [
+                    // {
+                    //     name: '重点人员人数',
+                    //     type: 'bar',
+                    //     barMaxWidth: 20,
+                    //     data: [],
+                    //
+                    // },
                     {
                         name: '重点人员人数',
-                        type: 'bar',
-                        barMaxWidth: 20,
-                        data: [],
-
+                        type: 'line',
+                        yAxisIndex: 1,//索引从0开始
+                        data: []
                     },
                     {
                         name: '报警通知已处理',
