@@ -71,6 +71,8 @@
     .header {
         position: relative;
         height: 60px;
+        width: 100%;
+        min-width: 1570px;
         background: #457aec;
         box-shadow: 0 0 4px #457aec;
 

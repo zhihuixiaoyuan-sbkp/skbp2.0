@@ -201,7 +201,7 @@
 
             /*导出数据*/
             exportAllInstructor(url){
-                document.getElementsByTagName("form")[0].action = this.api + url
+                document.getElementsByTagName("form")[1].action = this.api + url
             }
 
         },

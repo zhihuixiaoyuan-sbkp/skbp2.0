@@ -82,7 +82,7 @@
             }
         },
         watch: {
-            curPath: function (newVal, oldVal) {
+            curPath: function (newVal) {
                 // 保卫处
                 if (newVal === '/List' || newVal === '/Search') {
                     this.showFootprint = true;
@@ -100,7 +100,7 @@
                 }
             },
 
-            personList: function (newVal, oldVal) {
+            personList: function (newVal) {
                 if (newVal.length === 0) {
                     this.showList = false;
                     this.showMessage = true;

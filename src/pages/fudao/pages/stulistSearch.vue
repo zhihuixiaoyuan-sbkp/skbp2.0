@@ -16,93 +16,15 @@
                 </el-pagination>
             </nav>
         </el-col>
-        <!--模态框-修改重点人员-->
-        <el-dialog title="修改重点人员"
-                   class="allModal"
-                   width="520px"
-                   :visible.sync="modifyDialog"
-                   :close-on-press-escape="false"
-                   :close-on-click-modal="false"
-                   :before-close="closeModal">
-            <hr class="boundaryModal">
-            <div class="bodyModal">
-                <!--表单-->
-                <el-form :model="formData">
-                    <el-form-item
-                            label="学号: "
-                            prop="stuNum">
-                        <el-input type="stuNum"
-                                  id="stuNum"
-                                  ref="stuNum"
-                                  v-model="formData.stuNum"
-                                  autocomplete="off"
-                                  disabled
-                                  @keyup.enter.native="submitModify(formData.addReason)"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item
-                            label="添加原因（多个标签用空格分隔）:"
-                            prop="addReason">
-                        <el-input type="stuNum"
-                                  id="addReason"
-                                  ref="addReason"
-                                  v-model="formData.addReason"
-                                  autocomplete="off"
-                                  @keyup.enter.native="handleInputConfirm"
-                        ></el-input>
-                        <!--上次使用的标签-->
-                        <div class="tags">
-                            <span>我的添加原因：</span>
-                            <el-tag v-for="historytag in historyAddReason"
-                                    :key="historytag"
-                                    type="info"
-                                    :disable-transitions="false"
-                            >{{historytag}}
-                            </el-tag>
-                        </div>
-                        <!--所有标签-->
-                        <div class="tags">
-                            <span>推荐添加原因：</span>
-                            <el-tag v-for="tag in showTags"
-                                    :key="tag.id"
-                                    :disable-transitions="false"
-                                    @click="tagContent(tag.id,tag.name)">
-                                {{tag.name}}
-                            </el-tag>
-                        </div>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <hr class="boundaryModal">
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="closeModal">取消</el-button>
-                <el-button type="primary" @click="submitModify(formData.addReason)">提交</el-button>
-            </div>
-        </el-dialog>
-        <!--模态框-删除重点人员-->
-        <el-dialog title="删除重点人员"
-                   class="allModal"
-                   :visible.sync="delDialog"
-                   :close-on-press-escape="false"
-                   :close-on-click-modal="false"
-                   width="520px">
-            <hr class="boundaryModal">
-            <!--提示文本-->
-            <div class="bodyModaldel">
-                <span class="tips">是否确认从列表删除该名重点人员？</span>
-            </div>
-            <div slot="footer" class="dialog-footer delbutton">
-                <el-button @click="closeModal">取 消</el-button>
-                <el-button type="danger" @click="delStu">删 除</el-button>
-            </div>
-        </el-dialog>
+        <operate-modal :curPath="curPath" :modify="modifyDialog" :modifyNum="modifyNum" :delete="delDialog"
+                       :delNum="delNum" :personList="list" @updateList="closeModal"></operate-modal>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
-    import qs from 'qs'
     import personTable from '../../components/personTable/personTable'
+    import operateModal from '../../components/operateModal/operateModal'
 
     export default {
         name: "stulistSearch",
@@ -121,18 +43,7 @@
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
-                // form表单数据
-                formData: {
-                    stuNum: '',
-                    addReason: ''
-                },
-                // 记录添加原因
-                addReasonArr: [],
-                addReasonId: [],
-                // 历史添加原因标签
-                historyAddReason: [],
-                // 全部标签（对象数组）
-                showTags: [],
+                // 修改id号
                 modifyNum: '',
                 // 删除id号
                 delNum: '',
@@ -163,206 +74,23 @@
                 })
             },
 
-            // 展示修改模态框
-            showModifyModal(id) {
-                this.modifyNum = id;
-                //获取学生学号及添加原因的数据传入模态框
-                for (let i = 0; i < this.list.length; i++) {
-                    if (id === this.list[i].id) {
-                        this.formData.stuNum = this.list[i].stuNum;
-                        this.formData.addReason = this.list[i].reasonNames;
-                    }
-                }
-                this.historyAddReason = this.formData.addReason.split(" ");
-                if (this.showTags.length === 0) {
-                    axios.get(this.api1 + '/sbkp/personnel/reasons')
-                        .then(this.getTagsInfoSucc);
-                }
+            // 修改修改模态框状态
+            getModyfyId(id) {
                 this.modifyDialog = true;
+                this.modifyNum = id;
             },
 
-            // 修改-提交操作数据处理
-            submitModify(addReason) {
-                var _this = this;
-                let newTag = {};
-                let tags = [];
-                if (addReason === "") {
-                    // 判断添加原因是否为空
-                    this.$nextTick(() => {
-                        this.$refs.addReason.focus()
-                    });
-                    this.$message.error('添加原因不能为空');
-                    return false;
-                }
-                this.addReasonId = [];
-                this.addReasonArr = addReason.split(" ");
-                for (let i = 0; i < this.addReasonArr.length; i++) {
-                    for (let j = 0; j < this.showTags.length; j++) {
-                        if (this.addReasonArr[i] === this.showTags[j].name) {
-                            this.addReasonId.push(this.showTags[j].id)
-                        }
-                    }
-                }
-                if (addReason) {
-                    // 判断数组不为空
-                    this.addReasonArr.filter(item => {
-                        return item !== '' && item !== undefined;
-                    });
-                    // 循环数据进行对比
-                    this.addReasonArr.forEach(element => {
-                        // 取出对象中的name
-                        for (let i = 0; i < this.showTags.length; i++) {
-                            tags[i] = this.showTags[i].name
-                        }
-                        // 获取索引位置，获取不到添加进数组
-                        let index = tags.findIndex(i => {
-                            return i === element;
-                        });
-                        if (index < 0) {
-                            $.ajax({
-                                url: _this.api1 + '/sbkp/personnel/postDefinedReason',
-                                async: false,
-                                data: {"reasonName": element},
-                                // contentType: 'application/json;charset=utf-8',
-                                type: 'POST',
-                                dataType: 'json',
-                                success(data) {
-                                    newTag = {
-                                        id: data.id,
-                                        name: element,
-                                    };
-                                    _this.showTags.push(newTag);
-                                    _this.addReasonId.push(data.id)
-                                }
-                            })
-                        }
-                    });
-                    addReason = this.addReasonId.join(',');
-                    this.modifyForm(addReason)
-                }
-            },
-
-            // 修改-提交操作调用接口
-            modifyForm(addReason) {
-                var _this = this;
-                axios.post(this.api1 + '/sbkp/personnel/putReasons', qs.stringify({
-                        personnelId: this.modifyNum,
-                        reasonIds: addReason
-                    }
-                )).then(function () {
-                    _this.$message({
-                        message: '修改成功！',
-                        type: 'success'
-                    });
-                    _this.changList();
-                }).catch(function () {
-                    _this.$message.error('修改失败,请重试！');
-                });
-                // 关闭模态框
-                this.closeModal();
-            },
-
-            // 展示删除模态框
-            showDelModal(id) {
-                this.delNum = id;
+            // 修改删除模态框状态
+            getDeleteId(id) {
                 this.delDialog = true;
+                this.delNum = id;
             },
 
-            // 删除-提交操作
-            delStu() {
-                var _this = this;
-                axios.get(this.api1 + '/sbkp/personnel/deletePersonal', {
-                    params: {
-                        personnelId: this.delNum
-                    }
-                }).then(function () {
-                    _this.$message({
-                        message: '删除成功！',
-                        type: 'success'
-                    });
-                    _this.changList();
-                }).catch(function () {
-                    _this.$message.error('删除失败,请重试！');
-                });
-                // 关闭模态框
-                this.closeModal();
-            },
-
-            // 关闭添加模态框
+            // 关闭模态框并更新表
             closeModal() {
-                // 删除模态框数据清除
-                this.delNum = '';
-                // 关闭添加模态框
                 this.modifyDialog = false;
                 this.delDialog = false;
-            },
-
-            // 处理标签数据并赋值
-            getTagsInfoSucc(res) {
-                res = res.data;
-                const data = res.reasons;
-                this.showTags = data;
-            },
-
-            // 增加标签
-            handleInputConfirm() {
-                let inputValue = this.formData.addReason;
-                let tags = [];
-                // 新标签数组
-                let newTag = {};
-                var _this = this;
-                if (inputValue) {
-                    // 获取输入的数据
-                    let values = inputValue.split(" ").filter(item => {
-                        return item !== '' && item !== undefined;
-                    });
-                    // 循环数据进行对比
-                    values.forEach(element => {
-                        // 取出对象中的name
-                        for (let i = 0; i < this.showTags.length; i++) {
-                            tags[i] = this.showTags[i].name
-                        }
-                        // 获取索引位置，获取不到添加进数组
-                        let index = tags.findIndex(i => {
-                            return i === element;
-                        });
-                        if (index < 0) {
-                            axios.post(this.api1 + '/sbkp/personnel/postDefinedReason', qs.stringify({
-                                    reasonName: element
-                                }
-                            )).then(function (res) {
-                                newTag = {
-                                    id: res.data.id,
-                                    name: element
-                                };
-                                _this.showTags.push(newTag);
-                                _this.addReasonArr.push(element);
-                                _this.addReasonId.push(res.data.id);
-                            });
-                        }
-                    });
-                }
-            },
-
-            // 选择标签
-            tagContent(id, name) {
-                let addReasonArr = [];
-                if (this.formData.addReason === '') {
-                    // 记录的添加原因为空
-                    this.addReasonId.push(id);
-                    this.formData.addReason = name;
-                } else {
-                    addReasonArr = this.formData.addReason.split(" ");
-                    // 判断name是否重复
-                    for (let i = 0; i < addReasonArr.length; i++) {
-                        if (name === addReasonArr[i]) {
-                            return false;
-                        }
-                    }
-                    // 拼接addReason字符串
-                    this.formData.addReason = this.formData.addReason + " " + name;
-                    this.addReasonId.push(id);
-                }
+                this.changList();
             },
 
             // 获取正确的页码并更新数据表
@@ -406,7 +134,8 @@
             });
         },
         components: {
-            personTable
+            personTable,
+            operateModal
         },
     }
 </script>
@@ -417,24 +146,10 @@
         cursor: pointer;
     }
 
-    table {
-        /*width:30em;*/
-        table-layout: fixed;
-    }
-
-    td {
-        width: 100%;
-        word-break: keep-all;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        border-bottom: 1px solid #BBBBBB;
-    }
-
     .content {
         margin-left: 230px;
         margin-right: 50px;
-        min-width: 990px;
+        min-width: 1300px;
     }
 
     /*返回人员表*/
