@@ -133,6 +133,10 @@
                          us.value = "2018009602"
                          ps.value = 'Aiit@6044137796'
                          break;
+                     case "test2","test2":
+                         us.value = "2013049"
+                         ps.value = '346f64cc'
+                         break;
                      default:
                          break;
                  }

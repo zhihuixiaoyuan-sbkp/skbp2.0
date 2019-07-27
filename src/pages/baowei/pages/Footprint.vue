@@ -33,7 +33,7 @@
         margin-top: 17px;
         margin-left: 40px;
         margin-right: 40px;
-        min-width: 990px;
+        min-width: 1500px;
     }
 
     /*返回人员表*/

@@ -439,7 +439,7 @@
         margin-top: 12px;
         margin-left: 220px;
         margin-right: 40px;
-        min-width: 990px;
+        min-width: 1300px;
     }
 
     .content >>> .el-button--primary {

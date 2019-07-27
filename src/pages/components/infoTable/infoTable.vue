@@ -161,7 +161,7 @@
                 }
             },
 
-            personnelType: function (newVal, oldVal) {
+            personnelType: function (newVal) {
                 if (this.curPath === '/waringMessage' && newVal === 'second') {
                     // 心理健康中心-轻度异常展示处理按钮
                     this.showHandle = true;
@@ -177,7 +177,7 @@
                 }
             },
 
-            messageList: function (newVal, oldVal) {
+            messageList: function (newVal) {
                 if (newVal.length === 0) {
                     this.showList = false;
                     this.showMessage = true;
