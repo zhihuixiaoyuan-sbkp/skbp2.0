@@ -27,6 +27,7 @@ import erjiHome from "@/pages/erji/erjiHome.vue"
 import admin from "@/pages/guanli/pages/admin.vue"
 import powerControl from "@/pages/guanli/pages/powerControl.vue"
 import guanliHome from "@/pages/guanli/guanliHome.vue"
+import setTime from "@/pages/guanli/pages/setTime.vue"
 
 import abnormalList from "@/pages/xinli/pages/abnormalList"
 import listSearch from "@/pages/xinli/pages/listSearch.vue"
@@ -248,6 +249,16 @@ export default new Router({
                     name: '权限分配',
                     components: {
                         default: powerControl,
+                        top: Header,
+                        aside: Sidebar
+                    },
+                    menuShow: true,
+                },
+                {
+                    path: '/setTime',
+                    name: '系统设置',
+                    components: {
+                        default: setTime,
                         top: Header,
                         aside: Sidebar
                     },

@@ -13,10 +13,21 @@
                 </el-date-picker>
             </div>
             <div style="display: inline-block;margin-left:20px">
-                <span class="demonstration">选择学院</span>
-                <el-select v-model="value" placeholder="请选择">
+            <span class="demonstration">选择学院</span>
+            <el-select v-model="value" placeholder="请选择">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+            <div style="display: inline-block;margin-left:20px">
+                <span class="demonstration">选择原因</span>
+                <el-select v-model="value1" placeholder="请选择">
                     <el-option
-                            v-for="item in options"
+                            v-for="item in options1"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -151,6 +162,17 @@
                         value: '管理工程学院',
                         label: '管理工程学院'
                     }],
+                options1: [{
+                    value: '晚归',
+                    label: '晚归'
+                }, {
+                    value: '夜不归宿',
+                    label: '夜不归宿'
+                }, {
+                    value: '蜗居',
+                    label: '蜗居'
+                }],
+                value1:"",//选择违规原因
                 value: '',//选择学院值
                 valueTime: "",//选择时间值
                 tableData: [{//初始数据结构
@@ -186,13 +208,14 @@
             },
             /*搜索异步请求*/
             searchInfo() {
-                if (this.value === "" || this.valueTime === "") {
+                if (this.value === "" || this.valueTime === "" || this.value1 === "") {
                     this.open()
                 } else {
                     this.isSearch = true
                     let searchParams = {
                         curPage: this.curPage,
                         college: this.value,
+                        reason:this.value1,
                         date: this.valueTime
                     }
                     axios.post(this.api + "/sbkp/census/getRulesListBySearch", qs.stringify(searchParams))
