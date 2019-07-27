@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <span class="title">重点人员行为监管系统</span>
-        <form action="http://172.16.211.151/sbkp/logout">
+        <form action="http://172.16.211.152/sbkp/logout">
             <input class="exit" type="submit" @click="loginOut" value="退出登录" >
         </form>
 
