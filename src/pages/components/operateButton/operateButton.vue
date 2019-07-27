@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-button type="primary" class="addBtn" @click="showAddModal">添加</el-button>
-        <el-button type="primary" class="addBtn" @click="">导入</el-button>
-        <el-button type="primary" class="addBtn" @click="">导出</el-button>
+        <el-button type="primary" class="addBtn" @click="showImportModal">导入</el-button>
+        <el-button type="primary" class="addBtn" @click="exportList">导出</el-button>
 
         <div class="search">
             <!--下拉框-搜索筛选-->
@@ -127,7 +127,22 @@
             // 调用添加模态框
             showAddModal() {
                 this.$emit('showAddModal');
-            }
+            },
+
+            // 调用导入模态框
+            showImportModal() {
+                this.$emit('showImportModal');
+            },
+
+            // 导出列表
+            exportList() {
+                axios.get(this.api + '/sbkp/census/exportPersonnelList')
+                    .then(function (res) {
+                        console.log(res)
+                    }).catch(function (res) {
+                    console.log(res)
+                })
+            },
         },
         watch: {
             curPath: function (newVal) {

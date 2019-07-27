@@ -8,7 +8,7 @@
 
 
                 <div class="form">
-                    <form id="loginForm" action="http://172.16.211.152/sbkp/login" method="POST" @submit="submit">
+                    <form id="loginForm" action="http://172.16.211.151/sbkp/login" method="POST" @submit="submit">
                     <p class="p1">
                         <label for="account">账号：</label>
                         <input type="text"
@@ -132,6 +132,10 @@
                      case "guanliyuan","guanliyuan":
                          us.value = "2018009602"
                          ps.value = 'Aiit@6044137796'
+                         break;
+                     case "test2","test2":
+                         us.value = "2013049"
+                         ps.value = '346f64cc'
                          break;
                      default:
                          break;

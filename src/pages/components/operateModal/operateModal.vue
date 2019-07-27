@@ -1,5 +1,31 @@
 <template>
     <div>
+        <!--导入-->
+        <el-dialog title="批量导入"
+                   class="allModal"
+                   width="520px"
+                   :visible.sync="importDialog"
+                   :close-on-press-escape="false"
+                   :close-on-click-modal="false"
+                   :before-close="updateList">
+            <hr class="boundaryModal">
+            <div class="bodyModal">
+                <el-upload
+                        class="upload-demo"
+                        drag
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                </el-upload>
+            </div>
+            <hr class="boundaryModal">
+            <div slot="footer" class="dialog-footer">
+                <el-button class="download" type="warning" size="medium" @click="download">模板下载</el-button>
+                <el-button @click.native="updateList">取消</el-button>
+                <el-button type="primary" @click="">上传</el-button>
+            </div>
+        </el-dialog>
         <!--模态框-添加重点人员-->
         <el-dialog title="添加重点人员"
                    class="allModal"
@@ -283,6 +309,7 @@
         props: {
             curPath: String,
             personList: Array,
+            import: Boolean,
             add: Boolean,
             modify: Boolean,
             delete: Boolean,
@@ -294,6 +321,7 @@
                 curPath: '',
                 personList: [],
                 // 模态框
+                importDialog: false,
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -329,6 +357,65 @@
                 this.addReasonId = [];
                 // 更新表
                 this.$emit("updateList")
+            },
+
+            download() {
+                console.log(this.curPath)
+                var _this = this;
+                if (this.curPath === "/List"){
+                    axios({
+                        method: "get",
+                        url: _this.api1 + "/dist/static/file/保卫处-批量导入模板.xlsx",
+                    }).then(function (response) {
+                        let filename = "保卫处-批量导入模板.xlsx";
+                        // this.fileDownload(response.data, filename);
+                    }.bind(this)).catch(function (error) {
+                        alert("网络请求出错");
+                    }.bind(this));
+                }else if (this.curPath === "/List"){
+                    axios({
+                        method: "get",
+                        url: _this.api1 + "/dist/static/file/辅导员-批量导入模板.xlsx",
+                    }).then(function (response) {
+                        let filename = "辅导员-批量导入模板.xlsx";
+                        // this.fileDownload(response.data, filename);
+                    }.bind(this)).catch(function (error) {
+                        alert("网络请求出错");
+                    }.bind(this));
+                }else if (this.curPath === "/List"){
+                    axios({
+                        method: "get",
+                        url: _this.api1 + "/dist/static/file/辅导员-批量导入模板.xlsx",
+                    }).then(function (response) {
+                        let filename = "辅导员-批量导入模板.xlsx";
+                        // this.fileDownload(response.data, filename);
+                    }.bind(this)).catch(function (error) {
+                        alert("网络请求出错");
+                    }.bind(this));
+                }
+            },
+
+            fileDownload(data, fileName) {
+                let blob = new Blob([data], {
+                    type: "application/octet-stream"
+                });
+                let filename = fileName || "filename.xls";
+                if (typeof window.navigator.msSaveBlob !== "undefined") {
+                    window.navigator.msSaveBlob(blob, filename);
+                } else {
+                    var blobURL = window.URL.createObjectURL(blob);
+                    var tempLink = document.createElement("a");
+                    tempLink.style.display = "none";
+                    tempLink.href = blobURL;
+                    tempLink.setAttribute("download", filename);
+                    if (typeof tempLink.download === "undefined") {
+                        tempLink.setAttribute("target", "_blank");
+                    }
+                    document.body.appendChild(tempLink);
+                    tempLink.click();
+                    document.body.removeChild(tempLink);
+                    window.URL.revokeObjectURL(blobURL);
+                }
             },
 
             // 添加-提交操作数据处理
@@ -419,23 +506,23 @@
                     }
                 )).then(function (res) {
                     res = res.data;
-                    if (res.status === 0){
+                    if (res.status === 0) {
                         _this.$message({
                             message: '添加成功！',
                             type: 'success'
                         });
                         _this.updateList();
-                    }else if (res.status === 4) {
+                    } else if (res.status === 4) {
                         _this.$message({
                             message: '请勿重复添加！',
                             type: 'warning'
                         });
-                    }else if (res.status === 6){
+                    } else if (res.status === 6) {
                         _this.$message({
                             message: '请检查学号信息是否有误！',
                             type: 'warning'
                         });
-                    }else if (res.status === 1) {
+                    } else if (res.status === 1) {
                         _this.$message.error('添加失败,请重试！');
                         _this.updateList();
                     }
@@ -622,6 +709,10 @@
                 this.personList = newVel;
             },
 
+            import: function (newVel) {
+                this.importDialog = newVel;
+            },
+
             add: function (newVel) {
                 if (this.showTags.length === 0) {
                     axios.get(this.api1 + '/sbkp/personnel/reasons')
@@ -686,6 +777,11 @@
 </script>
 
 <style scoped>
+    button {
+        outline: none;
+        cursor: pointer;
+    }
+
     /*模态框*/
     .allModal >>> .el-dialog {
         -webkit-border-radius: 8px;
@@ -719,6 +815,10 @@
     .bodyModal {
         margin: 0 26px;
         width: 90%;
+    }
+
+    .allModal >>> .el-upload {
+        margin: 15px 54px;
     }
 
     .bodyModaldel {
@@ -759,6 +859,10 @@
 
     .allModal >>> .el-dialog__footer {
         padding: 15px 20px;
+    }
+
+    .download {
+        float: left;
     }
 
     .tips {

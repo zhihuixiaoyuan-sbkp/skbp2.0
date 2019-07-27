@@ -6,8 +6,8 @@
         <hr class="boundary">
         <el-col :span="24" class="table-wrapper">
             <!--表格-->
-            <person-table :personList="list" :curPath="curPath" @getModyfyId="showModifyModal"
-                          @getDeleteId="showDelModal"></person-table>
+            <person-table :personList="list" :curPath="curPath" @getModyfyId="getModyfyId"
+                          @getDeleteId="getDeleteId"></person-table>
             <nav class="block">
                 <el-pagination layout="prev, pager, next"
                                @current-change="pageNum"
@@ -40,7 +40,6 @@
                 totalNum: 0,
                 currentPage: 1,
                 // 模态框
-                addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
                 // 修改id号
@@ -175,134 +174,9 @@
         background: #BBBBBB;
     }
 
-    /*表格*/
-    .list {
-        width: 100%;
-        border: 0;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    /*表头*/
-    .header {
-        height: 40px;
-        font-size: 18px;
-        color: #4D4C4D;
-    }
-
-    /*主体*/
-    .body {
-        height: 60px;
-        border-left: 1px solid #BBBBBB;
-        border-right: 1px solid #BBBBBB;
-        font-size: 20px;
-        color: #5C5B5C;
-    }
-
-    /*操作*/
-    .operation {
-        font-size: 25px;
-        cursor: pointer;
-        color: #5C5B5C;
-    }
-
-    .operation:hover {
-        color: #457aec;
-        text-decoration: transparent
-    }
-
     /*分页*/
     .block {
         text-align: center;
         margin-top: 20px;
-    }
-
-    /*模态框*/
-    .allModal >>> .el-dialog {
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-    }
-
-    /*头部*/
-    .allModal >>> .el-dialog__header {
-        padding: 13px 17px;
-    }
-
-    .allModal >>> .el-dialog__headerbtn {
-        top: 9px;
-        font-size: 20px;
-        outline: none;
-    }
-
-    .allModal >>> .el-dialog__title {
-        font-size: 22px;
-        color: #77A2FB;
-    }
-
-    /*分界线*/
-    .boundaryModal {
-        margin: 0 13px;
-        width: 95%;
-    }
-
-    /*表单部分*/
-    .bodyModal {
-        margin: 0 26px;
-        width: 90%;
-    }
-
-    .bodyModaldel {
-        margin: 45px 26px 25px;
-        width: 90%;
-        text-align: center;
-    }
-
-    .allModal >>> .el-form-item {
-        margin-bottom: 5px;
-    }
-
-    .allModal >>> .el-dialog__body {
-        padding: 0;
-    }
-
-    .allModal >>> .el-form-item__label {
-        margin: 0;
-    }
-
-    .allModal >>> .el-form-item__content {
-        line-height: 0;
-    }
-
-    .allModal >>> .el-input__inner {
-        height: 30px;
-    }
-
-    .tags {
-        margin-top: 15px;
-    }
-
-    .allModal >>> .el-tag {
-        margin-right: 10px;
-        margin-bottom: 15px;
-        cursor: pointer;
-    }
-
-    .allModal >>> .el-dialog__footer {
-        padding: 15px 20px;
-    }
-
-    .tips {
-        color: #101010;
-        font-size: 24px;
-    }
-
-    .delbutton {
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .allModal >>> .el-button--danger {
-        margin-left: 35px;
     }
 </style>

@@ -3,7 +3,8 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <!--按钮-添加、导入、导出-->
-                <operate-button :curPath="curPath" @showAddModal="showAddModal"></operate-button>
+                <operate-button :curPath="curPath" @showAddModal="showAddModal"
+                                @showImportModal="showImportModal"></operate-button>
                 <!--分界线-->
                 <hr class="boundary">
                 <!--主体-->
@@ -20,8 +21,8 @@
                         </el-pagination>
                     </nav>
                 </el-col>
-                <operate-modal :curPath="curPath" :add="addDialog" :modify="modifyDialog" :modifyNum="modifyNum"
-                               :delete="delDialog" :delNum="delNum" :personList="personList"
+                <operate-modal :curPath="curPath" :add="addDialog" :import="importDialog" :modify="modifyDialog"
+                               :modifyNum="modifyNum" :delete="delDialog" :delNum="delNum" :personList="personList"
                                @updateList="closeModal"></operate-modal>
             </el-col>
         </el-row>
@@ -46,6 +47,7 @@
                 // 分页
                 currentPage: 1,
                 // 模态框
+                importDialog: false,
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -87,6 +89,10 @@
                 this.addDialog = true;
             },
 
+            showImportModal() {
+                this.importDialog = true;
+            },
+
             // 修改修改模态框状态
             getModyfyId(id) {
                 this.modifyDialog = true;
@@ -101,6 +107,7 @@
 
             // 关闭模态框并更新表
             closeModal() {
+                this.importDialog = false;
                 this.addDialog = false;
                 this.modifyDialog = false;
                 this.delDialog = false;

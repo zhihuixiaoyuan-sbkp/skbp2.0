@@ -155,8 +155,6 @@
         },
         watch: {
             curPath:function(newVal,oldVal){
-                console.log(newVal)
-                console.log(this.curPath)
                 if (this.curPath === '/waringInfo') {
                     this.showFudao = false;
                     this.showClass = true;
