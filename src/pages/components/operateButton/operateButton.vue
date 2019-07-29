@@ -26,6 +26,7 @@
         name: "operateButton",
         data() {
             return {
+                dept: 0,
                 // 搜索框
                 label: '',
                 select: '2',
@@ -136,12 +137,17 @@
 
             // 导出列表
             exportList() {
-                axios.get(this.api + '/sbkp/census/exportPersonnelList')
-                    .then(function (res) {
-                        console.log(res)
-                    }).catch(function (res) {
-                    console.log(res)
-                })
+                if (this.dept === 1) {
+                    window.location.href = this.api + '/sbkp/census/exportPersonnelList?dept=保卫处'
+                }
+                // 辅导员
+                if (this.dept === 2) {
+                    window.location.href = this.api + '/sbkp/census/exportPersonnelList?dept=辅导员'
+                }
+                // 心理健康中心
+                if (this.dept === 3) {
+                    window.location.href = this.api + '/sbkp/census/exportPersonnelList?dept=心理健康中心'
+                }
             },
         },
         watch: {
@@ -151,18 +157,21 @@
                     this.defend = true;
                     this.tutorship = false;
                     this.mentality = false;
+                    this.dept = 1;
                 }
                 // 辅导员
                 if (newVal === '/keyPersonList') {
                     this.defend = false;
                     this.tutorship = true;
                     this.mentality = false;
+                    this.dept = 2;
                 }
                 // 心理健康中心
                 if (newVal === '/abnormalList') {
                     this.defend = false;
                     this.tutorship = false;
                     this.mentality = true;
+                    this.dept = 3;
                 }
             },
 

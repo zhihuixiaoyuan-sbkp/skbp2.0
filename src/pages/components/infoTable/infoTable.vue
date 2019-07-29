@@ -68,15 +68,21 @@
             </td>
             <td v-show="showClass">{{item.proClass}}</td>
             <td>{{item.dateTime}}</td>
-            <td>{{item.actionName}}</td>
+            <td v-show="keyPoint">{{item.actionName}}</td>
+            <td v-show="nonKey">{{item.reasonName}}</td>
             <td>{{item.location}}</td>
             <td>
-                <!--<viewer><img style="height: 50px;"-->
-                <!--src="item.singleImgUrl"/>-->
-                <!--<img style="height: 50px;"-->
-                <!--src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1561526807777&di=41900df32e8b82da893f3c122c962160&imgtype=0&src=http%3A%2F%2F2c.zol-img.com.cn%2Fproduct%2F120_500x2000%2F526%2FceEtqxqa1AZ6I.jpg"/>-->
-                <!--</viewer>-->
-                图片x2
+                <viewer>
+                    <div v-if="item.singleImgUrl !== null">
+                        <img style="height: 50px;" :src="item.singleImgUrl"/>
+                    </div>
+                    <div v-if="item.globalImgUrl !== null">
+                        <img style="height: 50px;" :src="item.globalImgUrl"/>
+                    </div>
+                    <div v-if="item.singleImgUrl===null&&item.globalImgUrl === null">
+                        <span>空</span>
+                    </div>
+                </viewer>
             </td>
             <td>
                 <!--重点人员展示-->
@@ -106,14 +112,16 @@
         },
         data() {
             return {
-                showList:false,
+                showList: false,
                 stuLink: '',
                 tchInfo: [],
                 showFudao: true,
                 showClass: false,
                 showHandle: true,
                 showAdd: false,
-                showMessage:false
+                showMessage: false,
+                keyPoint: true,
+                nonKey: false
             }
         },
         methods: {
@@ -154,8 +162,8 @@
             }
         },
         watch: {
-            curPath:function(newVal,oldVal){
-                if (this.curPath === '/waringInfo') {
+            curPath: function (newVal) {
+                if (newVal === '/waringInfo') {
                     this.showFudao = false;
                     this.showClass = true;
                 }
@@ -167,11 +175,15 @@
                     this.showHandle = true;
                     this.showAdd = false;
                 } else if (newVal === 'second') {
+                    this.keyPoint = false;
+                    this.nonKey = true;
                     // 非重点人员展示添加按钮
                     this.showHandle = false;
                     this.showAdd = true;
                 } else {
                     // 复位
+                    this.keyPoint = true;
+                    this.nonKey = false;
                     this.showHandle = true;
                     this.showAdd = false;
                 }

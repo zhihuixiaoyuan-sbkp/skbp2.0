@@ -198,11 +198,18 @@
                 }).then(this.getMessageInfoSucc);
             },
 
-            // 处理表格数据
+            // 处理表格数据-重点
             getMessageInfoSucc(res) {
                 res = res.data;
                 this.totalNum = res.totalNum;
                 this.messageList = res.messageList;
+            },
+
+            // 处理表格数据-非重点
+            getMessageInfoSucc1(res) {
+                res = res.data;
+                this.totalNum = res.totalNum;
+                this.messageList = res.data;
             },
 
             // 切换重点&非重点
@@ -220,13 +227,14 @@
                         _this.getMessageInfoSucc(res);
                     });
                 } else if (this.personnelType === 'second') {
-                    axios.get(this.api1 + '/sbkp/message/messageList/1/1', {
+                    axios.get(this.api1 + '/sbkp/message/unMessageList', {
                         params: {
+                            levelCode: 1,
                             pageNum: this.currentPage,
                             pageSize: 10,
                         }
                     }).then(function (res) {
-                        _this.getMessageInfoSucc(res);
+                        _this.getMessageInfoSucc1(res);
                     });
                 }
             },
@@ -258,22 +266,24 @@
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险') {
-                        axios.get(this.api1 + '/sbkp/message/messageList/1/1', {
+                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
                             params: {
+                                levelCode: 1,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
                         }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
+                            _this.getMessageInfoSucc1(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1 + '/sbkp/message/messageList/1/2', {
+                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
                             params: {
+                                levelCode: 2,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
                         }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
+                            _this.getMessageInfoSucc1(res);
                         });
                     }
                 }

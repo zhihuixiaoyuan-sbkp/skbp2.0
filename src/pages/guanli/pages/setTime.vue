@@ -6,15 +6,21 @@
                 <div class="info_box">
                     <div class="block">
                         <span class="demonstration">假期名称：</span>
-                        <el-autocomplete
-                                style="width: 220px"
-                                class="inline-input"
-                                v-model="setNames"
-                                :fetch-suggestions="querySearch"
-                                placeholder="请输入假期名"
-                                :trigger-on-focus="false"
-                                @select="handleSelect"
-                        ></el-autocomplete>
+                        <el-input style="width: 220px"
+                                  class="inline-input"
+                                  v-model="setNames"
+                                  placeholder="请输入假期名"
+                                  :trigger-on-focus="false"
+                        ></el-input>
+                        <!--<el-autocomplete-->
+                        <!--style="width: 220px"-->
+                        <!--class="inline-input"-->
+                        <!--v-model="setNames"-->
+                        <!--:fetch-suggestions="querySearch"-->
+                        <!--placeholder="请输入假期名"-->
+                        <!--:trigger-on-focus="false"-->
+                        <!--@select="handleSelect"-->
+                        <!--&gt;</el-autocomplete>-->
                     </div>
                     <div class="block">
                         <span class="demonstration">开始时间:&nbsp&nbsp&nbsp</span>
@@ -41,22 +47,19 @@
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                    <el-button type="primary" @click="handleEdit">确 定</el-button>
                 </div>
             </el-dialog>
             <el-dialog title="添加假期" style="position: relative" :visible.sync="dialogFormVisible1">
                 <div class="info_box">
                     <div class="block">
                         <span class="demonstration">假期名称：</span>
-                        <el-autocomplete
-                                style="width: 220px"
-                                class="inline-input"
-                                v-model="setName"
-                                :fetch-suggestions="querySearch"
-                                placeholder="请输入假期名"
-                                :trigger-on-focus="false"
-                                @select="handleSelect"
-                        ></el-autocomplete>
+                        <el-input style="width: 220px"
+                                  class="inline-input"
+                                  v-model="setNames"
+                                  placeholder="请输入假期名"
+                                  :trigger-on-focus="false"
+                        ></el-input>
                     </div>
                     <div class="block">
                         <span class="demonstration">开始时间:&nbsp&nbsp&nbsp</span>
@@ -80,13 +83,21 @@
                         >
                         </el-date-picker>
                     </div>
-                    <!--<div class="block">-->
-                    <!--<el-button @click="searchInfo">添加</el-button>-->
-                    <!--</div>-->
                 </div>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible1 = false">确 定</el-button>
+                    <el-button @click="closeModal">取 消</el-button>
+                    <el-button type="primary" @click="handleAdd">确 定</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="删除" style="position: relative" :visible.sync="dialogDelete">
+                <div class="info_box">
+                    <div class="block">
+                        <span style="font-size: 20px">是否确认删除该条节假日信息？</span>
+                    </div>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="closeModal">取 消</el-button>
+                    <el-button type="primary" @click="handleDelete">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -103,13 +114,13 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="date1"
+                        prop="startDate"
                         label="开始时间"
                         width="220">
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        prop="date2"
+                        prop="endDate"
                         width="220"
                         label="结束时间">
                 </el-table-column>
@@ -120,93 +131,168 @@
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
-                                @click="showDialog(0,scope.row.name)">修改
+                                @click="showDialog(0,scope.row.id,scope.row.name,scope.row.startDate,scope.row.endDate)">
+                            修改
                         </el-button>
                         <el-button
                                 v-if="scope.row.name !== '暑假' && scope.row.name !== '寒假'"
                                 size="mini"
                                 type="danger"
-                                @click="handleDelete(scope.row.userName,scope.row.userNum,scope.row.id)">删除
+                                @click="showDialog(2,scope.row.id)">删除
                         </el-button>
                     </template>
                 </el-table-column>
-
             </el-table>
-            <div class="add" @click="showDialog(1)">添加假期</div>
+            <span class="add" @click="showDialog(1)">添加假期</span>
         </div>
     </div>
 </template>
 
 <script>
+    import axios from 'axios'
+    import qs from 'qs'
+
     export default {
         name: "setTime",
         data() {
             return {
-                setNames:'',
-                valueTimeStart:"",//开始时间
-                valueTimeEnd:"",//结束时间
+                setId: 0,
+                setNames: '',
+                valueTimeStart: "",//开始时间
+                valueTimeEnd: "",//结束时间
                 restaurants: [],
                 setName: '',
-                tableData: [{
-                    name: "暑假",
-                    date1: '2016-05-02',
-                    date2: '2016-05-02',
-                },
-                    {
-                        name: "寒假",
-                        date1: '2016-05-02',
-                        date2: '2016-05-02',
-                    },
-                    {
-                        name: "端午节",
-                        date1: '2016-05-02',
-                        date2: '2016-05-02',
-                    },
-
-                ],
+                tableData: [],
                 dialogFormVisible: false,
                 dialogFormVisible1: false,
+                dialogDelete:false,
                 formLabelWidth: '200px'
             }
         },
         methods: {
-            querySearch(queryString, cb) {
-                var restaurants = this.restaurants;
-                var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-                // 调用 callback 返回建议列表的数据
-                cb(results);
-            },
-            createFilter(queryString) {
-                return (restaurant) => {
-                    return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-                };
-            },
+            // 初始化列表
             loadAll() {
-                return [
-                    {"value": "国庆节"},
-                    {"value": "端午节"},
-                    {"value": "劳动节"},
-                    {"value": "中秋节"},
-                    {"value": "清明节"},
-                ];
+                axios.get(this.api1 + '/sbkp/additional/holidays', {}).then(this.getAllSucc)
             },
-            handleSelect(item) {
-                console.log(item);
+
+            // 数据处理
+            getAllSucc(res) {
+                res = res.data;
+                const data = res.data;
+                this.tableData = data;
             },
-            handleEdit(index, row) {
-                console.log(index, row);
+
+            // 添加
+            handleAdd() {
+                var _this = this;
+                axios.post(this.api1 + '/sbkp/additional/addHoliday', qs.stringify({
+                        name: this.setNames,
+                        startDate: this.valueTimeStart,
+                        endDate: this.valueTimeEnd
+                    }
+                )).then(function (res) {
+                    if (res.status === 0) {
+                        _this.$message({
+                            message: '添加成功！',
+                            type: 'success'
+                        });
+                        _this.closeModal();
+                    } else if (res.status === 4) {
+                        _this.$message({
+                            message: '假期名不能重复！',
+                            type: 'warning'
+                        });
+                    } else if (res.status === 1) {
+                        _this.$message.error('添加失败,请重试！');
+                        _this.closeModal();
+                    }
+                }).catch(function () {
+                    _this.$message.error('添加失败,请重试！');
+                    _this.closeModal();
+                });
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+
+            // 修改
+            handleEdit() {
+                var _this = this;
+                axios.post(this.api1 + '/sbkp/additional/updateHoliday', qs.stringify({
+                        id: this.setId,
+                        name: this.setNames,
+                        startDate: this.valueTimeStart,
+                        endDate: this.valueTimeEnd
+                    }
+                )).then(function (res) {
+                    if (res.status === 0) {
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+                        _this.closeModal();
+                    } else if (res.status === 4) {
+                        _this.$message({
+                            message: '假期名不能重复！',
+                            type: 'warning'
+                        });
+                    } else if (res.status === 1) {
+                        _this.$message.error('修改失败,请重试！');
+                        _this.closeModal();
+                    }
+                }).catch(function () {
+                    _this.$message.error('修改失败,请重试！');
+                    _this.closeModal();
+                });
             },
-            showDialog(flag,name){
-                if(flag === 0){
-                    this.setNames = name
+
+            // 删除
+            handleDelete() {
+                var _this = this;
+                axios.get(this.api1 + '/sbkp/additional/deleteHoliday', {
+                    params: {
+                        id: this.setId
+                    }
+                }).then(function () {
+                    _this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    });
+                }).catch(function () {
+                    _this.$message.error('删除失败,请重试！');
+                });
+                // 关闭模态框
+                this.closeModal();
+            },
+
+            // 关闭
+            closeModal() {
+                this.dialogFormVisible1 = false;
+                this.dialogFormVisible = false;
+                this.dialogDelete = false;
+                this.loadAll();
+            },
+
+            // 展示
+            showDialog(flag, id, name, date1, date2) {
+                if (flag === 0) {
+                    // 修改
+                    this.setId = id;
+                    this.setNames = name;
+                    this.valueTimeStart = date1;
+                    this.valueTimeEnd = date2;
                     this.dialogFormVisible = true
-                }else {
+                }
+                if (flag === 1) {
+                    // 添加
+                    this.setId = '';
+                    this.setNames = '';
+                    this.valueTimeStart = '';
+                    this.valueTimeEnd = '';
                     this.dialogFormVisible1 = true
                 }
-
+                if (flag === 2) {
+                    // 删除
+                    this.setId = id;
+                    this.dialogDelete = true
+                }
             }
 
         },
@@ -248,9 +334,12 @@
         left: 50%;
         transform: translateX(-138px);
     }
-    .add{
+
+    .add {
         position: relative;
-        left: 50%;
+        left: 43%;
+        top: 10px;
+        font-size: 16px;
         cursor: pointer;
         color: #02a774;
     }

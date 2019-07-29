@@ -13,7 +13,10 @@
                 <el-upload
                         class="upload-demo"
                         drag
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        ref="upload"
+                        action="http://172.16.211.152/sbkp/census/uploadExcel"
+                        :data="upLoadData"
+                        :auto-upload="false"
                         multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -23,7 +26,7 @@
             <div slot="footer" class="dialog-footer">
                 <el-button class="download" type="warning" size="medium" @click="download">模板下载</el-button>
                 <el-button @click.native="updateList">取消</el-button>
-                <el-button type="primary" @click="">上传</el-button>
+                <el-button type="primary" @click="submitUpload">上传</el-button>
             </div>
         </el-dialog>
         <!--模态框-添加重点人员-->
@@ -318,6 +321,9 @@
         },
         data() {
             return {
+                upLoadData: {
+                    dept: "bwc"
+                },
                 curPath: '',
                 personList: [],
                 // 模态框
@@ -359,42 +365,46 @@
                 this.$emit("updateList")
             },
 
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+
+            // 批量导入获取模板位置
             download() {
-                console.log(this.curPath)
-                var _this = this;
-                if (this.curPath === "/List"){
+                if (this.curPath === '/List' || this.curPath === '/keyPersonList') {
                     axios({
                         method: "get",
-                        url: _this.api1 + "/dist/static/file/保卫处-批量导入模板.xlsx",
-                    }).then(function (response) {
-                        let filename = "保卫处-批量导入模板.xlsx";
-                        // this.fileDownload(response.data, filename);
-                    }.bind(this)).catch(function (error) {
-                        alert("网络请求出错");
-                    }.bind(this));
-                }else if (this.curPath === "/List"){
+                        url: this.api1 + "/dist/static/file/baowei.xlsx",
+                        responseType: "arraybuffer"
+                    }).then(
+                        function (response) {
+                            let filename = "批量导入模板.xlsx";
+                            this.fileDownload(response.data, filename);
+                        }.bind(this)
+                    ).catch(
+                        function (error) {
+                            alert("网络请求出错");
+                        }.bind(this)
+                    );
+                } else if (this.curPath === '/abnormalList') {
                     axios({
                         method: "get",
-                        url: _this.api1 + "/dist/static/file/辅导员-批量导入模板.xlsx",
-                    }).then(function (response) {
-                        let filename = "辅导员-批量导入模板.xlsx";
-                        // this.fileDownload(response.data, filename);
-                    }.bind(this)).catch(function (error) {
-                        alert("网络请求出错");
-                    }.bind(this));
-                }else if (this.curPath === "/List"){
-                    axios({
-                        method: "get",
-                        url: _this.api1 + "/dist/static/file/辅导员-批量导入模板.xlsx",
-                    }).then(function (response) {
-                        let filename = "辅导员-批量导入模板.xlsx";
-                        // this.fileDownload(response.data, filename);
-                    }.bind(this)).catch(function (error) {
-                        alert("网络请求出错");
-                    }.bind(this));
+                        url: this.api1 + "/dist/static/file/xinli.xlsx",
+                        responseType: "arraybuffer"
+                    }).then(
+                        function (response) {
+                            let filename = "批量导入模板.xlsx";
+                            this.fileDownload(response.data, filename);
+                        }.bind(this)
+                    ).catch(
+                        function (error) {
+                            alert("网络请求出错");
+                        }.bind(this)
+                    );
                 }
             },
 
+            // 批量导入模板下载
             fileDownload(data, fileName) {
                 let blob = new Blob([data], {
                     type: "application/octet-stream"
@@ -474,7 +484,7 @@
                         });
                         if (index < 0) {
                             $.ajax({
-                                url: _this.api1 + '/sbkp/personnel/postDefinedReason',
+                                url: this.api1 + '/sbkp/personnel/postDefinedReason',
                                 async: false,
                                 data: {"reasonName": element},
                                 // contentType: 'application/json;charset=utf-8',
@@ -606,7 +616,6 @@
                         message: '修改成功！',
                         type: 'success'
                     });
-                    _this.updateList();
                 }).catch(function () {
                     _this.$message.error('修改失败,请重试！');
                 });
@@ -626,7 +635,6 @@
                         message: '删除成功！',
                         type: 'success'
                     });
-                    _this.updateList();
                 }).catch(function () {
                     _this.$message.error('删除失败,请重试！');
                 });

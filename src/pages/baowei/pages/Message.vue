@@ -14,7 +14,7 @@
                     </el-dropdown>
                     <hr class="boundary">
                     <!--表格-->
-                    <info-table :messageList="messageList" :personnelType="personnelType"
+                    <info-table :curPath="curPath" :messageList="messageList" :personnelType="personnelType"
                                 @getHandleId="showHandleDialog"></info-table>
                     <!--分页-->
                     <nav class="block">
@@ -37,7 +37,7 @@
                     </el-dropdown>
                     <hr class="boundary">
                     <!--表格-->
-                    <info-table :messageList="messageList" :personnelType="personnelType"
+                    <info-table :curPath="curPath" :messageList="messageList" :personnelType="personnelType"
                                 @getAddId="showAddDialog"></info-table>
                     <!--分页-->
                     <nav class="block">
@@ -163,6 +163,7 @@
         name: "Message",
         data() {
             return {
+                curPath:'',
                 label: '危险',
                 messageList: [],
                 totalNum: 0,
@@ -197,11 +198,18 @@
                 }).then(this.getMessageInfoSucc);
             },
 
-            // 处理表格数据
+            // 处理表格数据-重点
             getMessageInfoSucc(res) {
                 res = res.data;
                 this.totalNum = res.totalNum;
                 this.messageList = res.messageList;
+            },
+
+            // 处理表格数据-非重点
+            getMessageInfoSucc1(res) {
+                res = res.data;
+                this.totalNum = res.totalNum;
+                this.messageList = res.data;
             },
 
             // 切换重点&非重点
@@ -219,13 +227,14 @@
                         _this.getMessageInfoSucc(res);
                     });
                 } else if (this.personnelType === 'second') {
-                    axios.get(this.api1 + '/sbkp/message/messageList/1/1', {
+                    axios.get(this.api1 + '/sbkp/message/unMessageList', {
                         params: {
+                            levelCode: 1,
                             pageNum: this.currentPage,
                             pageSize: 10,
                         }
                     }).then(function (res) {
-                        _this.getMessageInfoSucc(res);
+                        _this.getMessageInfoSucc1(res);
                     });
                 }
             },
@@ -257,22 +266,24 @@
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险') {
-                        axios.get(this.api1 + '/sbkp/message/messageList/1/1', {
+                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
                             params: {
+                                levelCode: 1,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
                         }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
+                            _this.getMessageInfoSucc1(res);
                         });
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1 + '/sbkp/message/messageList/1/2', {
+                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
                             params: {
+                                levelCode: 2,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
                         }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
+                            _this.getMessageInfoSucc1(res);
                         });
                     }
                 }
@@ -458,6 +469,11 @@
         },
         mounted() {
             this.getMessageInfo();
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.curPath = to.matched[1].path;
+            });
         },
         components: {
             infoTable
