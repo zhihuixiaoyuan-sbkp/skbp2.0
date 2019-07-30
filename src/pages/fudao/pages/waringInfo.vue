@@ -218,21 +218,19 @@
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险') {
-                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
-                            params: {
+                        axios.post(this.api1 + "/sbkp/message/unMessageList", qs.stringify({
                                 levelCode: 1,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
-                            }
-                        }).then(this.getMessageInfoSucc);
+                            }),
+                        ).then(this.getMessageInfoSucc);
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
-                            params: {
+                        axios.post(this.api1 + "/sbkp/message/unMessageList", qs.stringify({
                                 levelCode: 2,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
-                            }
-                        }).then(this.getMessageInfoSucc);
+                            }),
+                        ).then(this.getMessageInfoSucc);
                     }
                 }
             },
