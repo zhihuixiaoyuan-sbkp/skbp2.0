@@ -172,7 +172,7 @@
         methods: {
             // 初始化列表
             loadAll() {
-                axios.get(this.api1 + '/sbkp/additional/holidays', {}).then(this.getAllSucc)
+                axios.get(this.api1 + '/sbkp/additional/holidays').then(this.getAllSucc)
             },
 
             // 数据处理
@@ -191,6 +191,7 @@
                         endDate: this.valueTimeEnd
                     }
                 )).then(function (res) {
+                    res = res.data;
                     if (res.status === 0) {
                         _this.$message({
                             message: '添加成功！',
@@ -222,6 +223,7 @@
                         endDate: this.valueTimeEnd
                     }
                 )).then(function (res) {
+                    res = res.data;
                     if (res.status === 0) {
                         _this.$message({
                             message: '修改成功！',

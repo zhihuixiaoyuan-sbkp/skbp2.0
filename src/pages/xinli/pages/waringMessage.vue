@@ -145,26 +145,36 @@
         name: "waringMessage",
         data() {
             return {
+                // 当前path值
                 curPath: '',
+                // 标签
+                label: '危险',
+                personnelType: 'first',
+                // 人员表
                 messageList: [],
                 totalNum: 0,
                 currentPage: 1,
-                personnelType: 'first',
-                label: '危险',
+                // 模态框
                 screenDialog: false,
                 handleDialog: false,
+                // 是否筛选
                 searchDetection: false,
+                // 时间格式处理
                 p(s) {
                     return s < 10 ? '0' + s : s
                 },
+                // 筛选表单
                 screenData: {
                     time1: '',
                     time2: '',
                     screenReason: [],
                     stuName: '',
                 },
+                // 标签表
                 keyword: [],
+                // 处理备注
                 remark: '',
+                // 消息处理id
                 messageId: '',
             }
         },
@@ -219,7 +229,7 @@
                 this.currentPage = 1;
                 this.searchDetection = false;
                 this.getMessageInfo();
-                this.clearModal();
+                this.closeModal();
             },
 
             // 切换危险&紧急类型
@@ -228,7 +238,7 @@
                 this.currentPage=1;
                 this.searchDetection = false;
                 this.getMessageInfo();
-                this.clearModal();
+                this.closeModal();
             },
 
             // 展示完善筛选条件模态框
@@ -236,6 +246,12 @@
                 axios.get(this.api1 + '/sbkp/message/messageListBySearch/rules')
                     .then(this.getTagsInfoSucc);
                 this.screenDialog = true;
+            },
+
+            // 获取标签
+            getTagsInfoSucc(res) {
+                res = res.data;
+                this.keyword = res.rules;
             },
 
             // 完善筛选条件-提交操作
@@ -319,7 +335,7 @@
                 }).catch(function () {
                     _this.$message.error('消息处理失败,请重试！');
                 });
-                this.getLabel(this.label);
+                this.getMessageInfo();
                 this.closeModal();
             },
 
@@ -338,22 +354,26 @@
                 }).catch(function () {
                     _this.$message.error('消息忽略失败,请重试！');
                 });
-                this.getLabel(this.label);
+                this.getMessageInfo();
                 this.closeModal();
             },
 
             // 关闭模态框
             closeModal() {
-                // 处理模态框数据清空
-                this.remark = '';
-                this.screenDialog = false;
-                this.handleDialog = false;
-            },
-
-            // 获取标签
-            getTagsInfoSucc(res) {
-                res = res.data;
-                this.keyword = res.rules;
+                if (this.searchDetection === true) {
+                    // 处理模态框数据清空
+                    this.remark = '';
+                    this.screenDialog = false;
+                    this.handleDialog = false;
+                } else if (this.searchDetection === false) {
+                    this.screenData.time1 = '';
+                    this.screenData.time2 = '';
+                    this.screenData.screenReason = [];
+                    this.screenData.name = '';
+                    this.remark = '';
+                    this.screenDialog = false;
+                    this.handleDialog = false;
+                }
             },
 
             // 获取筛选结果
@@ -361,7 +381,6 @@
                 res = res.data;
                 this.totalNum = res.totalNum;
                 this.messageList = res.messageList;
-                this.searchDetection = true;
             },
 
             // 获取当前页码

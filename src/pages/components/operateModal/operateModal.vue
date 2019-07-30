@@ -30,6 +30,52 @@
                 <el-button type="primary" @click="submitUpload">上传</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="导入结果"
+                   class="allModal"
+                   width="450px"
+                   :visible.sync="importMessage"
+                   :close-on-press-escape="false"
+                   :close-on-click-modal="false"
+                   :before-close="updateList">
+            <hr class="boundaryModal">
+            <div class="bodyModal">
+                <div class="message">
+                    <div class="success">成功条数:<span>{{successNum}}</span></div>
+                    <div class="fail">失败条数:<span>{{failNum}}</span></div>
+                </div>
+                <el-card class="box-card" v-show="true">
+                    <div slot="header" class="clearfix">
+                        <span>失败人员列表</span>
+                    </div>
+                    <el-scrollbar class="page-scroll">
+                        <table class="list">
+                            <!--表头-->
+                            <thead>
+                            <tr class="header">
+                                <td>序号</td>
+                                <td>学号</td>
+                                <td>姓名</td>
+                                <td>添加原因</td>
+                            </tr>
+                            </thead>
+                            <!--内容-->
+                            <tbody v-for="(item,index) in addList">
+                            <tr class="body">
+                                <td>{{index+1}}</td>
+                                <td>{{item.stuNum}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.reason}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </el-scrollbar>
+                </el-card>
+            </div>
+            <hr class="boundaryModal">
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="">关闭</el-button>
+            </div>
+        </el-dialog>
         <!--模态框-添加重点人员-->
         <el-dialog title="添加重点人员"
                    class="allModal"
@@ -329,12 +375,17 @@
                 personList: [],
                 // 模态框
                 importDialog: false,
+                importMessage: false,
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
                 xinliAddDialog: false,
                 xinliModifyDialog: false,
                 xinliDelDialog: false,
+                // 成功导入数据展示
+                successNum: 0,
+                failNum: 0,
+                addList: [],
                 // 修改id号
                 modifyNum: '',
                 // 删除id号
@@ -352,7 +403,6 @@
                 historyAddReason: [],
                 // 全部标签（对象数组）
                 showTags: [],
-                addList: []
             }
         },
         methods: {
@@ -363,6 +413,8 @@
                 this.formData.addReason = '';
                 this.formData.radio = '1';
                 this.addReasonId = [];
+                // 关闭上传信息展示表
+                this.importMessage = false;
                 // 更新表
                 this.$emit("updateList")
             },
@@ -370,12 +422,15 @@
             submitUpload() {
                 this.$refs.upload.submit();
                 this.updateList();
+                this.importMessage = true;
+                this.updateList();
             },
 
             uploadSucc(res) {
                 res = res.msg;
+                this.successNum = res.successNum;
+                this.failNum = res.failNum;
                 this.addList = res.lists;
-                console.log(this.addList)
             },
 
             // 批量导入获取模板位置
@@ -799,6 +854,20 @@
         cursor: pointer;
     }
 
+    table {
+        table-layout: fixed;
+    }
+
+    td {
+        width: 100%;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-bottom: 1px solid #BBBBBB;
+        outline: none;
+    }
+
     /*模态框*/
     .allModal >>> .el-dialog {
         -webkit-border-radius: 8px;
@@ -834,14 +903,76 @@
         width: 90%;
     }
 
-    .allModal >>> .el-upload {
-        margin: 15px 54px;
-    }
-
     .bodyModaldel {
         margin: 45px 26px 25px;
         width: 90%;
         text-align: center;
+    }
+
+    /*上传*/
+    .allModal >>> .el-upload {
+        margin: 15px 54px;
+    }
+
+    .message {
+        padding: 10px 0 0;
+        text-align: center;
+    }
+
+    .success, .fail {
+        font-size: 18px;
+        padding: 0 0 10px;
+        letter-spacing: 5px
+    }
+
+    .success {
+        color: #67C23A;
+    }
+
+    .fail {
+        color: #F56C6C;
+    }
+
+    .box-card {
+        margin: 0 -6px 10px -10px;
+    }
+
+    .allModal >>> .el-card__header {
+        padding: 10px 15px;
+    }
+
+    .allModal >>> .el-card__body {
+        padding: 5px 4px 6px 15px;
+    }
+
+    .allModal >>> .el-scrollbar__wrap {
+        margin: 0 !important;
+        overflow-x: hidden;
+    }
+
+    .page-scroll {
+        height: 150px;
+    }
+
+    /*表格*/
+    .list {
+        width: 100%;
+        border: 0;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    /*表头*/
+    .header {
+        color: #4D4C4D;
+    }
+
+    /*主体*/
+    .body {
+        height: 40px;
+        border-left: 1px solid #BBBBBB;
+        border-right: 1px solid #BBBBBB;
+        color: #5C5B5C;
     }
 
     .allModal >>> .el-form-item {
