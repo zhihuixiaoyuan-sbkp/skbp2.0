@@ -3,14 +3,23 @@
         <div style="margin-right: 30px;text-align: right">
             <div class="block" style="display: inline-block">
                 <span class="demonstration">选择日期</span>
+                <!--<el-date-picker-->
+                        <!--v-model="valueTime"-->
+                        <!--type="date"-->
+                        <!--placeholder="选择日期"-->
+                        <!--@change="selectDate"-->
+                        <!--value-format="yyyy-MM-dd"-->
+                <!--&gt;-->
+                <!--</el-date-picker>-->
                 <el-date-picker
                         v-model="valueTime"
-                        type="date"
-                        placeholder="选择日期"
-                        @change="selectDate"
-                        value-format="yyyy-MM-dd"
-                >
+                        type="daterange"
+                        range-separator="—"
+                        start-placeholder="开始"
+                        end-placeholder="结束"
+                        value-format="yyyy-MM-dd">
                 </el-date-picker>
+
             </div>
             <div style="display: inline-block;margin-left:20px">
             <span class="demonstration">选择学院</span>
@@ -49,8 +58,10 @@
                     <use xlink:href="#icon-daoChu"></use>
                 </svg>
                 <form action="" method="get" @submit="exportInfo">
-                    <input  type="text" v-model="valueTime" name="date" hidden />
+                    <input  type="text" v-model="this.valueTime[0]" name="startTime" hidden />
+                    <input  type="text" v-model="this.valueTime[1]" name="endTime" hidden />
                     <input  type="text" hidden v-model="value"  name="college"/>
+                    <input  type="text" hidden v-model="value1"  name="reason"/>
                     <input id="inputid5" type="submit" hidden />
                 </form>
 
@@ -208,22 +219,24 @@
             },
             /*搜索异步请求*/
             searchInfo() {
-                if (this.value === "" || this.valueTime === "" || this.value1 === "") {
-                    this.open()
-                } else {
+                // console.log(this.valueTime)
+                // if (this.value !== "" || this.valueTime !== "" || this.value1 !== "") {
+                //     this.open()
+                // } else {
                     this.isSearch = true
                     let searchParams = {
                         curPage: this.curPage,
                         college: this.value,
                         reason:this.value1,
-                        date: this.valueTime
+                        startDate: this.valueTime[0],
+                        endDate:this.valueTime[1]
                     }
                     axios.post(this.api + "/sbkp/census/getRulesListBySearch", qs.stringify(searchParams))
                         .then(this.getSearchRulesListInfoCallback)
                         .catch(function () {
                             this.isSearch = false
                         })
-                }
+                // }
 
             },
             /*搜索回调函数*/

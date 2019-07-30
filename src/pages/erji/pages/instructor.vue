@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div v-for="item in instructor" style="display: inline-block">
-            <card :head="item.counsellorName.charAt(0)"
+            <card :head="item.counsellorName === undefined ? item.counsellorName : item.counsellorName.charAt(0)"
                   :collage="item.counsellorName"
                   :count="item.keyPersonnel"
                   @checkInfo='checkInfo(item.counsellorName,item.keyPersonnel,item.processed,item.untreated)'
