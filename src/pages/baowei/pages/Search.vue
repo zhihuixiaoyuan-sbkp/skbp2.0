@@ -118,6 +118,13 @@
                             pageNum: this.currentPage,
                         }
                     }).then(this.searchList)
+                } else if (this.select === '4') {
+                    axios.get(this.api1 + '/sbkp/personnel/personnelList', {
+                        params: {
+                            reasonValue: this.label,
+                            pageNum: this.currentPage
+                        }
+                    }).then(this.searchList)
                 }
             },
         },

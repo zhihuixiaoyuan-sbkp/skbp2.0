@@ -57,7 +57,7 @@
                    :visible.sync="screenDialog"
                    :close-on-press-escape="false"
                    :close-on-click-modal="false"
-                   :before-close="closeModal">
+                   :before-close="clearModal">
             <hr class="boundaryModal">
             <div class="bodyModal">
                 <!--表单-->
@@ -105,7 +105,7 @@
             </div>
             <hr class="boundaryModal">
             <div slot="footer" class="dialog-footer">
-                <el-button @click.native="closeModal">取 消</el-button>
+                <el-button @click.native="clearModal">取 消</el-button>
                 <el-button type="primary" @click="submitForm">提 交</el-button>
             </div>
         </el-dialog>
@@ -160,7 +160,7 @@
     import infoTable from '../../components/infoTable/infoTable'
 
     export default {
-        name: "Message",
+        name: "waringInfo",
         data() {
             return {
                 curPath: '',
@@ -190,60 +190,6 @@
         methods: {
             // 初始化列表
             getMessageInfo() {
-                axios.get(this.api1 + '/sbkp/message/messageList/0/1', {
-                    params: {
-                        pageNum: this.currentPage,
-                        pageSize: 10,
-                    }
-                }).then(this.getMessageInfoSucc);
-            },
-
-            // 处理表格数据-重点
-            getMessageInfoSucc(res) {
-                res = res.data;
-                this.totalNum = res.totalNum;
-                this.messageList = res.messageList;
-            },
-
-            // 处理表格数据-非重点
-            getMessageInfoSucc1(res) {
-                res = res.data;
-                this.totalNum = res.totalNum;
-                this.messageList = res.data;
-            },
-
-            // 切换重点&非重点
-            handleClick() {
-                var _this = this;
-                this.searchDetection = false;
-                this.label = '危险';
-                if (this.personnelType === 'first') {
-                    axios.get(this.api1 + '/sbkp/message/messageList/0/1', {
-                        params: {
-                            pageNum: this.currentPage,
-                            pageSize: 10,
-                        }
-                    }).then(function (res) {
-                        _this.getMessageInfoSucc(res);
-                    });
-                } else if (this.personnelType === 'second') {
-                    axios.get(this.api1 + '/sbkp/message/unMessageList', {
-                        params: {
-                            levelCode: 1,
-                            pageNum: this.currentPage,
-                            pageSize: 10,
-                        }
-                    }).then(function (res) {
-                        _this.getMessageInfoSucc1(res);
-                    });
-                }
-            },
-
-            // 切换危险&紧急类型
-            getLabel(command) {
-                var _this = this;
-                this.searchDetection = false;
-                this.label = command;
                 if (this.personnelType === 'first') {
                     if (this.label === '危险') {
                         axios.get(this.api1 + '/sbkp/message/messageList/0/1', {
@@ -251,18 +197,14 @@
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     } else if (this.label === '紧急') {
                         axios.get(this.api1 + '/sbkp/message/messageList/0/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险') {
@@ -272,9 +214,7 @@
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc1(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     } else if (this.label === '紧急') {
                         axios.get(this.api1 + '/sbkp/message/unMessageList', {
                             params: {
@@ -282,37 +222,34 @@
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc1(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     }
                 }
             },
 
-            searchstuLink(number) {
-                var _this = this;
-                this.stuLink = '';
-                axios.get(this.api1 + '/sbkp/message/personnelDetail', {
-                    params: {
-                        number: number,
-                    }
-                }).then(function (res) {
-                    res = res.data;
-                    res = res.data;
-                    _this.stuLink = res.link;
-                });
+            // 处理表格数据
+            getMessageInfoSucc(res) {
+                res = res.data;
+                this.totalNum = res.totalNum;
+                this.messageList = res.messageList;
             },
 
-            searchLink(name) {
-                var _this = this;
-                axios.get(this.api1 + '/sbkp/message/counsellorDetail', {
-                    params: {
-                        counsellorName: name,
-                    }
-                }).then(function (res) {
-                    res = res.data;
-                    _this.tchInfo = res.data;
-                });
+            // 切换重点&非重点
+            handleClick() {
+                this.label = '危险';
+                this.currentPage = 1;
+                this.searchDetection = false;
+                this.getMessageInfo();
+                this.clearModal();
+            },
+
+            // 切换危险&紧急类型
+            getLabel(command) {
+                this.label = command;
+                this.currentPage=1;
+                this.searchDetection = false;
+                this.getMessageInfo();
+                this.clearModal();
             },
 
             // 展示完善筛选条件模态框
@@ -324,7 +261,6 @@
 
             // 完善筛选条件-提交操作
             submitForm() {
-                var _this = this;
                 let screenDataId = [];
                 let time1, time2;
                 if (this.screenData.time1 == null || this.screenData.time2 == null) {
@@ -366,9 +302,7 @@
                             pageNum: this.currentPage,
                             pageSize: 10
                         }),
-                    ).then(function (res) {
-                        _this.getSearchInfoSucc(res);
-                    });
+                    ).then(this.getSearchInfoSucc);
                 } else {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             isKey: personnelType,
@@ -380,9 +314,7 @@
                             pageNum: this.currentPage,
                             pageSize: 10
                         }),
-                    ).then(function (res) {
-                        _this.getSearchInfoSucc(res);
-                    });
+                    ).then(this.getSearchInfoSucc);
                 }
                 // 关闭模态框
                 this.closeModal();
@@ -442,7 +374,7 @@
             // 非重点人员添加至名单
             addNew() {
                 var _this = this;
-                axios.post(this.api1 + '/sbkp/message/putMessageStatus', qs.stringify({
+                axios.post(this.api1 + '/sbkp/message/putMessageStatus/0', qs.stringify({
                         messageId: this.messageId,
                     }
                 )).then(function () {
@@ -464,6 +396,15 @@
                 this.screenDialog = false;
                 this.handleDialog = false;
                 this.addDialog = false;
+            },
+
+            // 关闭筛选模态框并清除数据
+            clearModal() {
+                this.screenData.time1 = '';
+                this.screenData.time2 = '';
+                this.screenData.screenReason = [];
+                this.screenData.name = '';
+                this.screenDialog = false;
             },
 
             // 获取标签

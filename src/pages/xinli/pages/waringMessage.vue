@@ -171,61 +171,6 @@
         methods: {
             // 初始化列表
             getMessageInfo() {
-                // 重度x危险
-                axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
-                    params: {
-                        pageNum: this.currentPage,
-                        pageSize: 10,
-                    }
-                }).then(this.getMessageInfoSucc);
-            },
-
-            // 处理表格数据-重点
-            getMessageInfoSucc(res) {
-                res = res.data;
-                this.totalNum = res.totalNum;
-                this.messageList = res.messageList;
-            },
-
-            // 处理表格数据-非重点
-            getMessageInfoSucc1(res) {
-                res = res.data;
-                this.totalNum = res.totalNum;
-                this.messageList = res.data;
-            },
-
-            // 切换重点&非重点
-            handleClick() {
-                var _this = this;
-                this.searchDetection = false;
-                this.label = '危险';
-                if (this.personnelType === 'first') {
-                    axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
-                        params: {
-                            pageNum: this.currentPage,
-                            pageSize: 10,
-                        }
-                    }).then(function (res) {
-                        _this.getMessageInfoSucc(res);
-                    });
-                } else if (this.personnelType === 'second') {
-                    axios.get(this.api1 + '/sbkp/message/unMessageList', {
-                        params: {
-                            levelCode: 1,
-                            pageNum: this.currentPage,
-                            pageSize: 10,
-                        }
-                    }).then(function (res) {
-                        _this.getMessageInfoSucc1(res);
-                    });
-                }
-            },
-
-            // 切换危险&紧急类型
-            getLabel(command) {
-                var _this = this;
-                this.searchDetection = false;
-                this.label = command;
                 if (this.personnelType === 'first') {
                     if (this.label === '危险') {
                         axios.get(this.api1 + '/sbkp/message/messageMentalList/2/1', {
@@ -233,42 +178,57 @@
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     } else if (this.label === '紧急') {
                         axios.get(this.api1 + '/sbkp/message/messageMentalList/2/2', {
                             params: {
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     }
                 } else if (this.personnelType === 'second') {
                     if (this.label === '危险') {
-                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/1/1', {
                             params: {
-                                levelCode: 1,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc1(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     } else if (this.label === '紧急') {
-                        axios.get(this.api1 + '/sbkp/message/unMessageList', {
+                        axios.get(this.api1 + '/sbkp/message/messageMentalList/1/2', {
                             params: {
-                                levelCode: 2,
                                 pageNum: this.currentPage,
                                 pageSize: 10,
                             }
-                        }).then(function (res) {
-                            _this.getMessageInfoSucc1(res);
-                        });
+                        }).then(this.getMessageInfoSucc);
                     }
                 }
+            },
+
+            // 处理表格数据
+            getMessageInfoSucc(res) {
+                res = res.data;
+                this.totalNum = res.totalNum;
+                this.messageList = res.messageList;
+            },
+
+            // 切换重点&非重点
+            handleClick() {
+                this.label = '危险';
+                this.currentPage = 1;
+                this.searchDetection = false;
+                this.getMessageInfo();
+                this.clearModal();
+            },
+
+            // 切换危险&紧急类型
+            getLabel(command) {
+                this.label = command;
+                this.currentPage=1;
+                this.searchDetection = false;
+                this.getMessageInfo();
+                this.clearModal();
             },
 
             // 展示完善筛选条件模态框
@@ -280,7 +240,6 @@
 
             // 完善筛选条件-提交操作
             submitForm() {
-                var _this = this;
                 let screenDataId = [];
                 let time1, time2;
                 if (this.screenData.time1 == null || this.screenData.time2 == null) {
@@ -320,9 +279,7 @@
                             pageNum: this.currentPage,
                             pageSize: 10
                         }),
-                    ).then(function (res) {
-                        _this.getSearchInfoSucc(res);
-                    });
+                    ).then(this.getSearchInfoSucc);
                 } else {
                     axios.post(this.api1 + "/sbkp/message/messageListBySearch", qs.stringify({
                             levelCode: levelId,
@@ -334,9 +291,7 @@
                             pageNum: this.currentPage,
                             pageSize: 10
                         }),
-                    ).then(function (res) {
-                        _this.getSearchInfoSucc(res);
-                    });
+                    ).then(this.getSearchInfoSucc);
                 }
                 // 关闭模态框
                 this.closeModal();

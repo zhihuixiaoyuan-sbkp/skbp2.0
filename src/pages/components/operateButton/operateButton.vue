@@ -55,7 +55,7 @@
                 } else if (this.select === '4') {
                     axios.get(this.api1 + '/sbkp/personnel/personnelList', {
                         params: {
-                            reasonValue: this.label
+                            reasonValue: this.label,
                         }
                     }).then(this.searchList)
                 }
@@ -148,6 +148,11 @@
                 if (this.dept === 3) {
                     window.location.href = this.api + '/sbkp/census/exportPersonnelList?dept=心理健康中心'
                 }
+            },
+
+            pageNum(currentPage) {
+                this.currentPage = currentPage;
+                this.searchList();
             },
         },
         watch: {

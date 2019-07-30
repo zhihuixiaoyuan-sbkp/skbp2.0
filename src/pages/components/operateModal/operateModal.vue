@@ -17,6 +17,7 @@
                         action="http://172.16.211.152/sbkp/census/uploadExcel"
                         :data="upLoadData"
                         :auto-upload="false"
+                        :on-success="uploadSucc"
                         multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -351,6 +352,7 @@
                 historyAddReason: [],
                 // 全部标签（对象数组）
                 showTags: [],
+                addList: []
             }
         },
         methods: {
@@ -367,6 +369,13 @@
 
             submitUpload() {
                 this.$refs.upload.submit();
+                this.updateList();
+            },
+
+            uploadSucc(res) {
+                res = res.msg;
+                this.addList = res.lists;
+                console.log(this.addList)
             },
 
             // 批量导入获取模板位置
