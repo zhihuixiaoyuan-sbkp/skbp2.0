@@ -428,7 +428,6 @@
 
             // 关闭模态框
             closeModal() {
-                console.log(this.searchDetection)
                 if (this.searchDetection === true) {
                     // 处理模态框数据清空
                     this.remark = '';
@@ -456,7 +455,6 @@
 
             // 获取当前页码
             pageNum(currentPage) {
-                console.log(this.searchDetection)
                 this.currentPage = currentPage;
                 if (this.searchDetection === false) {
                     // 筛选字段模态框数据清空
