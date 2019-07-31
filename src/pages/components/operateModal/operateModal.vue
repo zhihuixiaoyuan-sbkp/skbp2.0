@@ -56,6 +56,7 @@
                                 <td>学号</td>
                                 <td>姓名</td>
                                 <td>添加原因</td>
+                                <td v-show="showStatus">状态</td>
                             </tr>
                             </thead>
                             <!--内容-->
@@ -65,6 +66,7 @@
                                 <td>{{item.stuNum}}</td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.reason}}</td>
+                                <td v-show="showStatus">{{item.status}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -377,6 +379,7 @@
                 importDialog: false,
                 importMessage: false,
                 failList: false,
+                showStatus:false,
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -784,10 +787,13 @@
                 this.curPath = newVal;
                 if (newVal === '/List') {
                     this.upLoadData.dept = 'bwc';
+                    this.showStatus = false;
                 } else if (newVal === '/keyPersonList') {
                     this.upLoadData.dept = 'fdy';
+                    this.showStatus = false;
                 } else if (newVal === '/abnormalList') {
                     this.upLoadData.dept = 'xljkzx';
+                    this.showStatus = true;
                 }
             },
 
