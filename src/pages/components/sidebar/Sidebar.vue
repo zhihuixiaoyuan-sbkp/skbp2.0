@@ -33,6 +33,12 @@
             }
         },
         methods: {
+
+            getCode(){
+                this.code = this.$route.query.code
+                console.log(this.$route.query)
+            },
+
             defaultLeftNavOpened() {
                 // let cur_path = this.$store.state.Sidebar; //获取当前路由
                 let cur_path = this.$route.query.name //获取后端访问url参数
@@ -56,6 +62,7 @@
             },
         },
         mounted() {
+            // this.getCode()
             window.addEventListener("beforeunload", () => {  //浏览器刷新之前，将返回参数存入session
                 sessionStorage.setItem("name1", this.pathname1)//浏览器刷新之前，将返回参数存入另外一个值中
             })
