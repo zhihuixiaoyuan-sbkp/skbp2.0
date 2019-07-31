@@ -18,7 +18,7 @@
                         :data="upLoadData"
                         :auto-upload="false"
                         :on-success="uploadSucc"
-                        multiple>
+                        >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 </el-upload>
@@ -43,7 +43,7 @@
                     <div class="success">成功条数:<span>{{successNum}}</span></div>
                     <div class="fail">失败条数:<span>{{failNum}}</span></div>
                 </div>
-                <el-card class="box-card" v-show="true">
+                <el-card class="box-card" v-show="failList">
                     <div slot="header" class="clearfix">
                         <span>失败人员列表</span>
                     </div>
@@ -56,6 +56,7 @@
                                 <td>学号</td>
                                 <td>姓名</td>
                                 <td>添加原因</td>
+                                <td v-show="showStatus">状态</td>
                             </tr>
                             </thead>
                             <!--内容-->
@@ -65,6 +66,7 @@
                                 <td>{{item.stuNum}}</td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.reason}}</td>
+                                <td v-show="showStatus">{{item.status}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -376,6 +378,8 @@
                 // 模态框
                 importDialog: false,
                 importMessage: false,
+                failList: false,
+                showStatus:false,
                 addDialog: false,
                 modifyDialog: false,
                 delDialog: false,
@@ -415,6 +419,9 @@
                 this.addReasonId = [];
                 // 关闭上传信息展示表
                 this.importMessage = false;
+                this.failList = false;
+                this.successNum = 0;
+                this.failNum = 0;
                 // 更新表
                 this.$emit("updateList")
             },
@@ -429,7 +436,11 @@
                 res = res.msg;
                 this.successNum = res.successNum;
                 this.failNum = res.failNum;
+                if (this.failNum !== 0) {
+                    this.failList = true;
+                }
                 this.addList = res.lists;
+                this.$refs.upload.clearFiles();
             },
 
             // 批量导入获取模板位置
@@ -774,12 +785,15 @@
         watch: {
             curPath: function (newVal) {
                 this.curPath = newVal;
-                if (newVal === '/List'){
+                if (newVal === '/List') {
                     this.upLoadData.dept = 'bwc';
+                    this.showStatus = false;
                 } else if (newVal === '/keyPersonList') {
                     this.upLoadData.dept = 'fdy';
+                    this.showStatus = false;
                 } else if (newVal === '/abnormalList') {
                     this.upLoadData.dept = 'xljkzx';
+                    this.showStatus = true;
                 }
             },
 
