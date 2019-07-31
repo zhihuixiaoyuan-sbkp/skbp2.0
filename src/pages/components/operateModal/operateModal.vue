@@ -73,7 +73,7 @@
             </div>
             <hr class="boundaryModal">
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="">关闭</el-button>
+                <el-button type="primary" @click="updateList">关闭</el-button>
             </div>
         </el-dialog>
         <!--模态框-添加重点人员-->
@@ -369,7 +369,7 @@
         data() {
             return {
                 upLoadData: {
-                    dept: "bwc"
+                    dept: ''
                 },
                 curPath: '',
                 personList: [],
@@ -423,7 +423,6 @@
                 this.$refs.upload.submit();
                 this.updateList();
                 this.importMessage = true;
-                this.updateList();
             },
 
             uploadSucc(res) {
@@ -775,6 +774,13 @@
         watch: {
             curPath: function (newVal) {
                 this.curPath = newVal;
+                if (newVal === '/List'){
+                    this.upLoadData.dept = 'bwc';
+                } else if (newVal === '/keyPersonList') {
+                    this.upLoadData.dept = 'fdy';
+                } else if (newVal === '/abnormalList') {
+                    this.upLoadData.dept = 'xljkzx';
+                }
             },
 
             personList: function (newVel) {
@@ -956,7 +962,7 @@
 
     /*表格*/
     .list {
-        width: 100%;
+        width: 99%;
         border: 0;
         border-collapse: collapse;
         text-align: center;
