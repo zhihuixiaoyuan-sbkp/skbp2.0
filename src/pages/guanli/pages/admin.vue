@@ -8,6 +8,7 @@
                         v-model="valueTime"
                         type="date"
                         placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
                         @change="selectDate"
                 >
                 </el-date-picker>
@@ -33,7 +34,7 @@
 
                 <div v-if="isnull">
                     <div class="tableBox">
-                        <span class="dataText">{{nowDate}}</span>
+                        <!--<span class="dataText">{{nowDate}}</span>-->
                         <div class="rowBox" style="text-align: center">
                             <el-divider class="el-divider"></el-divider>
                             <span style="font-size: 20px;text-align: center">今日无数据</span>
@@ -131,7 +132,7 @@
                 value: "保卫处",
                 dept: "",
                 notDelete: true,//标记是否为删除选项卡
-                valueTime: new Date(),
+                valueTime: "",
                 logList: [],
                 curPage: 1,
                 totalCount: 0,
@@ -248,7 +249,7 @@
             /*搜索触发事件*/
             searchInfo() {
                 this.isSearch = false
-                this.nowDate = this.valueTime.toLocaleDateString()
+                // this.nowDate = this.valueTime.toLocaleDateString()
                 if (this.notDelete) {
                     this.getAdminHandleSearch()
                 } else {
@@ -273,7 +274,7 @@
                     {
                         curPage: 1,
                         dept: this.value,
-                        date: this.timeTool(this.valueTime)
+                        date: this.valueTime
                     }))
                     .then(
                         this.getAdminHandleSearchCallback
@@ -303,7 +304,7 @@
                     {
                         curPage: 1,
                         dept: this.value,
-                        date: this.timeTool(this.valueTime)
+                        date: this.valueTime
                     }))
                     .then(
                         this.getAdminDeleteSearchCallback

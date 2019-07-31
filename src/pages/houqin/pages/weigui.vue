@@ -58,8 +58,8 @@
                     <use xlink:href="#icon-daoChu"></use>
                 </svg>
                 <form action="" method="get" @submit="exportInfo">
-                    <input  type="text" v-model="this.valueTime[0]" name="startTime" hidden />
-                    <input  type="text" v-model="this.valueTime[1]" name="endTime" hidden />
+                    <input  type="text" v-model="startDate" name="startDate" hidden />
+                    <input  type="text" v-model="endDate" name="endDate" hidden />
                     <input  type="text" hidden v-model="value"  name="college"/>
                     <input  type="text" hidden v-model="value1"  name="reason"/>
                     <input id="inputid5" type="submit" hidden />
@@ -186,6 +186,8 @@
                 value1:"",//选择违规原因
                 value: '',//选择学院值
                 valueTime: "",//选择时间值
+                startDate:'',
+                endDate:'',
                 tableData: [{//初始数据结构
                     college: "",
                     date_time: "",
@@ -219,7 +221,9 @@
             },
             /*搜索异步请求*/
             searchInfo() {
-                // console.log(this.valueTime)
+                this.startDate = this.valueTime[0] === undefined ? "" : this.valueTime[0]
+                this.endDate = this.valueTime[1] === undefined ? "" : this.valueTime[0]
+                console.log(this.startDate)
                 // if (this.value !== "" || this.valueTime !== "" || this.value1 !== "") {
                 //     this.open()
                 // } else {
@@ -228,8 +232,8 @@
                         curPage: this.curPage,
                         college: this.value,
                         reason:this.value1,
-                        startDate: this.valueTime[0],
-                        endDate:this.valueTime[1]
+                        startDate: this.startDate,
+                        endDate:this.endDate
                     }
                     axios.post(this.api + "/sbkp/census/getRulesListBySearch", qs.stringify(searchParams))
                         .then(this.getSearchRulesListInfoCallback)
@@ -251,6 +255,7 @@
             },
             /*表格导出*/
             exportInfo() {
+                console.log(this.startTime)
                 if (this.isSearch) {
                     document.getElementsByTagName("form")[1].action = this.api + "/sbkp/census/exportAllRulesList"
                 } else {
